@@ -2,28 +2,30 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star, ArrowLeft, CheckCircle2, Users, Zap, Shield } from "lucide-react";
 import { experts } from "@/data/experts";
+import { useLanguage } from "@/i18n/LanguageContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const ExpertProfile = () => {
   const { id } = useParams();
+  const { t } = useLanguage();
   const expert = experts.find((e) => e.id === id);
 
   if (!expert) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2">Expert not found</h1>
-          <Link to="/" className="text-primary hover:underline">Back to Home</Link>
+          <h1 className="text-2xl font-bold mb-2">{t.expertProfile.notFound}</h1>
+          <Link to="/" className="text-primary hover:underline">{t.expertProfile.back}</Link>
         </div>
       </div>
     );
   }
 
   const badgeColors: Record<string, string> = {
-    Elite: "bg-primary/10 text-primary",
-    Pro: "bg-secondary/10 text-secondary",
-    Certified: "bg-accent/10 text-accent",
+    Elite: "bg-primary/15 text-primary",
+    Pro: "bg-secondary text-secondary-foreground",
+    Certified: "bg-muted text-muted-foreground",
   };
 
   return (
@@ -32,10 +34,9 @@ const ExpertProfile = () => {
 
       <div className="pt-24 pb-16 px-6">
         <div className="container mx-auto max-w-5xl">
-          {/* Back button */}
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-8">
             <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              <ArrowLeft className="h-4 w-4" /> Back to Experts
+              <ArrowLeft className="h-4 w-4" /> {t.expertProfile.back}
             </Link>
           </motion.div>
 
@@ -50,12 +51,12 @@ const ExpertProfile = () => {
               <img
                 src={expert.avatar}
                 alt={expert.name}
-                className="h-28 w-28 rounded-3xl object-cover ring-4 ring-white/60 shadow-lg"
+                className="h-28 w-28 rounded-2xl object-cover ring-4 ring-border/40 shadow-lg"
               />
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3 mb-2">
                   <h1 className="text-3xl font-bold text-foreground">{expert.name}</h1>
-                  <span className={`text-xs font-semibold px-3 py-1 rounded-full ${badgeColors[expert.badge]}`}>
+                  <span className={`text-xs font-semibold px-3 py-1 rounded-md ${badgeColors[expert.badge]}`}>
                     {expert.badge}
                   </span>
                 </div>
@@ -69,22 +70,22 @@ const ExpertProfile = () => {
                   </div>
                   <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                     <Zap className="h-4 w-4" />
-                    {expert.tasksCompleted.toLocaleString()} tasks completed
+                    {expert.tasksCompleted.toLocaleString()} {t.expertProfile.tasksCompleted}
                   </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-6">
                   {expert.tags.map((tag) => (
-                    <span key={tag} className="text-xs px-3 py-1.5 rounded-xl bg-muted text-muted-foreground">{tag}</span>
+                    <span key={tag} className="text-xs px-3 py-1.5 rounded-lg bg-muted text-muted-foreground">{tag}</span>
                   ))}
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  <button className="rounded-2xl bg-foreground px-6 py-3 text-sm font-medium text-background transition-all hover:opacity-90 active:scale-[0.98] btn-glow">
-                    Hire Assistant
+                  <button className="rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 active:scale-[0.98] btn-glow">
+                    {t.expertProfile.hireAssistant}
                   </button>
-                  <button className="rounded-2xl glass px-6 py-3 text-sm font-medium text-foreground transition-all hover:shadow-md active:scale-[0.98]">
-                    Add to My Team
+                  <button className="rounded-lg glass px-6 py-3 text-sm font-medium text-foreground transition-all hover:shadow-md active:scale-[0.98]">
+                    {t.expertProfile.addToTeam}
                   </button>
                 </div>
               </div>
@@ -92,27 +93,16 @@ const ExpertProfile = () => {
           </motion.div>
 
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Main content */}
             <div className="lg:col-span-2 space-y-8">
               {/* About */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="glass-card p-8"
-              >
-                <h2 className="text-xl font-semibold text-foreground mb-4">About</h2>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card p-8">
+                <h2 className="text-xl font-semibold text-foreground mb-4">{t.expertProfile.about}</h2>
                 <p className="text-muted-foreground leading-relaxed">{expert.about}</p>
               </motion.div>
 
               {/* Capabilities */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 }}
-                className="glass-card p-8"
-              >
-                <h2 className="text-xl font-semibold text-foreground mb-4">Capabilities</h2>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-8">
+                <h2 className="text-xl font-semibold text-foreground mb-4">{t.expertProfile.capabilities}</h2>
                 <div className="grid sm:grid-cols-2 gap-3">
                   {expert.capabilities.map((cap) => (
                     <div key={cap} className="flex items-center gap-2.5">
@@ -124,13 +114,8 @@ const ExpertProfile = () => {
               </motion.div>
 
               {/* Skills */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="glass-card p-8"
-              >
-                <h2 className="text-xl font-semibold text-foreground mb-6">Skills & Competencies</h2>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-8">
+                <h2 className="text-xl font-semibold text-foreground mb-6">{t.expertProfile.skills}</h2>
                 <div className="space-y-4">
                   {expert.skills.map((skill) => (
                     <div key={skill.name}>
@@ -138,12 +123,12 @@ const ExpertProfile = () => {
                         <span className="text-foreground font-medium">{skill.name}</span>
                         <span className="text-muted-foreground">{skill.level}%</span>
                       </div>
-                      <div className="h-2 rounded-full bg-muted overflow-hidden">
+                      <div className="h-2 rounded-md bg-muted overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${skill.level}%` }}
                           transition={{ duration: 1, delay: 0.3 }}
-                          className="h-full rounded-full bg-gradient-to-r from-primary to-secondary"
+                          className="h-full rounded-md bg-gradient-to-r from-primary to-primary/60"
                         />
                       </div>
                     </div>
@@ -152,19 +137,14 @@ const ExpertProfile = () => {
               </motion.div>
 
               {/* Reviews */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25 }}
-                className="glass-card p-8"
-              >
-                <h2 className="text-xl font-semibold text-foreground mb-6">Reviews</h2>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass-card p-8">
+                <h2 className="text-xl font-semibold text-foreground mb-6">{t.expertProfile.reviews}</h2>
                 <div className="space-y-4">
                   {expert.userReviews.map((review, i) => (
-                    <div key={i} className="p-4 rounded-xl bg-muted/50">
+                    <div key={i} className="p-4 rounded-lg bg-muted/50">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                             <Users className="h-3.5 w-3.5 text-primary" />
                           </div>
                           <span className="text-sm font-medium text-foreground">{review.name}</span>
@@ -185,74 +165,48 @@ const ExpertProfile = () => {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              {/* Pricing */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 }}
-                className="glass-card p-6"
-              >
-                <h3 className="text-lg font-semibold text-foreground mb-4">Pricing</h3>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-6">
+                <h3 className="text-lg font-semibold text-foreground mb-4">{t.expertProfile.pricing}</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center py-3 border-b border-border/50">
-                    <span className="text-sm text-muted-foreground">Per Task</span>
+                    <span className="text-sm text-muted-foreground">{t.expertProfile.perTask}</span>
                     <span className="text-sm font-semibold text-foreground">{expert.pricing.credits}</span>
                   </div>
                   <div className="flex justify-between items-center py-3 border-b border-border/50">
-                    <span className="text-sm text-muted-foreground">Subscription</span>
+                    <span className="text-sm text-muted-foreground">{t.expertProfile.subscription}</span>
                     <span className="text-sm font-semibold text-foreground">{expert.pricing.subscription}</span>
                   </div>
                   <div className="flex justify-between items-center py-3">
-                    <span className="text-sm text-muted-foreground">Enterprise</span>
+                    <span className="text-sm text-muted-foreground">{t.expertProfile.enterprise}</span>
                     <span className="text-sm font-semibold text-foreground">{expert.pricing.enterprise}</span>
                   </div>
                 </div>
               </motion.div>
 
-              {/* Industries */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="glass-card p-6"
-              >
-                <h3 className="text-lg font-semibold text-foreground mb-4">Industries Served</h3>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-6">
+                <h3 className="text-lg font-semibold text-foreground mb-4">{t.expertProfile.industries}</h3>
                 <div className="flex flex-wrap gap-2">
                   {expert.industries.map((ind) => (
-                    <span key={ind} className="text-xs px-3 py-1.5 rounded-xl bg-muted text-muted-foreground">{ind}</span>
+                    <span key={ind} className="text-xs px-3 py-1.5 rounded-lg bg-muted text-muted-foreground">{ind}</span>
                   ))}
                 </div>
               </motion.div>
 
-              {/* Tools */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25 }}
-                className="glass-card p-6"
-              >
-                <h3 className="text-lg font-semibold text-foreground mb-4">Tools Integrated</h3>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass-card p-6">
+                <h3 className="text-lg font-semibold text-foreground mb-4">{t.expertProfile.tools}</h3>
                 <div className="flex flex-wrap gap-2">
                   {expert.tools.map((tool) => (
-                    <span key={tool} className="text-xs px-3 py-1.5 rounded-xl bg-primary/5 text-primary font-medium">{tool}</span>
+                    <span key={tool} className="text-xs px-3 py-1.5 rounded-lg bg-primary/10 text-primary font-medium">{tool}</span>
                   ))}
                 </div>
               </motion.div>
 
-              {/* Trust */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="glass-card p-6"
-              >
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass-card p-6">
                 <div className="flex items-center gap-2 mb-3">
                   <Shield className="h-4 w-4 text-primary" />
-                  <h3 className="text-sm font-semibold text-foreground">Trust & Security</h3>
+                  <h3 className="text-sm font-semibold text-foreground">{t.expertProfile.trust}</h3>
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  All AI experts are verified, audited, and continuously monitored for quality and compliance.
-                </p>
+                <p className="text-xs text-muted-foreground leading-relaxed">{t.expertProfile.trustDesc}</p>
               </motion.div>
             </div>
           </div>

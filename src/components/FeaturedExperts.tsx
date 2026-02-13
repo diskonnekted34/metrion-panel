@@ -2,14 +2,17 @@ import { motion } from "framer-motion";
 import { Star, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { experts } from "@/data/experts";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const badgeColors: Record<string, string> = {
-  Elite: "bg-primary/10 text-primary",
-  Pro: "bg-secondary/10 text-secondary",
-  Certified: "bg-accent/10 text-accent",
+  Elite: "bg-primary/15 text-primary",
+  Pro: "bg-secondary text-secondary-foreground",
+  Certified: "bg-muted text-muted-foreground",
 };
 
 const FeaturedExperts = () => {
+  const { t } = useLanguage();
+
   return (
     <section id="experts" className="py-24 px-6 gradient-bg">
       <div className="container mx-auto">
@@ -21,10 +24,10 @@ const FeaturedExperts = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Featured AI Experts
+            {t.featuredExperts.title}
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Handpicked professionals ready to join your digital workforce.
+            {t.featuredExperts.subtitle}
           </p>
         </motion.div>
 
@@ -42,12 +45,12 @@ const FeaturedExperts = () => {
                   <img
                     src={expert.avatar}
                     alt={expert.name}
-                    className="h-14 w-14 rounded-2xl object-cover ring-2 ring-white/60"
+                    className="h-14 w-14 rounded-xl object-cover ring-2 ring-border/60"
                   />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <h3 className="font-semibold text-foreground truncate">{expert.name}</h3>
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${badgeColors[expert.badge]}`}>
+                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${badgeColors[expert.badge]}`}>
                         {expert.badge}
                       </span>
                     </div>
@@ -59,7 +62,7 @@ const FeaturedExperts = () => {
 
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {expert.tags.map((tag) => (
-                    <span key={tag} className="text-[11px] px-2.5 py-1 rounded-lg bg-muted text-muted-foreground">
+                    <span key={tag} className="text-[11px] px-2.5 py-1 rounded-md bg-muted text-muted-foreground">
                       {tag}
                     </span>
                   ))}
@@ -77,7 +80,7 @@ const FeaturedExperts = () => {
                 </div>
 
                 <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                  View Profile <ArrowRight className="h-3.5 w-3.5" />
+                  {t.featuredExperts.viewProfile} <ArrowRight className="h-3.5 w-3.5" />
                 </div>
               </Link>
             </motion.div>
