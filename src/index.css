@@ -4,48 +4,44 @@
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    --foreground: 222 47% 11%;
+    --background: 220 15% 8%;
+    --foreground: 30 15% 90%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card: 220 15% 12%;
+    --card-foreground: 30 15% 90%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover: 220 15% 12%;
+    --popover-foreground: 30 15% 90%;
 
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 8 76% 47%;
+    --primary-foreground: 30 15% 95%;
 
-    --secondary: 186 76% 48%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 220 15% 18%;
+    --secondary-foreground: 30 15% 85%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 220 12% 16%;
+    --muted-foreground: 220 10% 55%;
 
-    --accent: 252 56% 57%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 8 60% 40%;
+    --accent-foreground: 30 15% 95%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 30 15% 95%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 221 83% 53%;
+    --border: 220 12% 18%;
+    --input: 220 12% 18%;
+    --ring: 8 76% 47%;
 
-    --radius: 1rem;
+    --radius: 0.7rem;
 
-    --glass-bg: 0 0% 100% / 0.6;
-    --glass-border: 220 13% 91% / 0.5;
-    --glass-shadow: 221 83% 53% / 0.06;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 221 83% 53%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 220 14% 96%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 221 83% 53%;
+    --sidebar-background: 220 15% 10%;
+    --sidebar-foreground: 30 15% 85%;
+    --sidebar-primary: 8 76% 47%;
+    --sidebar-primary-foreground: 30 15% 95%;
+    --sidebar-accent: 220 15% 14%;
+    --sidebar-accent-foreground: 30 15% 90%;
+    --sidebar-border: 220 12% 18%;
+    --sidebar-ring: 8 76% 47%;
   }
 }
 
@@ -62,15 +58,15 @@
 
 @layer components {
   .glass {
-    @apply bg-white/60 backdrop-blur-xl border border-white/40 shadow-sm;
+    @apply bg-card/60 backdrop-blur-xl border border-border/40 shadow-sm;
   }
 
   .glass-strong {
-    @apply bg-white/80 backdrop-blur-2xl border border-white/50 shadow-md;
+    @apply bg-card/80 backdrop-blur-2xl border border-border/50 shadow-md;
   }
 
   .glass-card {
-    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-sm rounded-2xl transition-all duration-300;
+    @apply bg-card/70 backdrop-blur-xl border border-border/40 shadow-sm rounded-xl transition-all duration-300;
   }
 
   .glass-card:hover {
@@ -78,18 +74,18 @@
   }
 
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-secondary;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/70 to-primary/50;
   }
 
   .gradient-bg {
-    background: linear-gradient(135deg, hsl(220 20% 97%) 0%, hsl(221 83% 53% / 0.03) 50%, hsl(186 76% 48% / 0.03) 100%);
+    background: linear-gradient(135deg, hsl(220 15% 8%) 0%, hsl(8 76% 47% / 0.03) 50%, hsl(220 15% 12% / 0.5) 100%);
   }
 
   .gradient-hero {
-    background: radial-gradient(ellipse at 30% 20%, hsl(221 83% 53% / 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 80%, hsl(186 76% 48% / 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, hsl(252 56% 57% / 0.04) 0%, transparent 60%),
-                hsl(220 20% 97%);
+    background: radial-gradient(ellipse at 30% 20%, hsl(8 76% 47% / 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, hsl(8 60% 40% / 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, hsl(220 15% 12% / 0.5) 0%, transparent 60%),
+                hsl(220 15% 8%);
   }
 
   .btn-glow {
@@ -99,7 +95,7 @@
   .btn-glow::after {
     content: '';
     @apply absolute inset-0 opacity-0 transition-opacity duration-300;
-    background: radial-gradient(circle at center, hsl(var(--primary) / 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle at center, hsl(var(--primary) / 0.2) 0%, transparent 70%);
   }
 
   .btn-glow:hover::after {
@@ -112,6 +108,10 @@
 
   .float-animation-delayed {
     animation: float 6s ease-in-out 2s infinite;
+  }
+
+  .float-animation-delayed-2 {
+    animation: float 6s ease-in-out 4s infinite;
   }
 }
 
