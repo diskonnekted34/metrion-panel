@@ -25,9 +25,9 @@ const Pricing = () => {
             <span className={`text-sm font-medium ${!annual ? "text-foreground" : "text-muted-foreground"}`}>{t.pricing.monthlyLabel}</span>
             <button
               onClick={() => setAnnual(!annual)}
-              className={`relative w-12 h-6 rounded-[5px] transition-colors ${annual ? "bg-primary" : "bg-white/[0.1]"}`}
+              className={`relative w-12 h-6 rounded-2xl transition-colors ${annual ? "bg-primary" : "bg-white/[0.1]"}`}
             >
-              <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-[3px] bg-white shadow transition-transform ${annual ? "translate-x-6" : ""}`} />
+              <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-xl bg-white shadow transition-transform ${annual ? "translate-x-6" : ""}`} />
             </button>
             <span className={`text-sm font-medium ${annual ? "text-foreground" : "text-muted-foreground"}`}>{t.pricing.annualLabel}</span>
           </motion.div>
@@ -41,7 +41,7 @@ const Pricing = () => {
               className="glass-card p-10 text-left"
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="h-12 w-12 rounded-[5px] bg-white/[0.06] flex items-center justify-center">
+                <div className="h-12 w-12 rounded-2xl bg-white/[0.06] flex items-center justify-center">
                   <User className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <div>
@@ -64,7 +64,7 @@ const Pricing = () => {
                 ))}
               </ul>
 
-              <Link to="/marketplace" className="block w-full text-center rounded-[5px] border border-white/[0.1] px-6 py-3.5 text-sm font-medium text-foreground transition-all hover:bg-white/[0.05] active:scale-[0.99]">
+              <Link to="/marketplace" className="block w-full text-center rounded-2xl border border-white/[0.1] px-6 py-3.5 text-sm font-medium text-foreground transition-all hover:bg-white/[0.05] active:scale-[0.99]">
                 {t.pricing.standardCta}
               </Link>
             </motion.div>
@@ -77,13 +77,13 @@ const Pricing = () => {
               className="glass-bento p-10 text-left relative overflow-hidden"
             >
               <div className="absolute top-4 right-4">
-                <span className="text-[10px] font-bold px-3 py-1.5 rounded-[5px] bg-accent text-accent-foreground uppercase tracking-wider">
+                <span className="text-[10px] font-bold px-3 py-1.5 rounded-2xl bg-accent text-accent-foreground uppercase tracking-wider">
                   {t.pricing.bundleBadge}
                 </span>
               </div>
 
               <div className="flex items-center gap-3 mb-6">
-                <div className="h-12 w-12 rounded-[5px] bg-primary/15 flex items-center justify-center">
+                <div className="h-12 w-12 rounded-2xl bg-primary/15 flex items-center justify-center">
                   <Crown className="h-5 w-5 text-primary" />
                 </div>
                 <div>

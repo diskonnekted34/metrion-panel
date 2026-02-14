@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="container mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-[5px] bg-primary flex items-center justify-center">
+            <div className="h-7 w-7 rounded-2xl bg-primary flex items-center justify-center">
               <span className="text-primary-foreground text-xs font-bold">C</span>
             </div>
             <span className="text-sm font-semibold text-foreground">C-Levels</span>

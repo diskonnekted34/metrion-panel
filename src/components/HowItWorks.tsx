@@ -51,7 +51,7 @@ const HowItWorks = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, ease: [0.2, 0.8, 0.2, 1] }}
-                  className={`p-6 rounded-[5px] cursor-pointer transition-all duration-500 ${
+                  className={`p-6 rounded-2xl cursor-pointer transition-all duration-500 ${
                     activeStep === i
                       ? "glass-bento border-primary/20"
                       : "bg-transparent hover:bg-white/[0.03]"
@@ -91,7 +91,7 @@ const HowItWorks = () => {
                       className={`${activeStep === i ? "block" : "hidden"}`}
                     >
                       <div className="flex items-center gap-3 mb-6">
-                        <div className="w-12 h-12 rounded-[5px] bg-primary/10 flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
                           <Icon className="h-5 w-5 text-primary" />
                         </div>
                         <div>
