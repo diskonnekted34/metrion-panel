@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Bell, ChevronDown } from "lucide-react";
+import { Bell, ChevronDown, Clock } from "lucide-react";
 import { useRBAC } from "@/contexts/RBACContext";
+import { usePacks } from "@/contexts/PackContext";
 import { alertsData } from "@/data/alerts";
 import NotificationPanel from "@/components/NotificationPanel";
 import ViewModeSwitcher from "@/components/ViewModeSwitcher";
@@ -8,6 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 const DashboardHeader = () => {
   const { currentUser } = useRBAC();
+  const { isTrial, trialDaysRemaining } = usePacks();
   const isMobile = useIsMobile();
   const [notifOpen, setNotifOpen] = useState(false);
   const criticalCount = alertsData.filter(a => a.category === "critical" && !a.resolved).length;
@@ -52,6 +54,14 @@ const DashboardHeader = () => {
           </div>
         </div>
       </div>
+
+      {isTrial && (
+        <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-warning/10 border border-warning/15 mb-6">
+          <Clock className="h-4 w-4 text-warning shrink-0" />
+          <span className="text-xs font-medium text-warning">Trial: {trialDaysRemaining} days remaining</span>
+          <span className="text-[10px] text-muted-foreground ml-1">— Full access to all features.</span>
+        </div>
+      )}
 
       <NotificationPanel open={notifOpen} onClose={() => setNotifOpen(false)} />
     </>
