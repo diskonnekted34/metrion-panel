@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Team from "./pages/Team";
 import Tasks from "./pages/Tasks";
 import Alerts from "./pages/Alerts";
+import AlertDetail from "./pages/AlertDetail";
 import Reports from "./pages/Reports";
 import Marketplace from "./pages/Marketplace";
 import Settings from "./pages/Settings";
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/team" element={<Team />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/alerts" element={<Alerts />} />
+            <Route path="/alerts/:alertId" element={<AlertDetail />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/settings" element={<Settings />} />
