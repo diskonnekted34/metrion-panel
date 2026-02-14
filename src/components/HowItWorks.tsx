@@ -31,10 +31,10 @@ const HowItWorks = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="glass-card p-8 text-center"
+              className={`${i === 1 ? "glass-bento" : "glass-card"} p-8 text-center`}
             >
               <div className="text-4xl font-bold text-primary/20 mb-4">{step.num}</div>
-              <div className="mx-auto w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
+              <div className="mx-auto w-12 h-12 rounded-[20px] bg-primary/10 flex items-center justify-center mb-5">
                 <step.icon className="h-5 w-5 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-3">{step.title}</h3>

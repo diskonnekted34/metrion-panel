@@ -4,11 +4,11 @@ const Footer = () => {
   const { t } = useLanguage();
 
   return (
-    <footer className="py-16 px-6 border-t border-border/50">
+    <footer className="py-16 px-6 border-t border-white/[0.06]">
       <div className="container mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
+            <div className="h-7 w-7 rounded-[12px] bg-primary flex items-center justify-center">
               <span className="text-primary-foreground text-xs font-bold">C</span>
             </div>
             <span className="text-sm font-semibold text-foreground">C-Levels</span>
