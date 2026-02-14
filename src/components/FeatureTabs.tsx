@@ -73,7 +73,8 @@ const FeatureTabs = () => {
           </h2>
         </motion.div>
 
-        <div className="flex items-center justify-center gap-2 mb-10">
+        {/* Segmented control */}
+        <div className="flex items-center justify-center gap-1 mb-10 p-1 rounded-2xl glass mx-auto w-fit">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -87,7 +88,11 @@ const FeatureTabs = () => {
               {active === tab.id && (
                 <motion.div
                   layoutId="activeTab"
-                  className="absolute inset-0 glass-bento rounded-2xl"
+                  className="absolute inset-0 rounded-2xl"
+                  style={{
+                    background: "rgba(76,141,255,0.1)",
+                    borderBottom: "2px solid rgba(76,141,255,0.6)",
+                  }}
                   transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
                 />
               )}
@@ -102,10 +107,10 @@ const FeatureTabs = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={active}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.35, ease: [0.2, 0.8, 0.2, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
             className="glass-bento p-10"
           >
             <div className="flex items-center gap-3 mb-6">
@@ -121,7 +126,7 @@ const FeatureTabs = () => {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
-                  className="flex items-start gap-3 p-4 rounded-2xl bg-white/[0.03]"
+                  className="flex items-start gap-3 p-4 rounded-2xl bg-secondary"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0" />
                   <span className="text-sm text-muted-foreground">{f}</span>

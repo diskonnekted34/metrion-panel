@@ -67,11 +67,12 @@ const StatsCounter = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, ease: [0.2, 0.8, 0.2, 1] }}
-              className="text-center"
+              className="glass-card p-6 text-center"
             >
-              <p className="text-4xl md:text-5xl font-bold text-foreground mb-2 tabular-nums">
+              <p className="text-4xl md:text-5xl font-bold text-foreground mb-1 tabular-nums">
                 {displayValues[i]}
               </p>
+              <div className="w-8 h-[2px] bg-primary/60 mx-auto mb-2 rounded-full" />
               <p className="text-sm text-muted-foreground font-medium">{stat.label}</p>
             </motion.div>
           ))}

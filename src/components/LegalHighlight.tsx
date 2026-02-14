@@ -61,7 +61,7 @@ const LegalHighlight = () => {
             ))}
           </div>
 
-          <div className="flex items-start gap-2 p-4 rounded-2xl bg-white/[0.03]">
+          <div className="flex items-start gap-2 p-4 rounded-2xl bg-secondary">
             <AlertTriangle className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
             <p className="text-xs text-muted-foreground italic">
               {lang === "en"

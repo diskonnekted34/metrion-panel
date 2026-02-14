@@ -16,7 +16,7 @@ const TrustStrip = () => {
   const doubled = [...items, ...items];
 
   return (
-    <section className="py-8 px-6 border-y border-white/[0.06] overflow-hidden">
+    <section className="py-8 px-6 border-y border-border overflow-hidden">
       <div className="relative">
         <motion.div
           initial={{ opacity: 0 }}

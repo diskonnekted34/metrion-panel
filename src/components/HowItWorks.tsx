@@ -53,8 +53,8 @@ const HowItWorks = () => {
                   transition={{ delay: i * 0.1, ease: [0.2, 0.8, 0.2, 1] }}
                   className={`p-6 rounded-2xl cursor-pointer transition-all duration-500 ${
                     activeStep === i
-                      ? "glass-bento border-primary/20"
-                      : "bg-transparent hover:bg-white/[0.03]"
+                      ? "glass-bento border-primary/15"
+                      : "bg-transparent hover:bg-secondary"
                   }`}
                   onClick={() => setActiveStep(i)}
                 >
@@ -103,7 +103,7 @@ const HowItWorks = () => {
 
                       <div className="mt-6 space-y-3">
                         {[1, 2, 3].map(j => (
-                          <div key={j} className="h-3 rounded-full bg-white/[0.04]" style={{ width: `${90 - j * 15}%` }} />
+                          <div key={j} className="h-3 rounded-full bg-secondary" style={{ width: `${90 - j * 15}%` }} />
                         ))}
                       </div>
                     </motion.div>

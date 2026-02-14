@@ -20,7 +20,7 @@ const Navbar = () => {
       transition={{ duration: 0.5 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "glass-strong"
+          ? "glass-strong border-b border-border"
           : "bg-transparent border-b border-transparent"
       }`}
     >

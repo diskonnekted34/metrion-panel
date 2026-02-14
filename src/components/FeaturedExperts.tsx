@@ -38,7 +38,7 @@ const FeaturedExperts = () => {
         {/* C-Level Executives */}
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-            <span className="text-xs font-bold px-2 py-0.5 rounded-2xl bg-primary/15 text-primary">C-Level</span>
+            <span className="text-xs font-bold px-2 py-0.5 rounded-2xl bg-primary/10 text-primary">C-Level</span>
             Executive Team
           </h3>
         </div>
@@ -55,11 +55,11 @@ const FeaturedExperts = () => {
             >
               <Link to={`/expert/${exec.id}`} className="block glass-card p-6 h-full group">
                 <div className="flex items-start gap-4 mb-4">
-                  <img src={exec.avatar} alt={exec.name} className="h-14 w-14 rounded-2xl object-cover ring-2 ring-white/[0.08]" />
+                  <img src={exec.avatar} alt={exec.name} className="h-14 w-14 rounded-2xl object-cover ring-1 ring-border" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <h3 className="font-bold text-primary text-sm">{exec.role}</h3>
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-2xl bg-primary/15 text-primary">
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-2xl bg-primary/10 text-primary">
                         {exec.badge}
                       </span>
                     </div>
@@ -84,12 +84,12 @@ const FeaturedExperts = () => {
                   transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
                   className="overflow-hidden"
                 >
-                  <div className="p-3 rounded-2xl bg-white/[0.03] mb-4">
+                  <div className="p-3 rounded-2xl bg-secondary mb-4">
                     <p className="text-[11px] text-muted-foreground italic">"{exec.outputs[2] || exec.tagline}"</p>
                   </div>
                 </motion.div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-white/[0.06]">
+                <div className="flex items-center justify-between pt-4 border-t border-border">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-medium text-foreground">{exec.performanceScore}%</span>
                     <span className="text-xs text-muted-foreground">performance</span>
@@ -114,7 +114,7 @@ const FeaturedExperts = () => {
         {/* Standard-tier Agents */}
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-            <span className="text-xs font-bold px-2 py-0.5 rounded-2xl bg-accent/15 text-accent">Standard</span>
+            <span className="text-xs font-bold px-2 py-0.5 rounded-2xl bg-accent/10 text-accent">Standard</span>
             AI Agents
           </h3>
         </div>
@@ -131,12 +131,12 @@ const FeaturedExperts = () => {
             >
               <Link to={`/expert/${agent.id}`} className="block glass-card p-6 h-full group">
                 <div className="flex items-start gap-4 mb-4">
-                  <img src={agent.avatar} alt={agent.name} className="h-14 w-14 rounded-2xl object-cover ring-2 ring-white/[0.08]" />
+                  <img src={agent.avatar} alt={agent.name} className="h-14 w-14 rounded-2xl object-cover ring-1 ring-border" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <h3 className="font-bold text-foreground text-sm">{agent.name}</h3>
                       <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-2xl ${
-                        agent.badge === "Agent" ? "bg-accent/15 text-accent" : "bg-white/[0.06] text-muted-foreground"
+                        agent.badge === "Agent" ? "bg-accent/10 text-accent" : "bg-secondary text-muted-foreground"
                       }`}>
                         {agent.pricingModel === "Subscription" ? "Pro" : "Elite"}
                       </span>
@@ -149,7 +149,7 @@ const FeaturedExperts = () => {
 
                 <div className="flex flex-wrap gap-2 mb-4">
                   {agent.tags?.map((tag) => (
-                    <span key={tag} className="text-[11px] px-2.5 py-1 rounded-2xl border border-white/[0.08] text-muted-foreground">
+                    <span key={tag} className="text-[11px] px-2.5 py-1 rounded-2xl border border-border text-muted-foreground">
                       {tag}
                     </span>
                   ))}
@@ -161,14 +161,14 @@ const FeaturedExperts = () => {
                   transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
                   className="overflow-hidden"
                 >
-                  <div className="p-3 rounded-2xl bg-white/[0.03] mb-4">
+                  <div className="p-3 rounded-2xl bg-secondary mb-4">
                     <p className="text-[11px] text-muted-foreground italic">"{agent.outputs[0]}"</p>
                   </div>
                 </motion.div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-white/[0.06]">
+                <div className="flex items-center justify-between pt-4 border-t border-border">
                   <div className="flex items-center gap-2">
-                    <Star className="h-3.5 w-3.5 text-orange-500 fill-orange-500" />
+                    <Star className="h-3.5 w-3.5 text-warning fill-warning" />
                     <span className="text-xs font-medium text-foreground">{agent.rating}</span>
                     <span className="text-xs text-muted-foreground">({agent.ratingCount})</span>
                   </div>
