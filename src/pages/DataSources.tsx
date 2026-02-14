@@ -113,7 +113,7 @@ const IntegrationCard = ({ integration }: { integration: Integration }) => {
               )}
 
               {/* Action Mode Toggle — only for actionable integrations */}
-              {(integration.id === "meta-ads" || integration.id === "google-ads") && (
+              {(integration.id === "meta-ads" || integration.id === "google-ads" || integration.id === "canva" || integration.id === "figma") && (
                 <div className="pt-2 border-t border-border">
                   <ActionModeToggle integrationId={integration.id} integrationName={integration.name} />
                 </div>

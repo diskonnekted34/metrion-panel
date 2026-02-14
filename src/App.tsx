@@ -24,6 +24,7 @@ import Departments from "./pages/Departments";
 import DepartmentDetail from "./pages/DepartmentDetail";
 import DataSources from "./pages/DataSources";
 import ActionCenter from "./pages/ActionCenter";
+import CreativeWorkspace from "./pages/CreativeWorkspace";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/settings" element={<Settings />} />
               <Route path="/data-sources" element={<DataSources />} />
               <Route path="/action-center" element={<ActionCenter />} />
+              <Route path="/creative-workspace" element={<CreativeWorkspace />} />
               <Route path="/expert/:id" element={<ExpertProfile />} />
               <Route path="/workspace/:agentId" element={<AgentWorkspace />} />
 

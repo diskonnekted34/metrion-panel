@@ -2,7 +2,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 
 export type UserRole = "owner" | "admin" | "department_lead" | "operator" | "viewer";
 
-export type DepartmentId = "executive" | "marketing" | "finance" | "operations" | "technology" | "legal";
+export type DepartmentId = "executive" | "marketing" | "finance" | "operations" | "technology" | "legal" | "creative";
 
 export interface Department {
   id: DepartmentId;
@@ -40,11 +40,12 @@ export const departments: Department[] = [
   { id: "operations", name: "Operasyon", icon: "⚙️", agentIds: ["cto", "aria"], healthScore: 74, activeAlerts: 2, activeTasks: 5, trend: "stable" },
   { id: "technology", name: "Teknoloji", icon: "🖥️", agentIds: ["cto"], healthScore: 88, activeAlerts: 0, activeTasks: 2, trend: "up" },
   { id: "legal", name: "Hukuk", icon: "⚖️", agentIds: ["legal", "lexis"], healthScore: 85, activeAlerts: 1, activeTasks: 2, trend: "stable" },
+  { id: "creative", name: "Kreatif", icon: "🎨", agentIds: ["muse", "art-director", "graphic-designer", "brand-manager", "social-media-manager"], healthScore: 79, activeAlerts: 1, activeTasks: 6, trend: "up" },
 ];
 
 const mockTeam: TeamMember[] = [
-  { id: "u1", name: "Ahmet Yılmaz", email: "ahmet@company.com", role: "owner", departments: ["executive", "marketing", "finance", "operations", "technology", "legal"], joinedAt: "2024-01-15" },
-  { id: "u2", name: "Zeynep Kaya", email: "zeynep@company.com", role: "admin", departments: ["executive", "marketing", "finance", "operations", "technology", "legal"], joinedAt: "2024-02-01" },
+  { id: "u1", name: "Ahmet Yılmaz", email: "ahmet@company.com", role: "owner", departments: ["executive", "marketing", "finance", "operations", "technology", "legal", "creative"], joinedAt: "2024-01-15" },
+  { id: "u2", name: "Zeynep Kaya", email: "zeynep@company.com", role: "admin", departments: ["executive", "marketing", "finance", "operations", "technology", "legal", "creative"], joinedAt: "2024-02-01" },
   { id: "u3", name: "Mehmet Demir", email: "mehmet@company.com", role: "department_lead", departments: ["marketing"], joinedAt: "2024-03-10" },
   { id: "u4", name: "Elif Öztürk", email: "elif@company.com", role: "department_lead", departments: ["finance"], joinedAt: "2024-03-15" },
   { id: "u5", name: "Can Arslan", email: "can@company.com", role: "operator", departments: ["operations", "technology"], joinedAt: "2024-04-01" },

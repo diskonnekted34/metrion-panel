@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, ListTodo, Bell, BarChart3, Store, Settings, Building2, Database, Zap } from "lucide-react";
+import { LayoutDashboard, Users, ListTodo, Bell, BarChart3, Store, Settings, Building2, Database, Zap, Palette } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import ViewModeSwitcher from "./ViewModeSwitcher";
@@ -16,6 +16,7 @@ const navItems = [
   { label: "Pazar Yeri", icon: Store, path: "/marketplace" },
   { label: "Veri Kaynakları", icon: Database, path: "/data-sources" },
   { label: "Aksiyon Merkezi", icon: Zap, path: "/action-center" },
+  { label: "Kreatif Çalışma Alanı", icon: Palette, path: "/creative-workspace" },
   { label: "Ayarlar", icon: Settings, path: "/settings" },
 ];
 
