@@ -176,7 +176,7 @@ const AgentWorkspace = () => {
           <div className="h-px flex-1 bg-white/[0.06]" />
         </div>
 
-        {/* Chat Messages with Auto Task Extraction */}
+        {/* Chat Messages */}
         <div className="space-y-3 mb-4">
           {messages.map((msg, i) => (
             <div key={i}>
@@ -197,18 +197,6 @@ const AgentWorkspace = () => {
                   </div>
                 )}
               </div>
-              {/* Auto-extracted tasks — only for the LAST agent message with recommendations */}
-              {msg.role === "agent" && msg.recommendations && msg.recommendations.length > 0 &&
-                i === [...messages].map((m, idx) => m.role === "agent" && m.recommendations && m.recommendations.length > 0 ? idx : -1).filter(x => x !== -1).pop() && (
-                <SuggestedTasks
-                  tasks={extractTasksFromResponse(
-                    messages.filter(m => m.role === "agent" && m.recommendations).flatMap(m => m.recommendations!),
-                    agent.id
-                  )}
-                  onCreateTask={handleCreateTask}
-                  onEditTask={handleEditTask}
-                />
-              )}
             </div>
           ))}
         </div>
@@ -256,6 +244,20 @@ const AgentWorkspace = () => {
             </Button>
           </div>
         </div>
+
+        {/* Suggested Tasks — Below conversation */}
+        {(() => {
+          const allRecs = messages.filter(m => m.role === "agent" && m.recommendations).flatMap(m => m.recommendations!);
+          return allRecs.length > 0 ? (
+            <div className="mt-4">
+              <SuggestedTasks
+                tasks={extractTasksFromResponse(allRecs, agent.id)}
+                onCreateTask={handleCreateTask}
+                onEditTask={handleEditTask}
+              />
+            </div>
+          ) : null;
+        })()}
       </div>
     </div>
   );
