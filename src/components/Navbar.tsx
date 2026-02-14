@@ -27,7 +27,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-6">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="h-8 w-8 rounded-[14px] bg-primary flex items-center justify-center">
+          <div className="h-8 w-8 rounded-[5px] bg-primary flex items-center justify-center">
             <span className="text-primary-foreground text-xs font-bold">C</span>
           </div>
           <span className="text-lg font-semibold tracking-tight text-foreground">C-Levels</span>
@@ -43,7 +43,7 @@ const Navbar = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setLang(lang === "en" ? "tr" : "en")}
-            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5 rounded-[14px] hover:bg-white/[0.05]"
+            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5 rounded-[5px] hover:bg-white/[0.05]"
           >
             <Globe className="h-3.5 w-3.5" />
             {lang === "en" ? "TR" : "EN"}

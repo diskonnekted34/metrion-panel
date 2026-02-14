@@ -78,7 +78,7 @@ const FeatureTabs = () => {
             <button
               key={tab.id}
               onClick={() => setActive(tab.id)}
-              className={`relative px-5 py-2.5 rounded-[14px] text-sm font-medium transition-all duration-300 ${
+              className={`relative px-5 py-2.5 rounded-[5px] text-sm font-medium transition-all duration-300 ${
                 active === tab.id
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground"
@@ -87,7 +87,7 @@ const FeatureTabs = () => {
               {active === tab.id && (
                 <motion.div
                   layoutId="activeTab"
-                  className="absolute inset-0 glass-bento rounded-[14px]"
+                  className="absolute inset-0 glass-bento rounded-[5px]"
                   transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
                 />
               )}
@@ -109,7 +109,7 @@ const FeatureTabs = () => {
             className="glass-bento p-10"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-[16px] bg-primary/10 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-[5px] bg-primary/10 flex items-center justify-center">
                 <currentTab.icon className="h-5 w-5 text-primary" />
               </div>
               <h3 className="text-xl font-semibold text-foreground">{tabLabels[active][lang]}</h3>
@@ -121,7 +121,7 @@ const FeatureTabs = () => {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
-                  className="flex items-start gap-3 p-4 rounded-[16px] bg-white/[0.03]"
+                  className="flex items-start gap-3 p-4 rounded-[5px] bg-white/[0.03]"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0" />
                   <span className="text-sm text-muted-foreground">{f}</span>
