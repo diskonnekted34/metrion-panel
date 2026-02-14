@@ -197,10 +197,14 @@ const AgentWorkspace = () => {
                   </div>
                 )}
               </div>
-              {/* Auto-extracted tasks from recommendations */}
-              {msg.role === "agent" && msg.recommendations && msg.recommendations.length > 0 && (
+              {/* Auto-extracted tasks — only for the LAST agent message with recommendations */}
+              {msg.role === "agent" && msg.recommendations && msg.recommendations.length > 0 &&
+                i === [...messages].map((m, idx) => m.role === "agent" && m.recommendations && m.recommendations.length > 0 ? idx : -1).filter(x => x !== -1).pop() && (
                 <SuggestedTasks
-                  tasks={extractTasksFromResponse(msg.recommendations, agent.id)}
+                  tasks={extractTasksFromResponse(
+                    messages.filter(m => m.role === "agent" && m.recommendations).flatMap(m => m.recommendations!),
+                    agent.id
+                  )}
                   onCreateTask={handleCreateTask}
                   onEditTask={handleEditTask}
                 />
