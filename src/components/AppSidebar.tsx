@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, ListTodo, Bell, BarChart3, Store, Settings, Building2 } from "lucide-react";
+import { LayoutDashboard, Users, ListTodo, Bell, BarChart3, Store, Settings, Building2, Database } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import ViewModeSwitcher from "./ViewModeSwitcher";
@@ -14,6 +14,7 @@ const navItems = [
   { label: "Uyarılar", icon: Bell, path: "/alerts" },
   { label: "Raporlar", icon: BarChart3, path: "/reports" },
   { label: "Pazar Yeri", icon: Store, path: "/marketplace" },
+  { label: "Veri Kaynakları", icon: Database, path: "/data-sources" },
   { label: "Ayarlar", icon: Settings, path: "/settings" },
 ];
 
@@ -85,7 +86,7 @@ const AppSidebar = () => {
         {/* Bottom */}
         <div className="px-5 py-4 border-t border-border">
           <Link to="/marketplace" className="btn-primary w-full text-center block px-4 py-2.5 text-sm">
-            Expand Workforce
+            İş Gücünü Genişlet
           </Link>
         </div>
       </aside>

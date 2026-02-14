@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import { RBACProvider } from "@/contexts/RBACContext";
 import { PackProvider } from "@/contexts/PackContext";
+import { IntegrationProvider } from "@/contexts/IntegrationContext";
 import Index from "./pages/Index";
 import ExpertProfile from "./pages/ExpertProfile";
 import Dashboard from "./pages/Dashboard";
@@ -20,6 +21,7 @@ import Pricing from "./pages/Pricing";
 import AgentWorkspace from "./pages/AgentWorkspace";
 import Departments from "./pages/Departments";
 import DepartmentDetail from "./pages/DepartmentDetail";
+import DataSources from "./pages/DataSources";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +32,7 @@ const App = () => (
       <LanguageProvider>
         <RBACProvider>
         <PackProvider>
+        <IntegrationProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -49,12 +52,14 @@ const App = () => (
               <Route path="/reports" element={<Reports />} />
               <Route path="/marketplace" element={<Marketplace />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/data-sources" element={<DataSources />} />
               <Route path="/expert/:id" element={<ExpertProfile />} />
               <Route path="/workspace/:agentId" element={<AgentWorkspace />} />
 
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
+        </IntegrationProvider>
         </PackProvider>
         </RBACProvider>
       </LanguageProvider>

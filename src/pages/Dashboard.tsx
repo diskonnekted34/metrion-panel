@@ -9,6 +9,7 @@ import PrioritizedTasks from "@/components/dashboard/PrioritizedTasks";
 import WeeklyRhythm from "@/components/dashboard/WeeklyRhythm";
 import ImpactSnapshot from "@/components/dashboard/ImpactSnapshot";
 import DataSourceEmptyState from "@/components/dashboard/DataSourceEmptyState";
+import IntegrationBanner from "@/components/dashboard/IntegrationBanner";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
@@ -36,6 +37,7 @@ const Dashboard = () => {
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
           <DashboardHeader />
         </motion.div>
+        <IntegrationBanner />
         <InsightBar />
         <CompanyHealthScore />
         <TeamMatrix />
