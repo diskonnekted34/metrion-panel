@@ -15,7 +15,7 @@ const agentDeptMap: Record<string, DepartmentId> = {
 
 const deptLabel: Record<DepartmentId, string> = {
   executive: "Yönetim", marketing: "Pazarlama", finance: "Finans",
-  operations: "Operasyon", technology: "Teknoloji", legal: "Hukuk",
+  operations: "Operasyon", technology: "Teknoloji", legal: "Hukuk", creative: "Kreatif",
 };
 
 const statusColor = (s: string) => {

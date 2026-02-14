@@ -1,5 +1,5 @@
 export type IntegrationStatus = "not_connected" | "connected" | "syncing" | "error";
-export type IntegrationCategory = "commerce" | "advertising" | "finance" | "analytics" | "crm" | "operations";
+export type IntegrationCategory = "commerce" | "advertising" | "finance" | "analytics" | "crm" | "operations" | "creative";
 
 export interface IntegrationPermission {
   label: string;
@@ -27,10 +27,11 @@ export const categoryLabels: Record<IntegrationCategory, string> = {
   analytics: "Analitik",
   crm: "CRM & Müşteri Tutundurma",
   operations: "Operasyon",
+  creative: "Kreatif & Tasarım",
 };
 
 export const categoryOrder: IntegrationCategory[] = [
-  "commerce", "advertising", "finance", "analytics", "crm", "operations",
+  "commerce", "advertising", "finance", "analytics", "crm", "operations", "creative",
 ];
 
 export const integrations: Integration[] = [
@@ -171,6 +172,34 @@ export const integrations: Integration[] = [
     phase2: true,
     permissions: [],
     requiredBy: [],
+  },
+  // Creative
+  {
+    id: "canva",
+    name: "Canva",
+    category: "creative",
+    description: "Tasarım taslakları oluşturun, marka kitini yönetin ve şablonlara erişin.",
+    status: "not_connected",
+    permissions: [
+      { label: "Tasarım oluşturma", access: "taslak" },
+      { label: "Şablon düzenleme", access: "okuma/yazma" },
+      { label: "Marka kiti erişimi", access: "salt okunur" },
+      { label: "Tasarım dışa aktarma", access: "salt okunur" },
+    ],
+    requiredBy: ["muse", "graphic-designer", "art-director", "brand-manager"],
+  },
+  {
+    id: "figma",
+    name: "Figma",
+    category: "creative",
+    description: "Tasarım dosyaları oluşturun, bileşen kütüphanesine erişin ve ekip projelerini yönetin.",
+    status: "not_connected",
+    permissions: [
+      { label: "Dosya oluşturma", access: "taslak" },
+      { label: "Tasarım bileşenleri düzenleme", access: "okuma/yazma" },
+      { label: "Ekip kütüphanesi erişimi", access: "salt okunur" },
+    ],
+    requiredBy: ["graphic-designer", "art-director"],
   },
 ];
 

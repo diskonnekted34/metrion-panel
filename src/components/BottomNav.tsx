@@ -70,6 +70,9 @@ const BottomNav = () => {
               <Link to="/action-center" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-secondary">
                 <BarChart3 className="h-4 w-4 text-muted-foreground" /> Aksiyon Merkezi
               </Link>
+              <Link to="/creative-workspace" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-secondary">
+                <BarChart3 className="h-4 w-4 text-muted-foreground" /> Kreatif Çalışma Alanı
+              </Link>
               <Link to="/settings" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-secondary">
                 <BarChart3 className="h-4 w-4 text-muted-foreground" /> Ayarlar
               </Link>
