@@ -1,7 +1,7 @@
 import AppLayout from "@/components/AppLayout";
 import FeaturedExperts from "@/components/FeaturedExperts";
 
-const Marketplace = () => {
+const Team = () => {
   return (
     <AppLayout>
       <div className="p-6">
@@ -11,4 +11,4 @@ const Marketplace = () => {
   );
 };
 
-export default Marketplace;
+export default Team;
