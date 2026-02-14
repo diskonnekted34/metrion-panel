@@ -32,8 +32,8 @@ const LegalHighlight = () => {
           className="glass-bento p-10 md:p-14 relative overflow-hidden"
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-[20px] bg-gradient-to-br from-mint-200/40 to-mint-400/30 flex items-center justify-center">
-              <Shield className="h-6 w-6 text-mint-500" />
+            <div className="w-12 h-12 rounded-[20px] bg-accent/10 flex items-center justify-center">
+              <Shield className="h-6 w-6 text-accent" />
             </div>
             <div>
               <h2 className="text-2xl font-bold text-foreground">
@@ -55,13 +55,13 @@ const LegalHighlight = () => {
                 transition={{ delay: i * 0.08 }}
                 className="flex items-start gap-2.5"
               >
-                <CheckCircle2 className="h-4 w-4 text-mint-400 shrink-0 mt-0.5" />
+                <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
                 <span className="text-sm text-muted-foreground">{f}</span>
               </motion.div>
             ))}
           </div>
 
-          <div className="flex items-start gap-2 p-4 rounded-[16px] bg-muted/50">
+          <div className="flex items-start gap-2 p-4 rounded-[16px] bg-white/[0.03]">
             <AlertTriangle className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
             <p className="text-xs text-muted-foreground italic">
               {lang === "en"

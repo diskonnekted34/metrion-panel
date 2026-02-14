@@ -14,14 +14,13 @@ const PainPoints = () => {
     { icon: Brain, title: t.painPoints.overload, items: t.painPoints.overloadItems },
   ];
 
-  // Use glass-bento for the first and last cards
   const bentoIndices = [0, 3, 5];
 
   return (
-    <section className="py-24 px-6 gradient-bg">
+    <section className="py-24 px-6">
       <div className="container mx-auto max-w-6xl">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mb-16"
@@ -34,10 +33,10 @@ const PainPoints = () => {
           {groups.map((group, i) => (
             <motion.div
               key={group.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0)" }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
+              transition={{ delay: i * 0.06, ease: [0.2, 0.8, 0.2, 1] }}
               className={`${bentoIndices.includes(i) ? "glass-bento" : "glass-card"} p-6`}
             >
               <div className="flex items-center gap-3 mb-4">
@@ -49,7 +48,7 @@ const PainPoints = () => {
               <ul className="space-y-2">
                 {group.items.map((item) => (
                   <li key={item} className="text-xs text-muted-foreground flex items-start gap-2">
-                    <span className="w-1 h-1 rounded-full bg-primary/40 mt-1.5 shrink-0" />
+                    <span className="w-1 h-1 rounded-full bg-accent/50 mt-1.5 shrink-0" />
                     {item}
                   </li>
                 ))}

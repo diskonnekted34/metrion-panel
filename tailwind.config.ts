@@ -31,7 +31,6 @@ export default {
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
-          dark: "hsl(var(--primary-dark))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -68,14 +67,6 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        mint: {
-          50: "#f0faf4",
-          100: "#dcf5e5",
-          200: "#BCEB93",
-          300: "#A9DDA6",
-          400: "#96D1B6",
-          500: "#7bc48f",
-        },
       },
       keyframes: {
         "accordion-down": {
@@ -103,8 +94,8 @@ export default {
           "100%": { backgroundPosition: "200% 0" },
         },
         "pulse-line": {
-          "0%, 100%": { opacity: "0.3" },
-          "50%": { opacity: "0.6" },
+          "0%, 100%": { opacity: "0.2" },
+          "50%": { opacity: "0.5" },
         },
         "count-up": {
           "0%": { opacity: "0", transform: "translateY(20px)" },

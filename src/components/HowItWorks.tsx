@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Database, Brain, CheckSquare, Zap, Shield } from "lucide-react";
+import { Database, Brain, CheckSquare } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const HowItWorks = () => {
@@ -43,7 +43,6 @@ const HowItWorks = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Left: Steps */}
             <div className="space-y-2">
               {steps.map((step, i) => (
                 <motion.div
@@ -54,21 +53,21 @@ const HowItWorks = () => {
                   transition={{ delay: i * 0.1, ease: [0.2, 0.8, 0.2, 1] }}
                   className={`p-6 rounded-[20px] cursor-pointer transition-all duration-500 ${
                     activeStep === i
-                      ? "glass-bento border-mint-300/40"
-                      : "bg-transparent hover:bg-white/30"
+                      ? "glass-bento border-primary/20"
+                      : "bg-transparent hover:bg-white/[0.03]"
                   }`}
                   onClick={() => setActiveStep(i)}
                 >
                   <div className="flex items-start gap-4">
                     <div className={`text-2xl font-bold transition-colors duration-300 ${
-                      activeStep === i ? "text-mint-400" : "text-border"
+                      activeStep === i ? "text-primary" : "text-white/[0.1]"
                     }`}>
                       {step.num}
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-foreground mb-1">{step.title}</h3>
                       <p className={`text-sm leading-relaxed transition-all duration-500 ${
-                        activeStep === i ? "text-muted-foreground max-h-20 opacity-100" : "text-muted-foreground/60 max-h-0 opacity-0 overflow-hidden"
+                        activeStep === i ? "text-muted-foreground max-h-20 opacity-100" : "text-muted-foreground/40 max-h-0 opacity-0 overflow-hidden"
                       }`}>{step.desc}</p>
                     </div>
                   </div>
@@ -76,7 +75,6 @@ const HowItWorks = () => {
               ))}
             </div>
 
-            {/* Right: Preview card */}
             <div className="hidden md:block">
               <div className="glass-bento p-10 relative overflow-hidden" style={{ minHeight: 300 }}>
                 {steps.map((step, i) => {
@@ -93,8 +91,8 @@ const HowItWorks = () => {
                       className={`${activeStep === i ? "block" : "hidden"}`}
                     >
                       <div className="flex items-center gap-3 mb-6">
-                        <div className="w-12 h-12 rounded-[20px] bg-gradient-to-br from-mint-200/40 to-mint-400/30 flex items-center justify-center">
-                          <Icon className="h-5 w-5 text-mint-500" />
+                        <div className="w-12 h-12 rounded-[20px] bg-primary/10 flex items-center justify-center">
+                          <Icon className="h-5 w-5 text-primary" />
                         </div>
                         <div>
                           <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Step {step.num}</p>
@@ -103,10 +101,9 @@ const HowItWorks = () => {
                       </div>
                       <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
 
-                      {/* Mock UI elements */}
                       <div className="mt-6 space-y-3">
                         {[1, 2, 3].map(j => (
-                          <div key={j} className="h-3 rounded-full bg-muted" style={{ width: `${90 - j * 15}%` }} />
+                          <div key={j} className="h-3 rounded-full bg-white/[0.04]" style={{ width: `${90 - j * 15}%` }} />
                         ))}
                       </div>
                     </motion.div>
