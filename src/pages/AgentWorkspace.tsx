@@ -168,6 +168,18 @@ const AgentWorkspace = () => {
         ))}
       </div>
 
+      {/* ── SUGGESTED TASKS ── */}
+      {(() => {
+        const allRecs = messages.filter(m => m.role === "agent" && m.recommendations).flatMap(m => m.recommendations!);
+        return allRecs.length > 0 ? (
+          <SuggestedTasks
+            tasks={extractTasksFromResponse(allRecs, agent.id)}
+            onCreateTask={handleCreateTask}
+            onEditTask={handleEditTask}
+          />
+        ) : null;
+      })()}
+
       {/* ── CONVERSATION SECTION ── */}
       <div className="pt-2">
         <div className="flex items-center gap-2 mb-4">
@@ -201,7 +213,7 @@ const AgentWorkspace = () => {
           ))}
         </div>
 
-        {/* Smart Suggestion Bubbles — Dynamic & Context-Aware */}
+        {/* Smart Suggestion Bubbles */}
         <div className={`flex gap-2 mb-3 ${isMobile ? "overflow-x-auto pb-2" : "flex-wrap"}`}>
           {dynamicSuggestions.map((s, i) => (
             <button
@@ -244,20 +256,6 @@ const AgentWorkspace = () => {
             </Button>
           </div>
         </div>
-
-        {/* Suggested Tasks — Below conversation */}
-        {(() => {
-          const allRecs = messages.filter(m => m.role === "agent" && m.recommendations).flatMap(m => m.recommendations!);
-          return allRecs.length > 0 ? (
-            <div className="mt-4">
-              <SuggestedTasks
-                tasks={extractTasksFromResponse(allRecs, agent.id)}
-                onCreateTask={handleCreateTask}
-                onEditTask={handleEditTask}
-              />
-            </div>
-          ) : null;
-        })()}
       </div>
     </div>
   );
