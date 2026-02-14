@@ -84,8 +84,8 @@ const AppSidebar = () => {
 
         {/* Bottom */}
         <div className="px-5 py-4 border-t border-border">
-          <Link to="/pricing" className="btn-primary w-full text-center block px-4 py-2.5 text-sm">
-            Planları Gör
+          <Link to="/marketplace" className="btn-primary w-full text-center block px-4 py-2.5 text-sm">
+            Expand Workforce
           </Link>
         </div>
       </aside>

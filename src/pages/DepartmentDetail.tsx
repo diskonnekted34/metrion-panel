@@ -1,8 +1,9 @@
 import { useParams, Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Lock, AlertTriangle, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { ArrowLeft, Lock, AlertTriangle, TrendingUp, TrendingDown, Minus, Package } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { useRBAC, DepartmentId } from "@/contexts/RBACContext";
+import { usePacks } from "@/contexts/PackContext";
 import { executives, agents } from "@/data/experts";
 
 const allAgents = [...executives, ...agents];
@@ -10,6 +11,7 @@ const allAgents = [...executives, ...agents];
 const DepartmentDetail = () => {
   const { deptId } = useParams<{ deptId: string }>();
   const { departments, hasAccessToDepartment, hasAccessToAgent } = useRBAC();
+  const { isAgentUnlocked, getPackForAgent } = usePacks();
 
   const dept = departments.find(d => d.id === deptId);
   if (!dept) return <Navigate to="/departments" />;
@@ -20,15 +22,10 @@ const DepartmentDetail = () => {
         <div className="p-6 max-w-3xl mx-auto flex flex-col items-center justify-center min-h-[60vh]">
           <div className="glass-card p-10 text-center">
             <Lock className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-lg font-bold text-foreground mb-2">Erişim Yetkiniz Yok</h2>
-            <p className="text-sm text-muted-foreground mb-4">
-              Bu departmanı görüntüleme yetkiniz bulunmuyor.
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Erişim için yöneticinize veya departman liderine başvurun.
-            </p>
+            <h2 className="text-lg font-bold text-foreground mb-2">Access Denied</h2>
+            <p className="text-sm text-muted-foreground mb-4">You don't have permission to view this department.</p>
             <Link to="/departments" className="btn-primary px-6 py-2.5 mt-6 inline-block text-sm">
-              Departmanlara Dön
+              Back to Departments
             </Link>
           </div>
         </div>
@@ -46,10 +43,10 @@ const DepartmentDetail = () => {
   };
 
   const statusLabel = (s: string) => {
-    if (s === "Monitoring") return "İzleniyor";
-    if (s === "Running Task") return "Görev Çalışıyor";
-    if (s === "Alerting") return "Uyarı Veriyor";
-    return "Boşta";
+    if (s === "Monitoring") return "Monitoring";
+    if (s === "Running Task") return "Running";
+    if (s === "Alerting") return "Alerting";
+    return "Idle";
   };
 
   const healthColor = (score: number) => {
@@ -70,7 +67,7 @@ const DepartmentDetail = () => {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <Link to="/departments" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
-            <ArrowLeft className="h-4 w-4" /> Departmanlar
+            <ArrowLeft className="h-4 w-4" /> Departments
           </Link>
 
           <div className="glass-card p-6">
@@ -79,7 +76,7 @@ const DepartmentDetail = () => {
                 <span className="text-3xl">{dept.icon}</span>
                 <div>
                   <h1 className="text-2xl font-bold text-foreground">{dept.name}</h1>
-                  <p className="text-sm text-muted-foreground">{deptAgents.length} AI Ajan Aktif</p>
+                  <p className="text-sm text-muted-foreground">{deptAgents.length} AI Agents</p>
                 </div>
               </div>
               <div className="flex items-center gap-6">
@@ -88,18 +85,18 @@ const DepartmentDetail = () => {
                     <span className={`text-3xl font-bold ${healthColor(dept.healthScore)}`}>{dept.healthScore}</span>
                     {trendIcon(dept.trend)}
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-1">Sağlık Skoru</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">Health Score</p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center gap-1.5 justify-center">
                     <AlertTriangle className="h-4 w-4 text-warning" />
                     <span className="text-2xl font-bold text-foreground">{dept.activeAlerts}</span>
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-1">Aktif Uyarı</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">Active Alerts</p>
                 </div>
                 <div className="text-center">
                   <span className="text-2xl font-bold text-foreground">{dept.activeTasks}</span>
-                  <p className="text-[10px] text-muted-foreground mt-1">Aktif Görev</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">Active Tasks</p>
                 </div>
               </div>
             </div>
@@ -108,10 +105,13 @@ const DepartmentDetail = () => {
 
         {/* Agent Grid */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <h2 className="text-lg font-semibold text-foreground mb-4">Departman Ajanları</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4">Department Agents</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {deptAgents.map((agent, i) => {
               const canAccess = hasAccessToAgent(agent.id);
+              const unlocked = isAgentUnlocked(agent.id);
+              const pack = getPackForAgent(agent.id);
+
               return (
                 <motion.div
                   key={agent.id}
@@ -119,7 +119,7 @@ const DepartmentDetail = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.15 + i * 0.04 }}
                 >
-                  {canAccess ? (
+                  {canAccess && unlocked ? (
                     <div className="glass-card p-5">
                       <div className="flex items-center gap-3 mb-3">
                         <img src={agent.avatar} alt={agent.name} className="h-11 w-11 rounded-2xl object-cover ring-1 ring-border" />
@@ -133,22 +133,47 @@ const DepartmentDetail = () => {
                       </div>
                       <p className="text-xs text-muted-foreground mb-3 line-clamp-1">{agent.tagline}</p>
                       <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
-                        <span>{agent.performanceScore}% performans</span>
-                        <span>{agent.tasksCompleted.toLocaleString()} görev</span>
+                        <span>{agent.performanceScore}% performance</span>
+                        <span>{agent.tasksCompleted.toLocaleString()} tasks</span>
                       </div>
                       <Link
                         to={`/workspace/${agent.id}`}
                         className="w-full text-center text-xs py-2 rounded-2xl bg-secondary hover:bg-secondary/80 text-foreground transition-colors block"
                       >
-                        Ajan Konsolunu Aç
+                        Open Console
                       </Link>
                     </div>
+                  ) : canAccess && !unlocked ? (
+                    /* LOCKED — Pack inactive */
+                    <div className="glass-card p-5 relative overflow-hidden">
+                      <div className="absolute inset-0 rounded-2xl bg-background/70 backdrop-blur-[6px] flex flex-col items-center justify-center z-10">
+                        <Lock className="h-5 w-5 text-muted-foreground mb-2" />
+                        <p className="text-xs font-medium text-muted-foreground mb-1">
+                          Available in {pack?.name || "Add-on Pack"}
+                        </p>
+                        <Link
+                          to="/marketplace"
+                          className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors mt-2"
+                        >
+                          <Package className="h-3 w-3" /> Upgrade to Unlock
+                        </Link>
+                      </div>
+                      <div className="flex items-center gap-3 mb-3 blur-[2px]">
+                        <img src={agent.avatar} alt="" className="h-11 w-11 rounded-2xl object-cover ring-1 ring-border opacity-40" />
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-muted-foreground text-sm">{agent.role}</h3>
+                          <p className="text-xs text-muted-foreground truncate">{agent.name}</p>
+                        </div>
+                      </div>
+                      <div className="h-16 blur-[2px]" />
+                    </div>
                   ) : (
+                    /* RBAC locked */
                     <div className="glass-card p-5 opacity-50 relative">
                       <div className="absolute inset-0 rounded-2xl bg-background/60 flex items-center justify-center z-10">
                         <div className="text-center">
                           <Lock className="h-4 w-4 text-muted-foreground mx-auto mb-1" />
-                          <p className="text-[10px] text-muted-foreground">Erişim Kısıtlı</p>
+                          <p className="text-[10px] text-muted-foreground">Access Restricted</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3 mb-3">

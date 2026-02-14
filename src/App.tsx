@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import { RBACProvider } from "@/contexts/RBACContext";
+import { PackProvider } from "@/contexts/PackContext";
 import Index from "./pages/Index";
 import ExpertProfile from "./pages/ExpertProfile";
 import Dashboard from "./pages/Dashboard";
@@ -28,6 +29,7 @@ const App = () => (
     <TooltipProvider>
       <LanguageProvider>
         <RBACProvider>
+        <PackProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -53,6 +55,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
+        </PackProvider>
         </RBACProvider>
       </LanguageProvider>
     </TooltipProvider>
