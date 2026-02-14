@@ -15,6 +15,7 @@ export interface AnalysisModule {
 export interface AgentWorkspaceConfig {
   snapshot: SnapshotKPI[];
   modules: AnalysisModule[];
+  suggestions: string[];
 }
 
 export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
@@ -84,6 +85,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
         ],
       },
     ],
+    suggestions: [
+      "Haftalık öncelik sıralamasını güncelle.",
+      "Departman performans karşılaştırmasını çalıştır.",
+      "Stratejik risk özetini hazırla.",
+      "OKR ilerleme durumunu kontrol et.",
+      "Karar darboğazlarını tespit et.",
+    ],
   },
 
   cfo: {
@@ -151,6 +159,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
           "Lojistik maliyet artışı tedarikçi değişikliğinden kaynaklanıyor",
         ],
       },
+    ],
+    suggestions: [
+      "Kampanya B'nin marjin etkisini analiz et.",
+      "Ürün X'e %10 indirim simüle et.",
+      "En yüksek iade riskli SKU'yu belirle.",
+      "6 haftalık nakit akışı tahmini oluştur.",
+      "Başa baş ROAS eşiğini hesapla.",
     ],
   },
 
@@ -226,6 +241,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
         ],
       },
     ],
+    suggestions: [
+      "Mevcut bütçe tahsisini optimize et.",
+      "En düşük performanslı kreatifi belirle.",
+      "Agresif büyüme planı tasarla.",
+      "Checkout dönüşüm oranını iyileştir.",
+      "Kanal bazında ROAS karşılaştırması çalıştır.",
+    ],
   },
 
   cto: {
@@ -285,6 +307,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
         ],
       },
     ],
+    suggestions: [
+      "En yüksek ROI otomasyon fırsatını belirle.",
+      "Veri tutarsızlıklarını kontrol et.",
+      "Sistem darboğazlarını analiz et.",
+      "Takip bütünlüğü denetimi çalıştır.",
+      "Entegrasyon sağlık raporunu oluştur.",
+    ],
   },
 
   cso: {
@@ -341,6 +370,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
           "Niş segment fırsatı tespit edildi",
         ],
       },
+    ],
+    suggestions: [
+      "30/60/90 büyüme planını güncelle.",
+      "AOV artırma stratejisi öner.",
+      "Rekabet pozisyonlama analizi çalıştır.",
+      "LTV/CAC oranını optimize et.",
+      "Yeni genişleme senaryosu oluştur.",
     ],
   },
 
@@ -409,6 +445,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
         ],
       },
     ],
+    suggestions: [
+      "Açık sözleşmelerin risk özetini çıkar.",
+      "KVKK uyumluluk durumunu kontrol et.",
+      "Reklam iddia risklerini tara.",
+      "Eskalasyon gerektiren konuları listele.",
+      "Sözleşme madde revizyon önerileri oluştur.",
+    ],
   },
 
   // ==================== MARKETING & CREATIVE AGENTS ====================
@@ -475,6 +518,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
         ],
       },
     ],
+    suggestions: [
+      "Marka tutarlılık raporunu oluştur.",
+      "Ses tonu sapmalarını kontrol et.",
+      "Değer önerisi A/B test sonuçlarını analiz et.",
+      "Web sitesi başlık optimizasyonu öner.",
+      "Marka risk bayraklarını listele.",
+    ],
   },
 
   "art-director": {
@@ -527,6 +577,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
           "Özel gün konseptlerini takvime ekle",
         ],
       },
+    ],
+    suggestions: [
+      "Q2 kampanya konseptini oluştur.",
+      "Görsel yön brifingi hazırla.",
+      "Sezonsal konsept haritası çıkar.",
+      "Moodboard alternatifleri öner.",
+      "Görsel tutarlılık denetimi çalıştır.",
     ],
   },
 
@@ -591,6 +648,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
           "Tipografi testi: Sans-serif %12 daha yüksek okunabilirlik",
         ],
       },
+    ],
+    suggestions: [
+      "Reklam varyasyonları üret.",
+      "Carousel storyboard oluştur.",
+      "Banner optimizasyonu öner.",
+      "Thumbnail A/B test varyantları hazırla.",
+      "Haftalık kreatif üretim raporunu çıkar.",
     ],
   },
 
@@ -658,6 +722,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
         ],
       },
     ],
+    suggestions: [
+      "Haftalık içerik takvimini oluştur.",
+      "Hook varyasyonları üret.",
+      "Etkileşim risk monitörünü kontrol et.",
+      "Topluluk yanıt stratejisi öner.",
+      "En iyi performans gösteren içeriği analiz et.",
+    ],
   },
 
   // ==================== OPERATIONS & PRODUCT AGENTS ====================
@@ -713,6 +784,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
           "Minimum sipariş miktarı analizi tamamlanmalı",
         ],
       },
+    ],
+    suggestions: [
+      "SKU performans tablosunu analiz et.",
+      "Paket stratejisi öner.",
+      "Fiyat optimizasyon modeli çalıştır.",
+      "Ürün genişleme senaryosu oluştur.",
+      "AOV etkisi simülasyonu yap.",
     ],
   },
 
@@ -770,6 +848,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
         ],
       },
     ],
+    suggestions: [
+      "Envanter risk haritasını güncelle.",
+      "Tedarik riski tahminini çalıştır.",
+      "Lojistik maliyet analizi yap.",
+      "Fulfillment verimlilik raporunu oluştur.",
+      "Operasyonel darboğazları belirle.",
+    ],
   },
 
   // Finance Analyst = atlas
@@ -825,6 +910,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
         ],
       },
     ],
+    suggestions: [
+      "Detaylı gider tablosunu oluştur.",
+      "Maliyet optimizasyon önerileri sun.",
+      "İade kalıp analizi çalıştır.",
+      "Genel gider risk raporu hazırla.",
+      "Bütçe sapma analizini güncelle.",
+    ],
   },
 
   // Creative Director = muse
@@ -879,6 +971,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
           "Kullanıcı üretimi içerik (UGC) kampanyası test et",
         ],
       },
+    ],
+    suggestions: [
+      "İçerik stratejisi brifingi oluştur.",
+      "Marka hikaye çerçevesi tasarla.",
+      "Kampanya narratif varyasyonları üret.",
+      "Hedef kitle mesaj haritası çıkar.",
+      "İçerik performans analizi çalıştır.",
     ],
   },
 
@@ -936,6 +1035,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
         ],
       },
     ],
+    suggestions: [
+      "Büyüme deney backlogunu güncelle.",
+      "SEO denetim raporunu oluştur.",
+      "Kanal performans matrisini analiz et.",
+      "Kampanya ROI karşılaştırması çalıştır.",
+      "Organik trafik büyüme planı öner.",
+    ],
   },
 
   // Investment Advisor = vega
@@ -990,6 +1096,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
           "Yeni tez oluştur: SaaS sektörü konsolidasyonu",
         ],
       },
+    ],
+    suggestions: [
+      "Portföy performans özetini çıkar.",
+      "Yatırım tezi doğrulaması çalıştır.",
+      "Risk-getiri analizi güncelle.",
+      "Sektör fırsat taraması yap.",
+      "Senaryo bazlı getiri simülasyonu oluştur.",
     ],
   },
 
@@ -1046,6 +1159,13 @@ export const agentWorkspaceConfigs: Record<string, AgentWorkspaceConfig> = {
           "Gizlilik maddesi kapsamını genişlet",
         ],
       },
+    ],
+    suggestions: [
+      "Sözleşme risk skor kartını güncelle.",
+      "Uyumluluk kontrol listesini çalıştır.",
+      "Due diligence özetini hazırla.",
+      "Madde revizyon önerilerini listele.",
+      "Hukuki risk taraması başlat.",
     ],
   },
 };
