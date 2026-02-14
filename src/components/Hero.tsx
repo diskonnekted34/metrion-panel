@@ -1,26 +1,25 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
-import { experts } from "@/data/experts";
+import { executives } from "@/data/experts";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const cardPositions = [
   { top: "5%", right: "5%", className: "float-animation" },
-  { top: "25%", right: "35%", className: "float-animation-delayed" },
+  { top: "25%", right: "38%", className: "float-animation-delayed" },
   { top: "50%", right: "8%", className: "float-animation-delayed-2" },
-  { top: "15%", right: "55%", className: "float-animation" },
-  { top: "65%", right: "40%", className: "float-animation-delayed" },
+  { top: "12%", right: "58%", className: "float-animation" },
+  { top: "65%", right: "42%", className: "float-animation-delayed" },
 ];
 
-// SVG lines connecting the cards (center-to-center approximate)
 const connectionLines = [
-  { x1: "88%", y1: "12%", x2: "58%", y2: "32%" },
-  { x1: "58%", y1: "32%", x2: "85%", y2: "57%" },
-  { x1: "85%", y1: "57%", x2: "53%", y2: "72%" },
-  { x1: "53%", y1: "72%", x2: "38%", y2: "22%" },
-  { x1: "38%", y1: "22%", x2: "88%", y2: "12%" },
-  { x1: "58%", y1: "32%", x2: "53%", y2: "72%" },
-  { x1: "38%", y1: "22%", x2: "85%", y2: "57%" },
+  { x1: "90%", y1: "12%", x2: "55%", y2: "32%" },
+  { x1: "55%", y1: "32%", x2: "87%", y2: "57%" },
+  { x1: "87%", y1: "57%", x2: "51%", y2: "72%" },
+  { x1: "51%", y1: "72%", x2: "35%", y2: "19%" },
+  { x1: "35%", y1: "19%", x2: "90%", y2: "12%" },
+  { x1: "55%", y1: "32%", x2: "51%", y2: "72%" },
+  { x1: "35%", y1: "19%", x2: "87%", y2: "57%" },
 ];
 
 const Hero = () => {
@@ -38,7 +37,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 rounded-lg glass px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6"
+              className="inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6"
             >
               <Sparkles className="h-3.5 w-3.5 text-primary" />
               {t.hero.badge}
@@ -70,30 +69,25 @@ const Hero = () => {
               className="flex flex-wrap gap-4"
             >
               <Link
-                to="/#experts"
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 active:scale-[0.98] btn-glow"
+                to="/pricing"
+                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 active:scale-[0.98] btn-glow"
               >
                 {t.hero.cta1}
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <button className="inline-flex items-center gap-2 rounded-lg glass px-6 py-3 text-sm font-medium text-foreground transition-all hover:shadow-md active:scale-[0.98]">
+              <Link to="/marketplace" className="inline-flex items-center gap-2 rounded-xl glass px-6 py-3 text-sm font-medium text-foreground transition-all hover:shadow-md active:scale-[0.98]">
                 {t.hero.cta2}
-              </button>
+              </Link>
             </motion.div>
           </div>
 
-          {/* Right: 5 floating connected cards */}
           <div className="relative hidden lg:block h-[500px]">
-            {/* Connection lines SVG */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
               {connectionLines.map((line, i) => (
                 <motion.line
                   key={i}
-                  x1={line.x1}
-                  y1={line.y1}
-                  x2={line.x2}
-                  y2={line.y2}
-                  stroke="hsl(8 76% 47% / 0.2)"
+                  x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2}
+                  stroke="hsl(8 76% 47% / 0.15)"
                   strokeWidth="1"
                   strokeDasharray="6 4"
                   initial={{ opacity: 0 }}
@@ -102,14 +96,11 @@ const Hero = () => {
                   className="animate-pulse-line"
                 />
               ))}
-              {/* Dot nodes at intersections */}
               {connectionLines.slice(0, 5).map((line, i) => (
                 <motion.circle
                   key={`dot-${i}`}
-                  cx={line.x1}
-                  cy={line.y1}
-                  r="3"
-                  fill="hsl(8 76% 47% / 0.5)"
+                  cx={line.x1} cy={line.y1} r="3"
+                  fill="hsl(8 76% 47% / 0.4)"
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 1 + i * 0.1 }}
@@ -117,25 +108,30 @@ const Hero = () => {
               ))}
             </svg>
 
-            {experts.slice(0, 5).map((expert, i) => (
+            {executives.slice(0, 5).map((exec, i) => (
               <motion.div
-                key={expert.id}
+                key={exec.id}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: 0.4 + i * 0.12 }}
-                className={`absolute glass-card p-4 w-56 z-10 ${cardPositions[i].className}`}
+                className={`absolute glass-card p-4 w-52 z-10 ${cardPositions[i].className}`}
                 style={{ top: cardPositions[i].top, right: cardPositions[i].right }}
               >
                 <div className="flex items-center gap-3 mb-2">
-                  <img src={expert.avatar} alt={expert.name} className="h-9 w-9 rounded-lg object-cover" />
+                  <img src={exec.avatar} alt={exec.name} className="h-9 w-9 rounded-xl object-cover" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">{expert.name}</p>
-                    <p className="text-[11px] text-muted-foreground">{expert.tagline}</p>
+                    <p className="text-xs font-bold text-primary">{exec.role}</p>
+                    <p className="text-[11px] text-muted-foreground">{exec.name}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-primary font-medium">★ {expert.rating}</span>
-                  <span className="text-xs text-muted-foreground">· {expert.reviews} reviews</span>
+                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${
+                    exec.status === "Monitoring" ? "bg-primary/10 text-primary" :
+                    exec.status === "Alerting" ? "bg-destructive/10 text-destructive" :
+                    "bg-accent text-muted-foreground"
+                  }`}>
+                    {exec.status}
+                  </span>
                 </div>
               </motion.div>
             ))}

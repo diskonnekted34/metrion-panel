@@ -1,27 +1,54 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Zap, BarChart3, Settings, Users, Activity, TrendingUp, Clock, ChevronRight } from "lucide-react";
-import { experts } from "@/data/experts";
+import { Zap, BarChart3, Users, Activity, TrendingUp, Clock, ChevronRight, AlertTriangle, ArrowRight, Shield, Calendar } from "lucide-react";
+import { executives } from "@/data/experts";
 import { useLanguage } from "@/i18n/LanguageContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const statuses = ["Active", "Idle", "Running Task", "Active", "Idle", "Active"];
-
 const Dashboard = () => {
   const { t } = useLanguage();
 
-  const statusTranslate = (s: string) => {
-    if (s === "Active") return t.dashboard.active;
-    if (s === "Idle") return t.dashboard.idle;
-    return t.dashboard.running;
+  const statusColor = (s: string) => {
+    if (s === "Monitoring") return "bg-primary/10 text-primary";
+    if (s === "Running Task") return "bg-accent text-accent-foreground";
+    if (s === "Alerting") return "bg-destructive/10 text-destructive";
+    return "bg-muted text-muted-foreground";
   };
 
-  const stats = [
-    { label: t.dashboard.totalTasks, value: "124,580", icon: Activity, change: "+12%" },
-    { label: t.dashboard.efficiency, value: "94.2%", icon: TrendingUp, change: "+3.1%" },
-    { label: t.dashboard.activeAgents, value: "6", icon: Users, change: "" },
-    { label: t.dashboard.revenue, value: "$2.4M", icon: BarChart3, change: "+18%" },
+  const statusLabel = (s: string) => {
+    if (s === "Monitoring") return t.dashboard.monitoring;
+    if (s === "Running Task") return t.dashboard.runningTask;
+    if (s === "Alerting") return t.dashboard.alerting;
+    return t.dashboard.idle;
+  };
+
+  const insights = [
+    { text: "ROAS dropped 18% on Meta campaigns in the last 48 hours", urgency: "High", confidence: "94%", agent: "AI CMO" },
+    { text: "Product margin on SKU-1247 fell below break-even threshold", urgency: "Critical", confidence: "97%", agent: "AI CFO" },
+    { text: "3 supplier contracts expire within 14 days — clause review recommended", urgency: "Medium", confidence: "89%", agent: "Legal Desk" },
+  ];
+
+  const weeklyRhythm = [
+    { day: t.weekdays.monday, output: "CEO Brief", agent: "AI CEO" },
+    { day: t.weekdays.tuesday, output: "Growth Plan", agent: "AI CSO" },
+    { day: t.weekdays.wednesday, output: "Finance Brief", agent: "AI CFO" },
+    { day: t.weekdays.thursday, output: "Systems & Automation Brief", agent: "AI CTO" },
+    { day: t.weekdays.friday, output: "Weekly Wrap + Next Week Priorities", agent: "AI CEO" },
+  ];
+
+  const tasks = [
+    { title: "Review Q4 campaign creative performance", agent: "AI CMO", status: "In Progress", time: "12 min ago" },
+    { title: "Update cashflow forecast with latest revenue data", agent: "AI CFO", status: "Completed", time: "1h ago" },
+    { title: "Map top 10 automation opportunities", agent: "AI CTO", status: "In Progress", time: "2h ago" },
+    { title: "Score supplier contract risk for renewal", agent: "Legal Desk", status: "Completed", time: "4h ago" },
+  ];
+
+  const impact = [
+    { label: t.dashboard.revenueImpact, value: "$2.4M", icon: TrendingUp },
+    { label: t.dashboard.hoursSaved, value: "186h", icon: Clock },
+    { label: t.dashboard.risksMitigated, value: "23", icon: Shield },
+    { label: t.dashboard.automationsRun, value: "47", icon: Zap },
   ];
 
   return (
@@ -31,133 +58,144 @@ const Dashboard = () => {
       <div className="pt-24 pb-16 px-6">
         <div className="container mx-auto max-w-6xl">
           {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-10"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
             <h1 className="text-3xl font-bold text-foreground mb-2">{t.dashboard.welcome}</h1>
             <p className="text-muted-foreground">{t.dashboard.subtitle}</p>
           </motion.div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-            {stats.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 }}
-                className="glass-card p-5"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="rounded-lg bg-primary/10 p-2">
-                    <stat.icon className="h-4 w-4 text-primary" />
+          {/* Insight Bar */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-10">
+            <h2 className="text-lg font-semibold text-foreground mb-4">{t.dashboard.insightBar}</h2>
+            <div className="space-y-3">
+              {insights.map((insight, i) => (
+                <div key={i} className="glass-card p-5 flex items-center justify-between gap-4">
+                  <div className="flex items-start gap-3 flex-1">
+                    <div className={`rounded-xl p-2 shrink-0 ${insight.urgency === "Critical" ? "bg-destructive/10" : insight.urgency === "High" ? "bg-primary/10" : "bg-accent"}`}>
+                      <AlertTriangle className={`h-4 w-4 ${insight.urgency === "Critical" ? "text-destructive" : "text-primary"}`} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{insight.text}</p>
+                      <div className="flex items-center gap-3 mt-1">
+                        <span className="text-xs text-muted-foreground">{insight.agent}</span>
+                        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${
+                          insight.urgency === "Critical" ? "bg-destructive/10 text-destructive" :
+                          insight.urgency === "High" ? "bg-primary/10 text-primary" :
+                          "bg-accent text-muted-foreground"
+                        }`}>{t.dashboard.urgency}: {insight.urgency}</span>
+                        <span className="text-[10px] text-muted-foreground">{t.dashboard.confidence}: {insight.confidence}</span>
+                      </div>
+                    </div>
                   </div>
-                  {stat.change && (
-                    <span className="text-xs text-green-400 font-medium">{stat.change}</span>
-                  )}
+                  <button className="text-xs font-medium text-primary hover:underline whitespace-nowrap flex items-center gap-1">
+                    {t.dashboard.convertToTask} <ArrowRight className="h-3 w-3" />
+                  </button>
                 </div>
-                <p className="text-2xl font-bold text-foreground mb-0.5">{stat.value}</p>
-                <p className="text-xs text-muted-foreground">{stat.label}</p>
-              </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </motion.div>
 
-          {/* My AI Team */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="mb-10"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-foreground">{t.dashboard.myTeam}</h2>
-              <Link to="/" className="text-sm text-primary hover:underline flex items-center gap-1">
-                {t.nav.marketplace} <ChevronRight className="h-3.5 w-3.5" />
+          {/* AI Team Status */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-10">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-foreground">{t.dashboard.teamStatus}</h2>
+              <Link to="/marketplace" className="text-sm text-primary hover:underline flex items-center gap-1">
+                {t.dashboard.myTeam} <ChevronRight className="h-3.5 w-3.5" />
               </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {experts.map((expert, i) => {
-                const status = statuses[i] || "Idle";
-                return (
-                  <motion.div
-                    key={expert.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.35 + i * 0.06 }}
-                    className="glass-card p-5 group"
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <img src={expert.avatar} alt={expert.name} className="h-12 w-12 rounded-xl object-cover ring-2 ring-border/40" />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-foreground text-sm truncate">{expert.name}</h3>
-                        <p className="text-xs text-muted-foreground">{expert.tagline}</p>
-                      </div>
-                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${status === "Active" ? "bg-primary/20 text-primary" : status === "Running Task" ? "bg-accent/20 text-accent" : "bg-muted text-muted-foreground"}`}>
-                        {statusTranslate(status)}
-                      </span>
+              {executives.map((exec, i) => (
+                <motion.div
+                  key={exec.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25 + i * 0.05 }}
+                  className="glass-card p-5"
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <img src={exec.avatar} alt={exec.name} className="h-11 w-11 rounded-xl object-cover ring-2 ring-border/40" />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-primary text-sm">{exec.role}</h3>
+                      <p className="text-xs text-muted-foreground truncate">{exec.name}</p>
                     </div>
+                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${statusColor(exec.status)}`}>
+                      {statusLabel(exec.status)}
+                    </span>
+                  </div>
 
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        <span>2h ago</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Zap className="h-3 w-3" />
-                        <span>{expert.tasksCompleted.toLocaleString()} {t.expertProfile.tasksCompleted}</span>
-                      </div>
-                    </div>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+                    <span>{exec.performanceScore}% performance</span>
+                    <span>{exec.tasksCompleted.toLocaleString()} tasks</span>
+                  </div>
 
-                    <div className="flex gap-2">
-                      <Link
-                        to={`/expert/${expert.id}`}
-                        className="flex-1 text-center text-xs py-2 rounded-lg bg-muted hover:bg-muted/80 text-foreground transition-colors"
-                      >
-                        {t.dashboard.open}
-                      </Link>
-                      <button className="flex-1 text-xs py-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
-                        {t.dashboard.assignTask}
-                      </button>
-                    </div>
-                  </motion.div>
-                );
-              })}
+                  <div className="flex gap-2">
+                    <Link to={`/expert/${exec.id}`} className="flex-1 text-center text-xs py-2 rounded-lg bg-accent hover:bg-accent/80 text-foreground transition-colors">
+                      {t.dashboard.open}
+                    </Link>
+                    <button className="flex-1 text-xs py-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
+                      {t.dashboard.assign}
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
 
-          {/* Recent Activity */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <h2 className="text-xl font-semibold text-foreground mb-6">{t.dashboard.tasks}</h2>
+          {/* Weekly Rhythm */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="mb-10">
+            <h2 className="text-lg font-semibold text-foreground mb-4">{t.dashboard.weeklyRhythm}</h2>
+            <div className="glass-card p-6">
+              <div className="grid grid-cols-5 gap-3">
+                {weeklyRhythm.map((day, i) => (
+                  <div key={i} className="text-center p-4 rounded-xl bg-accent/50 hover:bg-accent transition-colors">
+                    <div className="flex items-center justify-center mb-2">
+                      <Calendar className="h-4 w-4 text-primary" />
+                    </div>
+                    <p className="text-xs font-semibold text-foreground mb-1">{day.day}</p>
+                    <p className="text-[11px] text-muted-foreground">{day.output}</p>
+                    <p className="text-[10px] text-primary mt-1">{day.agent}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Priority Tasks */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mb-10">
+            <h2 className="text-lg font-semibold text-foreground mb-4">{t.dashboard.topTasks}</h2>
             <div className="glass-card divide-y divide-border/50">
-              {[
-                { agent: "Lexis", task: "Contract review for Series B", time: "12 min ago", status: "Running" },
-                { agent: "Nova", task: "Q4 SEO performance report", time: "1h ago", status: "Completed" },
-                { agent: "Atlas", task: "Revenue forecast model update", time: "2h ago", status: "Completed" },
-                { agent: "Muse", task: "Brand voice guidelines v2", time: "4h ago", status: "Completed" },
-                { agent: "Aria", task: "Supply chain bottleneck analysis", time: "5h ago", status: "Completed" },
-              ].map((task, i) => (
+              {tasks.map((task, i) => (
                 <div key={i} className="flex items-center justify-between px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Zap className="h-3.5 w-3.5 text-primary" />
+                    <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <Activity className="h-3.5 w-3.5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-foreground">{task.task}</p>
+                      <p className="text-sm font-medium text-foreground">{task.title}</p>
                       <p className="text-xs text-muted-foreground">{task.agent} · {task.time}</p>
                     </div>
                   </div>
                   <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${
-                    task.status === "Running" ? "bg-primary/20 text-primary" : "bg-green-500/20 text-green-400"
+                    task.status === "In Progress" ? "bg-primary/10 text-primary" : "bg-accent text-muted-foreground"
                   }`}>
                     {task.status}
                   </span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Impact Snapshot */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
+            <h2 className="text-lg font-semibold text-foreground mb-4">{t.dashboard.impactSnapshot}</h2>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {impact.map((item, i) => (
+                <div key={item.label} className="glass-card p-5 text-center">
+                  <div className="mx-auto w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+                    <item.icon className="h-4 w-4 text-primary" />
+                  </div>
+                  <p className="text-2xl font-bold text-foreground mb-1">{item.value}</p>
+                  <p className="text-xs text-muted-foreground">{item.label}</p>
                 </div>
               ))}
             </div>
