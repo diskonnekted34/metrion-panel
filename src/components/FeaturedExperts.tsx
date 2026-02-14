@@ -29,7 +29,7 @@ const FeaturedExperts = () => {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <span className="inline-flex items-center gap-2 text-xs font-medium text-mint-500 bg-mint-200/20 px-4 py-2 rounded-full">
+          <span className="inline-flex items-center gap-2 text-xs font-medium text-accent bg-accent/10 px-4 py-2 rounded-full">
             <CheckCircle2 className="h-3.5 w-3.5" />
             {t.marketplace.banner}
           </span>
@@ -48,12 +48,12 @@ const FeaturedExperts = () => {
             >
               <Link to={`/expert/${exec.id}`} className="block glass-card p-6 h-full group">
                 <div className="flex items-start gap-4 mb-4">
-                  <img src={exec.avatar} alt={exec.name} className="h-14 w-14 rounded-[18px] object-cover ring-2 ring-border" />
+                  <img src={exec.avatar} alt={exec.name} className="h-14 w-14 rounded-[18px] object-cover ring-2 ring-white/[0.08]" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <h3 className="font-bold text-foreground text-sm">{exec.role}</h3>
+                      <h3 className="font-bold text-primary text-sm">{exec.role}</h3>
                       <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-[10px] ${
-                        exec.badge === "C-Level" ? "bg-mint-200/30 text-mint-500" : "bg-muted text-muted-foreground"
+                        exec.badge === "C-Level" ? "bg-primary/15 text-primary" : "bg-white/[0.06] text-muted-foreground"
                       }`}>
                         {exec.badge}
                       </span>
@@ -67,35 +67,34 @@ const FeaturedExperts = () => {
                 <div className="space-y-1.5 mb-4">
                   {exec.outputs.slice(0, 2).map((output) => (
                     <div key={output} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-mint-400 shrink-0 mt-0.5" />
+                      <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
                       <span className="text-xs text-muted-foreground">{output}</span>
                     </div>
                   ))}
                 </div>
 
-                {/* Hover expand: example output */}
                 <motion.div
                   initial={false}
                   animate={{ height: hoveredId === exec.id ? "auto" : 0, opacity: hoveredId === exec.id ? 1 : 0 }}
                   transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
                   className="overflow-hidden"
                 >
-                  <div className="p-3 rounded-[14px] bg-muted/50 mb-4">
+                  <div className="p-3 rounded-[14px] bg-white/[0.03] mb-4">
                     <p className="text-[11px] text-muted-foreground italic">"{exec.outputs[2] || exec.tagline}"</p>
                   </div>
                 </motion.div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-border/60">
+                <div className="flex items-center justify-between pt-4 border-t border-white/[0.06]">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-medium text-foreground">{exec.performanceScore}%</span>
                     <span className="text-xs text-muted-foreground">performance</span>
                   </div>
-                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-[10px] bg-mint-200/20 text-mint-500">
+                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-[10px] bg-accent/10 text-accent">
                     KPI: {exec.kpis[0]}
                   </span>
                 </div>
 
-                <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-mint-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
                   {t.marketplace.viewRole} <ArrowRight className="h-3.5 w-3.5" />
                 </div>
 

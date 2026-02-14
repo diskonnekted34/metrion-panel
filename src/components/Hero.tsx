@@ -17,9 +17,10 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen gradient-hero flex items-center overflow-hidden pt-16">
-      {/* Animated gradient blobs */}
-      <div className="absolute top-[10%] left-[15%] w-[500px] h-[500px] rounded-full bg-gradient-to-br from-mint-200/30 to-mint-400/20 blur-[120px] blob-move pointer-events-none" />
-      <div className="absolute bottom-[10%] right-[10%] w-[400px] h-[400px] rounded-full bg-gradient-to-tl from-mint-300/25 to-mint-200/15 blur-[100px] blob-move-2 pointer-events-none" />
+      {/* Aurora-like gradient blobs */}
+      <div className="absolute top-[5%] left-[10%] w-[600px] h-[600px] rounded-full bg-primary/[0.08] blur-[150px] blob-move pointer-events-none" />
+      <div className="absolute bottom-[15%] right-[5%] w-[400px] h-[400px] rounded-full bg-accent/[0.06] blur-[120px] blob-move-2 pointer-events-none" />
+      <div className="absolute top-[40%] right-[30%] w-[300px] h-[300px] rounded-full bg-primary/[0.05] blur-[100px] pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -30,7 +31,7 @@ const Hero = () => {
               transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
               className="inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6"
             >
-              <Sparkles className="h-3.5 w-3.5 text-mint-400" />
+              <Sparkles className="h-3.5 w-3.5 text-primary" />
               {t.hero.badge}
             </motion.div>
 
@@ -61,12 +62,12 @@ const Hero = () => {
             >
               <Link
                 to="/marketplace"
-                className="inline-flex items-center gap-2 rounded-[20px] btn-glow px-6 py-3 text-sm font-medium text-foreground transition-all hover:opacity-90 active:scale-[0.98]"
+                className="btn-primary inline-flex items-center gap-2 px-6 py-3 active:scale-[0.98]"
               >
                 {t.hero.cta1}
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link to="/pricing" className="inline-flex items-center gap-2 rounded-[20px] glass px-6 py-3 text-sm font-medium text-foreground transition-all hover:border-border active:scale-[0.98]">
+              <Link to="/pricing" className="inline-flex items-center gap-2 rounded-[20px] glass px-6 py-3 text-sm font-medium text-foreground transition-all hover:border-white/[0.18] active:scale-[0.98]">
                 {t.hero.cta2}
               </Link>
             </motion.div>
@@ -85,7 +86,7 @@ const Hero = () => {
                 <motion.line
                   key={i}
                   x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2}
-                  stroke="rgba(150, 209, 182, 0.35)"
+                  stroke="hsla(210, 80%, 55%, 0.25)"
                   strokeWidth="1"
                   strokeDasharray="6 4"
                   initial={{ opacity: 0 }}
@@ -113,17 +114,17 @@ const Hero = () => {
                 }}
               >
                 <div className="flex items-center gap-3 mb-2">
-                  <img src={exec.avatar} alt={exec.name} className="h-9 w-9 rounded-[14px] object-cover ring-2 ring-border" />
+                  <img src={exec.avatar} alt={exec.name} className="h-9 w-9 rounded-[14px] object-cover ring-2 ring-white/[0.08]" />
                   <div>
-                    <p className="text-xs font-bold text-foreground">{exec.role}</p>
+                    <p className="text-xs font-bold text-primary">{exec.role}</p>
                     <p className="text-[11px] text-muted-foreground">{exec.name}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className={`text-[10px] font-medium px-2 py-0.5 rounded-[10px] ${
-                    exec.status === "Monitoring" ? "bg-mint-200/30 text-mint-500" :
-                    exec.status === "Alerting" ? "bg-destructive/10 text-destructive" :
-                    "bg-muted text-muted-foreground"
+                    exec.status === "Monitoring" ? "bg-accent/15 text-accent" :
+                    exec.status === "Alerting" ? "bg-destructive/15 text-destructive" :
+                    "bg-white/[0.06] text-muted-foreground"
                   }`}>
                     {exec.status}
                   </span>

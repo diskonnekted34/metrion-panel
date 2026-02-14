@@ -73,7 +73,6 @@ const FeatureTabs = () => {
           </h2>
         </motion.div>
 
-        {/* Tab bar */}
         <div className="flex items-center justify-center gap-2 mb-10">
           {tabs.map((tab) => (
             <button
@@ -100,7 +99,6 @@ const FeatureTabs = () => {
           ))}
         </div>
 
-        {/* Content */}
         <AnimatePresence mode="wait">
           <motion.div
             key={active}
@@ -111,8 +109,8 @@ const FeatureTabs = () => {
             className="glass-bento p-10"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-[16px] bg-gradient-to-br from-mint-200/40 to-mint-400/30 flex items-center justify-center">
-                <currentTab.icon className="h-5 w-5 text-mint-500" />
+              <div className="w-10 h-10 rounded-[16px] bg-primary/10 flex items-center justify-center">
+                <currentTab.icon className="h-5 w-5 text-primary" />
               </div>
               <h3 className="text-xl font-semibold text-foreground">{tabLabels[active][lang]}</h3>
             </div>
@@ -123,9 +121,9 @@ const FeatureTabs = () => {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
-                  className="flex items-start gap-3 p-4 rounded-[16px] bg-white/40"
+                  className="flex items-start gap-3 p-4 rounded-[16px] bg-white/[0.03]"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-mint-400 mt-1.5 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0" />
                   <span className="text-sm text-muted-foreground">{f}</span>
                 </motion.div>
               ))}

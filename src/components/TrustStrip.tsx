@@ -16,7 +16,7 @@ const TrustStrip = () => {
   const doubled = [...items, ...items];
 
   return (
-    <section className="py-8 px-6 border-y border-border/60 overflow-hidden bg-white/40">
+    <section className="py-8 px-6 border-y border-white/[0.06] overflow-hidden">
       <div className="relative">
         <motion.div
           initial={{ opacity: 0 }}
@@ -27,7 +27,7 @@ const TrustStrip = () => {
         >
           {doubled.map((item, i) => (
             <div key={`${item.label}-${i}`} className="flex items-center gap-2.5 text-sm text-muted-foreground whitespace-nowrap">
-              <item.icon className="h-4 w-4 text-mint-400" />
+              <item.icon className="h-4 w-4 text-primary" />
               <span className="font-medium">{item.label}</span>
             </div>
           ))}
