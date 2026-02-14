@@ -17,10 +17,10 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen gradient-hero flex items-center overflow-hidden pt-16">
-      {/* Aurora-like gradient blobs */}
-      <div className="absolute top-[5%] left-[10%] w-[600px] h-[600px] rounded-full bg-primary/[0.08] blur-[150px] blob-move pointer-events-none" />
-      <div className="absolute bottom-[15%] right-[5%] w-[400px] h-[400px] rounded-full bg-accent/[0.06] blur-[120px] blob-move-2 pointer-events-none" />
-      <div className="absolute top-[40%] right-[30%] w-[300px] h-[300px] rounded-full bg-primary/[0.05] blur-[100px] pointer-events-none" />
+      {/* Subtle gradient blobs */}
+      <div className="absolute top-[5%] left-[10%] w-[600px] h-[600px] rounded-full blur-[150px] blob-move pointer-events-none" style={{ background: "rgba(76,141,255,0.05)" }} />
+      <div className="absolute bottom-[15%] right-[5%] w-[400px] h-[400px] rounded-full blur-[120px] blob-move-2 pointer-events-none" style={{ background: "rgba(126,242,198,0.03)" }} />
+      <div className="absolute top-[40%] right-[30%] w-[300px] h-[300px] rounded-full blur-[100px] pointer-events-none" style={{ background: "rgba(76,141,255,0.03)" }} />
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -67,7 +67,7 @@ const Hero = () => {
                 {t.hero.cta1}
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link to="/pricing" className="inline-flex items-center gap-2 rounded-2xl glass px-6 py-3 text-sm font-medium text-foreground transition-all hover:border-white/[0.18] active:scale-[0.98]">
+              <Link to="/pricing" className="inline-flex items-center gap-2 rounded-2xl glass px-6 py-3 text-sm font-medium text-foreground transition-all hover:border-primary/20 active:scale-[0.98]">
                 {t.hero.cta2}
               </Link>
             </motion.div>
@@ -86,7 +86,7 @@ const Hero = () => {
                 <motion.line
                   key={i}
                   x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2}
-                  stroke="hsla(210, 80%, 55%, 0.25)"
+                  stroke="rgba(76,141,255,0.15)"
                   strokeWidth="1"
                   strokeDasharray="6 4"
                   initial={{ opacity: 0 }}
@@ -97,24 +97,25 @@ const Hero = () => {
               ))}
             </svg>
 
-            {/* Floating expert cards */}
+            {/* Floating OS-style cards */}
             {executives.slice(0, 5).map((exec, i) => (
               <motion.div
                 key={exec.id}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: 0.4 + i * 0.1, ease: [0.2, 0.8, 0.2, 1] }}
-                whileHover={{ scale: 1.04, rotateY: 3, rotateX: -2 }}
+                whileHover={{ scale: 1.04 }}
                 className="absolute glass-card p-4 w-52 z-10"
                 style={{
                   top: cardPositions[i].top,
                   right: cardPositions[i].right,
                   transform: `rotate(${cardPositions[i].rotate}deg)`,
                   animation: `float 6s ease-in-out ${i * 1.2}s infinite`,
+                  boxShadow: "0 0 1px rgba(76,141,255,0.15), 0 4px 24px rgba(0,0,0,0.4)",
                 }}
               >
                 <div className="flex items-center gap-3 mb-2">
-                  <img src={exec.avatar} alt={exec.name} className="h-9 w-9 rounded-2xl object-cover ring-2 ring-white/[0.08]" />
+                  <img src={exec.avatar} alt={exec.name} className="h-9 w-9 rounded-2xl object-cover ring-1 ring-border" />
                   <div>
                     <p className="text-xs font-bold text-primary">{exec.role}</p>
                     <p className="text-[11px] text-muted-foreground">{exec.name}</p>
@@ -122,9 +123,9 @@ const Hero = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className={`text-[10px] font-medium px-2 py-0.5 rounded-2xl ${
-                    exec.status === "Monitoring" ? "bg-accent/15 text-accent" :
+                    exec.status === "Monitoring" ? "bg-success/15 text-success" :
                     exec.status === "Alerting" ? "bg-destructive/15 text-destructive" :
-                    "bg-white/[0.06] text-muted-foreground"
+                    "bg-secondary text-muted-foreground"
                   }`}>
                     {exec.status}
                   </span>
@@ -135,7 +136,7 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Soft vignette edges */}
+      {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
     </section>
   );

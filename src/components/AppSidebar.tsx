@@ -19,7 +19,7 @@ const AppSidebar = () => {
   if (isMobile) return null;
 
   return (
-    <aside className="fixed left-0 top-0 bottom-0 z-40 w-[220px] flex flex-col glass-strong border-r border-white/[0.08]">
+    <aside className="fixed left-0 top-0 bottom-0 z-40 w-[220px] flex flex-col glass-strong border-r border-border">
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 h-16 shrink-0">
         <Link to="/" className="flex items-center gap-2.5">
@@ -41,13 +41,13 @@ const AppSidebar = () => {
               className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm transition-all duration-200 group relative ${
                 isActive
                   ? "text-primary bg-primary/10"
-                  : "text-muted-foreground hover:text-foreground hover:bg-white/[0.04]"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
               }`}
             >
               <item.icon className={`h-[18px] w-[18px] shrink-0 ${isActive ? "text-primary" : ""}`} />
               <span className="font-medium">{item.label}</span>
               {isActive && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary shadow-[0_0_8px_hsl(210_80%_55%/0.5)]" />
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 8px rgba(76,141,255,0.4)" }} />
               )}
             </Link>
           );
@@ -55,7 +55,7 @@ const AppSidebar = () => {
       </nav>
 
       {/* Bottom */}
-      <div className="px-5 py-4 border-t border-white/[0.06]">
+      <div className="px-5 py-4 border-t border-border">
         <Link to="/pricing" className="btn-primary w-full text-center block px-4 py-2.5 text-sm">
           Planları Gör
         </Link>

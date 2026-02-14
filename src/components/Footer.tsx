@@ -4,7 +4,7 @@ const Footer = () => {
   const { t } = useLanguage();
 
   return (
-    <footer className="py-16 px-6 border-t border-white/[0.06]">
+    <footer className="py-16 px-6 border-t border-border">
       <div className="container mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
