@@ -7,6 +7,7 @@ import { LanguageProvider } from "@/i18n/LanguageContext";
 import { RBACProvider } from "@/contexts/RBACContext";
 import { PackProvider } from "@/contexts/PackContext";
 import { IntegrationProvider } from "@/contexts/IntegrationContext";
+import { ActionModeProvider } from "@/contexts/ActionModeContext";
 import Index from "./pages/Index";
 import ExpertProfile from "./pages/ExpertProfile";
 import Dashboard from "./pages/Dashboard";
@@ -22,6 +23,7 @@ import AgentWorkspace from "./pages/AgentWorkspace";
 import Departments from "./pages/Departments";
 import DepartmentDetail from "./pages/DepartmentDetail";
 import DataSources from "./pages/DataSources";
+import ActionCenter from "./pages/ActionCenter";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,7 @@ const App = () => (
         <RBACProvider>
         <PackProvider>
         <IntegrationProvider>
+        <ActionModeProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -53,12 +56,14 @@ const App = () => (
               <Route path="/marketplace" element={<Marketplace />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/data-sources" element={<DataSources />} />
+              <Route path="/action-center" element={<ActionCenter />} />
               <Route path="/expert/:id" element={<ExpertProfile />} />
               <Route path="/workspace/:agentId" element={<AgentWorkspace />} />
 
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
+        </ActionModeProvider>
         </IntegrationProvider>
         </PackProvider>
         </RBACProvider>
