@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Bell, ListTodo, Users, BarChart3, Store } from "lucide-react";
+import { LayoutDashboard, Bell, ListTodo, Users, BarChart3, Store, Building2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import { alertsData } from "@/data/alerts";
 
 const bottomItems = [
   { label: "Genel Bakış", icon: LayoutDashboard, path: "/dashboard" },
+  { label: "Departmanlar", icon: Building2, path: "/departments" },
   { label: "Uyarılar", icon: Bell, path: "/alerts" },
   { label: "Görevler", icon: ListTodo, path: "/tasks" },
   { label: "Ekip", icon: Users, path: "/team" },
-  { label: "Raporlar", icon: BarChart3, path: "/reports" },
 ];
 
 const BottomNav = () => {
@@ -61,6 +61,9 @@ const BottomNav = () => {
               <Link to="/marketplace" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-secondary">
                 <Store className="h-4 w-4 text-muted-foreground" /> Pazar Yeri
               </Link>
+              <Link to="/reports" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-secondary">
+                <BarChart3 className="h-4 w-4 text-muted-foreground" /> Raporlar
+              </Link>
               <Link to="/settings" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-secondary">
                 <BarChart3 className="h-4 w-4 text-muted-foreground" /> Ayarlar
               </Link>
@@ -76,7 +79,9 @@ const BottomNav = () => {
       <nav className="fixed bottom-0 left-0 right-0 z-50 glass-strong border-t border-border pb-[env(safe-area-inset-bottom)]">
         <div className="flex items-center justify-around h-14">
           {bottomItems.map((item) => {
-            const isActive = location.pathname === item.path || (item.path === "/alerts" && location.pathname.startsWith("/alerts/"));
+            const isActive = location.pathname === item.path
+              || (item.path === "/alerts" && location.pathname.startsWith("/alerts/"))
+              || (item.path === "/departments" && location.pathname.startsWith("/departments/"));
             return (
               <Link
                 key={item.path}

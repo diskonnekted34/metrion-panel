@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, ListTodo, Bell, BarChart3, Store, Settings } from "lucide-react";
+import { LayoutDashboard, Users, ListTodo, Bell, BarChart3, Store, Settings, Building2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
+import ViewModeSwitcher from "./ViewModeSwitcher";
 import { alertsData } from "@/data/alerts";
 
 const navItems = [
   { label: "Genel Bakış", icon: LayoutDashboard, path: "/dashboard" },
+  { label: "Departmanlar", icon: Building2, path: "/departments" },
   { label: "AI Ekibim", icon: Users, path: "/team" },
   { label: "Görevler", icon: ListTodo, path: "/tasks" },
   { label: "Uyarılar", icon: Bell, path: "/alerts" },
@@ -48,10 +50,18 @@ const AppSidebar = () => {
           </button>
         </div>
 
+        {/* View Mode Switcher */}
+        <div className="px-3 pb-3">
+          <ViewModeSwitcher />
+        </div>
+
         {/* Nav */}
-        <nav className="flex-1 px-3 py-4 space-y-1">
+        <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
-            const isActive = location.pathname === item.path || (item.path === "/team" && location.pathname.startsWith("/workspace")) || (item.path === "/alerts" && location.pathname.startsWith("/alerts/"));
+            const isActive = location.pathname === item.path
+              || (item.path === "/team" && location.pathname.startsWith("/workspace"))
+              || (item.path === "/alerts" && location.pathname.startsWith("/alerts/"))
+              || (item.path === "/departments" && location.pathname.startsWith("/departments/"));
             return (
               <Link
                 key={item.path}
