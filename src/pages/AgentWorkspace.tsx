@@ -2,51 +2,15 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Activity, AlertTriangle, CheckCircle2, Clock, ChevronDown, ChevronRight,
-  FileText, Upload, Calendar, MessageSquare, Send, Plus, Filter
+  Activity, Clock, ChevronDown, ChevronRight,
+  FileText, Calendar, MessageSquare, Send, Plus, Save, Users
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import TaskCreationModal from "@/components/TaskCreationModal";
-import { executives } from "@/data/experts";
+import { allExperts } from "@/data/experts";
+import { agentWorkspaceConfigs } from "@/data/agentModules";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-// Agent-specific modules
-const agentModules: Record<string, { title: string; kpis: { label: string; value: string; trend: string }[]; recommendations: string[] }[]> = {
-  cfo: [
-    { title: "Marjin Analizi", kpis: [{ label: "Net Marjin", value: "12.4%", trend: "+1.2%" }, { label: "Brüt Marjin", value: "38.7%", trend: "-0.5%" }], recommendations: ["Düşük marjinli 3 ürünü fiyat revizyonuna al", "Tedarikçi B ile yeniden müzakere başlat"] },
-    { title: "Başa Baş Analizi", kpis: [{ label: "Başa Baş ROAS", value: "2.8x", trend: "stabil" }, { label: "Başa Baş CPA", value: "₺142", trend: "+₺8" }], recommendations: ["CPA ₺150 üzerine çıkarsa kampanya C'yi durdur", "ROAS hedefini 3.0x'e yükselt"] },
-    { title: "Nakit Akışı Tahmini", kpis: [{ label: "4 Hafta Tahmini", value: "₺2.4M", trend: "+₺180K" }, { label: "Nakit Döngüsü", value: "34 gün", trend: "-2 gün" }], recommendations: ["Hafta 3'te nakit sıkışıklığı riski — erken tahsilat başlat"] },
-    { title: "Risk Özeti", kpis: [{ label: "Açık Riskler", value: "3", trend: "+1" }, { label: "Çözülen", value: "7", trend: "" }], recommendations: ["Tedarikçi A sözleşme yenileme gecikmiş — hukuk masasına yönlendir"] },
-  ],
-  cmo: [
-    { title: "Kampanya Performansı", kpis: [{ label: "ROAS", value: "3.2x", trend: "-0.4x" }, { label: "CTR", value: "2.8%", trend: "+0.3%" }], recommendations: ["Kreatif A yorulma sinyali — yeni varyasyon üret", "Kanal D bütçesini %15 azalt"] },
-    { title: "Kreatif Öneriler", kpis: [{ label: "Aktif Kreatif", value: "24", trend: "" }, { label: "Yorulan", value: "6", trend: "+2" }], recommendations: ["Video formatına geçiş test et", "UGC tarzı kreatifler %40 daha yüksek CVR gösteriyor"] },
-    { title: "Funnel Analizi", kpis: [{ label: "Üst Funnel CVR", value: "4.2%", trend: "+0.5%" }, { label: "Alt Funnel CVR", value: "1.8%", trend: "-0.2%" }], recommendations: ["Checkout sayfası optimizasyonu öncelikli", "Retargeting segmentini güncelle"] },
-    { title: "Optimizasyon Planı", kpis: [{ label: "Test Sayısı", value: "8", trend: "" }, { label: "Kazanan", value: "5", trend: "" }], recommendations: ["A/B test hızını artır — haftalık 3 test hedefle"] },
-  ],
-  ceo: [
-    { title: "Haftalık Öncelikler", kpis: [{ label: "Öncelik Tamamlama", value: "67%", trend: "+12%" }, { label: "Karar Bekleniyor", value: "3", trend: "" }], recommendations: ["Fiyatlama kararı bu hafta tamamlanmalı", "Q1 OKR revizyonu gerekli"] },
-    { title: "Darboğaz Tespiti", kpis: [{ label: "Aktif Darboğaz", value: "2", trend: "-1" }, { label: "Çözüm Süresi", value: "3.2 gün", trend: "" }], recommendations: ["Tedarik zinciri gecikmesi operasyonu etkiliyor", "Pazarlama-satış alignment toplantısı planla"] },
-  ],
-  cto: [
-    { title: "Otomasyon Haritası", kpis: [{ label: "Otomasyon Fırsatı", value: "14", trend: "+3" }, { label: "Uygulanan", value: "8", trend: "+2" }], recommendations: ["Fatura işleme otomasyonu en yüksek ROI", "CRM entegrasyonu tamamlanmalı"] },
-    { title: "Sistem Sağlığı", kpis: [{ label: "Uptime", value: "99.7%", trend: "" }, { label: "Hata Oranı", value: "0.3%", trend: "-0.1%" }], recommendations: ["API yanıt süresi optimize edilmeli", "Yedekleme politikası güncellenmeli"] },
-  ],
-  cso: [
-    { title: "Büyüme Yol Haritası", kpis: [{ label: "Deney Sayısı", value: "12", trend: "+4" }, { label: "Başarı Oranı", value: "58%", trend: "+8%" }], recommendations: ["Referans programı test et", "Yeni kanal: LinkedIn organik büyüme"] },
-    { title: "Funnel Optimizasyonu", kpis: [{ label: "CAC", value: "₺89", trend: "-₺12" }, { label: "LTV/CAC", value: "4.2x", trend: "+0.3x" }], recommendations: ["Onboarding akışı iyileştirmesi %20 retention artışı sağlayabilir"] },
-  ],
-  legal: [
-    { title: "Sözleşme Risk Analizi", kpis: [{ label: "Açık Sözleşme", value: "5", trend: "" }, { label: "Yüksek Risk", value: "2", trend: "+1" }], recommendations: ["Tedarikçi A sözleşmesi yenileme öncesi revizyon gerekli", "KVKK uyumluluk kontrolü tamamlanmalı"] },
-  ],
-};
-
-// Default modules for agents without specific ones
-const defaultModules = [
-  { title: "Performans Özeti", kpis: [{ label: "Tamamlanan Görev", value: "24", trend: "+6" }, { label: "Başarı Oranı", value: "92%", trend: "+3%" }], recommendations: ["Mevcut görevlere devam et", "Veri kaynağı bağlantısını kontrol et"] },
-];
 
 const taskTimeline = [
   { title: "ROAS düşüşü analizi", severity: "critical", status: "Aktif", eta: "2 saat", source: "İçgörü" },
@@ -57,9 +21,9 @@ const taskTimeline = [
 ];
 
 const chatMessages = [
-  { role: "agent" as const, text: "Q4 kampanya performans analizi tamamlandı. ROAS 3.2x → 2.8x düşüş tespit edildi. Kreatif yorulma ve hedef kitle doygunluğu ana faktörler." },
-  { role: "user" as const, text: "Hangi kanalda en fazla düşüş var?" },
-  { role: "agent" as const, text: "Meta Ads kanalında %18 düşüş. Google Ads stabil. TikTok %12 artış gösteriyor. Meta bütçesinin %15'ini TikTok'a kaydırmanızı öneriyorum." },
+  { role: "agent" as const, text: "Yapılandırılmış analiz tamamlandı. Sonuçlar modüller halinde yukarıda sunulmuştur. Detaylı inceleme için herhangi bir modülü genişletin." },
+  { role: "user" as const, text: "Hangi alanda en fazla risk var?" },
+  { role: "agent" as const, text: "Risk özeti modülünde detaylar mevcut. Öncelikli 2 aksiyon önerilmiştir — görev oluşturmak için 'Göreve Dönüştür' butonunu kullanın." },
 ];
 
 const severityColor = (s: string) => {
@@ -77,8 +41,12 @@ const severityChip = (s: string) => {
 const AgentWorkspace = () => {
   const { agentId } = useParams<{ agentId: string }>();
   const isMobile = useIsMobile();
-  const agent = executives.find(e => e.id === agentId) || executives[0];
-  const modules = agentModules[agent.id] || defaultModules;
+  const agent = allExperts.find(e => e.id === agentId) || allExperts[0];
+  const config = agentWorkspaceConfigs[agent.id];
+  const snapshot = config?.snapshot || [];
+  const modules = config?.modules || [
+    { title: "Performans Özeti", kpis: [{ label: "Tamamlanan Görev", value: "24", trend: "+6" }, { label: "Başarı Oranı", value: "92%", trend: "+3%" }], recommendations: ["Mevcut görevlere devam et", "Veri kaynağı bağlantısını kontrol et"] },
+  ];
 
   const [expandedModule, setExpandedModule] = useState<number>(0);
   const [chatOpen, setChatOpen] = useState(false);
@@ -86,6 +54,13 @@ const AgentWorkspace = () => {
   const [taskModalOpen, setTaskModalOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(!isMobile);
   const [chatInput, setChatInput] = useState("");
+
+  const statusLabel = (s: string) => {
+    if (s === "Monitoring") return "İzleniyor";
+    if (s === "Running Task") return "Görev Çalışıyor";
+    if (s === "Alerting") return "Uyarı";
+    return "Boşta";
+  };
 
   const statusStyle = (s: string) => {
     if (s === "Alerting") return "text-destructive";
@@ -95,6 +70,11 @@ const AgentWorkspace = () => {
   };
 
   const filteredTasks = taskFilter === "all" ? taskTimeline : taskTimeline.filter(t => t.severity === taskFilter);
+
+  // Collaboration log — role-specific
+  const collaborationLogs = agent.collaborations?.slice(0, 3).map(c => c) || [
+    "Ajanlar arası veri paylaşımı aktif.",
+  ];
 
   // LEFT PANEL — Task Timeline
   const TaskPanel = () => (
@@ -141,7 +121,7 @@ const AgentWorkspace = () => {
     <div className="space-y-4">
       {/* Agent header */}
       <div className="glass-card p-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-3">
             <div className="relative">
               <img src={agent.avatar} alt={agent.role} className="h-10 w-10 rounded-xl object-cover" />
@@ -150,17 +130,20 @@ const AgentWorkspace = () => {
             <div>
               <h2 className="text-base font-bold text-foreground">{agent.role}</h2>
               <div className="flex items-center gap-2">
-                <span className={`text-[10px] font-medium ${statusStyle(agent.status)}`}>{agent.status === "Monitoring" ? "İzleniyor" : agent.status === "Running Task" ? "Görev Çalışıyor" : agent.status === "Alerting" ? "Uyarı" : "Boşta"}</span>
+                <span className={`text-[10px] font-medium ${statusStyle(agent.status)}`}>{statusLabel(agent.status)}</span>
                 <span className="text-[10px] text-muted-foreground">• Skor: {agent.performanceScore}</span>
               </div>
             </div>
           </div>
-          <div className="flex gap-1.5">
+          <div className="flex gap-1.5 flex-wrap">
             <Button size="sm" className="h-7 text-[10px] gap-1" onClick={() => setTaskModalOpen(true)}>
               <Plus className="h-3 w-3" /> Görev Ata
             </Button>
             <Button size="sm" variant="outline" className="h-7 text-[10px] gap-1">
-              <FileText className="h-3 w-3" /> Rapor
+              <Save className="h-3 w-3" /> Rapor Kaydet
+            </Button>
+            <Button size="sm" variant="outline" className="h-7 text-[10px] gap-1">
+              <Users className="h-3 w-3" /> Ajana Ata
             </Button>
             <Button size="sm" variant="outline" className="h-7 text-[10px] gap-1 hidden sm:flex">
               <Calendar className="h-3 w-3" /> Planla
@@ -168,6 +151,23 @@ const AgentWorkspace = () => {
           </div>
         </div>
       </div>
+
+      {/* Snapshot KPI Bar */}
+      {snapshot.length > 0 && (
+        <div className="flex gap-3 overflow-x-auto pb-1">
+          {snapshot.map((kpi, i) => (
+            <div key={i} className="glass-card p-3 min-w-[140px] flex-1">
+              <p className="text-[10px] text-muted-foreground">{kpi.label}</p>
+              <p className="text-lg font-bold text-foreground mt-0.5">{kpi.value}</p>
+              {kpi.trend && (
+                <p className={`text-[10px] mt-0.5 ${kpi.trend.startsWith("+") ? "text-accent" : kpi.trend.startsWith("-") ? "text-destructive" : "text-muted-foreground"}`}>
+                  {kpi.trend}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Structured Analysis Modules */}
       <div className="space-y-2">
@@ -194,9 +194,9 @@ const AgentWorkspace = () => {
                 >
                   <div className="px-4 pb-4 space-y-3">
                     {/* KPIs */}
-                    <div className="flex gap-3">
+                    <div className="flex gap-3 overflow-x-auto">
                       {mod.kpis.map((kpi, k) => (
-                        <div key={k} className="bg-white/[0.03] rounded-xl p-3 flex-1">
+                        <div key={k} className="bg-white/[0.03] rounded-xl p-3 flex-1 min-w-[100px]">
                           <p className="text-[10px] text-muted-foreground">{kpi.label}</p>
                           <p className="text-lg font-bold text-foreground">{kpi.value}</p>
                           {kpi.trend && <p className={`text-[10px] ${kpi.trend.startsWith("+") ? "text-accent" : kpi.trend.startsWith("-") ? "text-destructive" : "text-muted-foreground"}`}>{kpi.trend}</p>}
@@ -213,9 +213,12 @@ const AgentWorkspace = () => {
                       ))}
                     </div>
                     {/* Actions */}
-                    <div className="flex gap-2 pt-1">
+                    <div className="flex gap-2 pt-1 flex-wrap">
                       <Button size="sm" variant="outline" className="h-7 text-[10px]">Öneriyi Uygula</Button>
                       <Button size="sm" variant="ghost" className="h-7 text-[10px] text-primary" onClick={() => setTaskModalOpen(true)}>Göreve Dönüştür</Button>
+                      <Button size="sm" variant="ghost" className="h-7 text-[10px] text-muted-foreground">
+                        <Save className="h-3 w-3 mr-1" /> Rapor Olarak Kaydet
+                      </Button>
                     </div>
                   </div>
                 </motion.div>
@@ -229,11 +232,7 @@ const AgentWorkspace = () => {
       <div className="glass-card p-4 space-y-2">
         <h3 className="text-xs font-semibold text-foreground">İşbirliği Günlüğü</h3>
         <div className="space-y-1.5">
-          {[
-            "CMO, CFO'dan marjin doğrulaması talep etti.",
-            "Hukuk Masası uyumluluk riski işaretledi.",
-            "CTO otomasyon fırsatını onayladı.",
-          ].map((log, i) => (
+          {collaborationLogs.map((log, i) => (
             <div key={i} className="flex items-center gap-2 text-[11px] text-muted-foreground">
               <div className="h-1 w-1 rounded-full bg-primary/50" />
               <span>{log}</span>
@@ -285,7 +284,6 @@ const AgentWorkspace = () => {
       <TaskCreationModal open={taskModalOpen} onOpenChange={setTaskModalOpen} prefillAgent={agent.id} />
 
       {isMobile ? (
-        /* MOBILE LAYOUT */
         <div className="p-4 space-y-4">
           <OutputPanel />
           <div className="glass-card p-4">
@@ -306,17 +304,13 @@ const AgentWorkspace = () => {
           )}
         </div>
       ) : (
-        /* DESKTOP 3-COLUMN LAYOUT */
         <div className="flex h-[calc(100vh-0px)]">
-          {/* Left - Task Timeline */}
           <div className="w-[260px] shrink-0 border-r border-white/[0.06] p-4 overflow-y-auto">
             <TaskPanel />
           </div>
-          {/* Center - Structured Output */}
           <div className="flex-1 p-6 overflow-y-auto">
             <OutputPanel />
           </div>
-          {/* Right - Chat */}
           <div className="w-[280px] shrink-0 border-l border-white/[0.06] p-4 flex flex-col">
             {!chatOpen ? (
               <button
