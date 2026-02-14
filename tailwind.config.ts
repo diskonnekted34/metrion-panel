@@ -31,6 +31,7 @@ export default {
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
+          dark: "hsl(var(--primary-dark))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -67,6 +68,14 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        mint: {
+          50: "#f0faf4",
+          100: "#dcf5e5",
+          200: "#BCEB93",
+          300: "#A9DDA6",
+          400: "#96D1B6",
+          500: "#7bc48f",
+        },
       },
       keyframes: {
         "accordion-down": {
@@ -78,8 +87,8 @@ export default {
           to: { height: "0" },
         },
         "fade-up": {
-          "0%": { opacity: "0", transform: "translateY(20px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
+          "0%": { opacity: "0", transform: "translateY(16px)", filter: "blur(4px)" },
+          "100%": { opacity: "1", transform: "translateY(0)", filter: "blur(0)" },
         },
         "fade-in": {
           "0%": { opacity: "0" },
@@ -95,17 +104,22 @@ export default {
         },
         "pulse-line": {
           "0%, 100%": { opacity: "0.3" },
-          "50%": { opacity: "0.7" },
+          "50%": { opacity: "0.6" },
+        },
+        "count-up": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-up": "fade-up 0.6s ease-out forwards",
+        "fade-up": "fade-up 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards",
         "fade-in": "fade-in 0.4s ease-out forwards",
         "scale-in": "scale-in 0.3s ease-out forwards",
         shimmer: "shimmer 2s linear infinite",
         "pulse-line": "pulse-line 3s ease-in-out infinite",
+        "count-up": "count-up 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards",
       },
     },
   },
