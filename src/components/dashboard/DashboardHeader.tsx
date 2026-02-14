@@ -17,8 +17,8 @@ const DashboardHeader = () => {
   if (isMobile) {
     return (
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground mb-1">Company Overview</h1>
-        <p className="text-sm text-muted-foreground">Executive monitoring and cross-department intelligence.</p>
+        <h1 className="text-2xl font-bold text-foreground mb-1">Şirket Genel Bakış</h1>
+        <p className="text-sm text-muted-foreground">Yönetici izleme ve departmanlar arası istihbarat.</p>
       </div>
     );
   }
@@ -27,8 +27,8 @@ const DashboardHeader = () => {
     <>
       <div className="flex items-start justify-between mb-10">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-1">Company Overview</h1>
-          <p className="text-muted-foreground text-sm">Executive monitoring and cross-department intelligence.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-1">Şirket Genel Bakış</h1>
+          <p className="text-muted-foreground text-sm">Yönetici izleme ve departmanlar arası istihbarat.</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -58,8 +58,8 @@ const DashboardHeader = () => {
       {isTrial && (
         <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-warning/10 border border-warning/15 mb-6">
           <Clock className="h-4 w-4 text-warning shrink-0" />
-          <span className="text-xs font-medium text-warning">Trial: {trialDaysRemaining} days remaining</span>
-          <span className="text-[10px] text-muted-foreground ml-1">— Full access to all features.</span>
+          <span className="text-xs font-medium text-warning">Deneme: {trialDaysRemaining} gün kaldı</span>
+          <span className="text-[10px] text-muted-foreground ml-1">— Tüm özelliklere tam erişim.</span>
         </div>
       )}
 

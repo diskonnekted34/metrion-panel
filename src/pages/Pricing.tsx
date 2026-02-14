@@ -9,11 +9,11 @@ import { tiers, addonPacks } from "@/data/packs";
 const tierIcons = [Crown, Zap, Rocket];
 
 const faqs = [
-  { q: "Is there a free plan?", a: "No. All plans include a 30-day free trial with full access. No free-forever plan." },
-  { q: "Do I need to book a demo?", a: "No. The platform is fully self-serve. You can optionally book a strategy call from your dashboard." },
-  { q: "Can I cancel anytime?", a: "Yes. Cancel from Settings > Subscription at any time. No long-term contracts." },
-  { q: "Is my data secure?", a: "Yes. All data is encrypted at rest and in transit. Enterprise-grade security standards." },
-  { q: "Can I add packs on top of my tier?", a: "Yes. Optional expansion packs can be activated on any tier for additional capabilities." },
+  { q: "Ücretsiz plan var mı?", a: "Hayır. Tüm planlarda tam erişimli 30 günlük ücretsiz deneme mevcuttur. Süresiz ücretsiz plan yoktur." },
+  { q: "Demo randevusu almam gerekiyor mu?", a: "Hayır. Platform tamamen self-servis çalışır. İsterseniz kontrol panelinizden strateji görüşmesi ayarlayabilirsiniz." },
+  { q: "İstediğim zaman iptal edebilir miyim?", a: "Evet. Ayarlar > Abonelik bölümünden istediğiniz zaman iptal edebilirsiniz. Uzun vadeli sözleşme yoktur." },
+  { q: "Verilerim güvende mi?", a: "Evet. Tüm veriler durağan halde ve aktarım sırasında şifrelenir. Kurumsal düzey güvenlik standartları." },
+  { q: "Planımın üzerine paket ekleyebilir miyim?", a: "Evet. İsteğe bağlı genişleme paketleri herhangi bir plana ek yetenekler için aktifleştirilebilir." },
 ];
 
 const Pricing = () => {
@@ -27,9 +27,9 @@ const Pricing = () => {
         <div className="container mx-auto max-w-6xl">
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Choose Your Plan</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Planınızı Seçin</h1>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              AI Management Operating System. 30-day free trial on all plans. No demo required.
+              AI Yönetim İşletim Sistemi. Tüm planlarda 30 günlük ücretsiz deneme. Demo gerekmez.
             </p>
           </motion.div>
 
@@ -37,8 +37,8 @@ const Pricing = () => {
           <div className="grid md:grid-cols-3 gap-6 mb-20">
             {tiers.map((tier, i) => {
               const Icon = tierIcons[i];
-              const isPopular = tier.badge === "Most Popular";
-              const isBest = tier.badge === "Best Value";
+              const isPopular = tier.badge === "En Popüler";
+              const isBest = tier.badge === "En İyi Değer";
 
               return (
                 <motion.div
@@ -74,13 +74,13 @@ const Pricing = () => {
 
                   <div className="mb-6">
                     <span className="text-4xl font-bold text-foreground">${tier.monthlyPrice}</span>
-                    <span className="text-sm text-muted-foreground ml-1">/mo</span>
+                    <span className="text-sm text-muted-foreground ml-1">/ay</span>
                   </div>
 
                   {/* Included agents */}
                   <div className="mb-5">
                     <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                      {i === 0 ? "Included Agents" : i === 1 ? "Everything in Core +" : "Everything in Performance +"}
+                      {i === 0 ? "Dahil Ajanlar" : i === 1 ? "Çekirdek'teki Her Şey +" : "Performans'taki Her Şey +"}
                     </p>
                     <div className="space-y-1.5">
                       {tier.agents.map(agent => (
@@ -109,10 +109,10 @@ const Pricing = () => {
                       ? "btn-primary"
                       : "border border-border hover:bg-secondary text-foreground"
                   }`}>
-                    Start 30-Day Trial <ArrowRight className="h-4 w-4" />
+                    30 Gün Ücretsiz Dene <ArrowRight className="h-4 w-4" />
                   </button>
 
-                  <p className="text-[10px] text-muted-foreground text-center mt-3">Card required. Cancel anytime.</p>
+                  <p className="text-[10px] text-muted-foreground text-center mt-3">Kart gerekli. İstediğiniz zaman iptal edin.</p>
                 </motion.div>
               );
             })}
@@ -123,9 +123,9 @@ const Pricing = () => {
             <div className="text-center mb-8">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Package className="h-4 w-4 text-accent" />
-                <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">Optional Expansion Packs</h2>
+                <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">İsteğe Bağlı Genişleme Paketleri</h2>
               </div>
-              <p className="text-sm text-muted-foreground">Activate on top of any tier for additional capabilities.</p>
+              <p className="text-sm text-muted-foreground">Ek yetenekler için herhangi bir planın üzerine aktifleştirin.</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-5">
@@ -156,10 +156,10 @@ const Pricing = () => {
                   <div className="flex items-center justify-between pt-3 border-t border-border">
                     <div>
                       <span className="text-lg font-bold text-foreground">${pack.monthlyPrice}</span>
-                      <span className="text-xs text-muted-foreground">/mo</span>
+                      <span className="text-xs text-muted-foreground">/ay</span>
                     </div>
                     <Link to="/marketplace" className="text-xs text-primary hover:text-primary/80 transition-colors">
-                      Learn More →
+                      Detaylar →
                     </Link>
                   </div>
                 </motion.div>
@@ -169,7 +169,7 @@ const Pricing = () => {
 
           {/* FAQ */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="max-w-2xl mx-auto">
-            <h2 className="text-xl font-bold text-foreground text-center mb-8">Frequently Asked Questions</h2>
+            <h2 className="text-xl font-bold text-foreground text-center mb-8">Sıkça Sorulan Sorular</h2>
             <div className="space-y-2">
               {faqs.map((faq, i) => (
                 <div key={i} className="glass-card overflow-hidden">

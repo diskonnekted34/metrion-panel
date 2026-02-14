@@ -14,8 +14,8 @@ const agentDeptMap: Record<string, DepartmentId> = {
 };
 
 const deptLabel: Record<DepartmentId, string> = {
-  executive: "Executive", marketing: "Marketing", finance: "Finance",
-  operations: "Operations", technology: "Technology", legal: "Legal",
+  executive: "Yönetim", marketing: "Pazarlama", finance: "Finans",
+  operations: "Operasyon", technology: "Teknoloji", legal: "Hukuk",
 };
 
 const statusColor = (s: string) => {
@@ -26,10 +26,10 @@ const statusColor = (s: string) => {
 };
 
 const statusLabel = (s: string) => {
-  if (s === "Monitoring") return "Monitoring";
-  if (s === "Running Task") return "Running";
-  if (s === "Alerting") return "Alerting";
-  return "Idle";
+  if (s === "Monitoring") return "İzleniyor";
+  if (s === "Running Task") return "Görev Çalışıyor";
+  if (s === "Alerting") return "Uyarı Veriyor";
+  return "Boşta";
 };
 
 const TeamMatrix = () => {
@@ -53,7 +53,7 @@ const TeamMatrix = () => {
   if (isMobile) {
     return (
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-6">
-        <h2 className="text-base font-semibold text-foreground mb-3">Team Status</h2>
+        <h2 className="text-base font-semibold text-foreground mb-3">Ekip Durumu</h2>
         <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
           {filtered.map((exec) => (
             <div key={exec.id} className="glass-card p-4 min-w-[160px] shrink-0">
@@ -73,9 +73,9 @@ const TeamMatrix = () => {
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="mb-10">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-foreground">AI Team Status Matrix</h2>
+        <h2 className="text-lg font-semibold text-foreground">AI Ekip Durum Matrisi</h2>
         <Link to="/team" className="text-sm text-primary hover:underline flex items-center gap-1">
-          View All <ChevronRight className="h-3.5 w-3.5" />
+          Tümünü Gör <ChevronRight className="h-3.5 w-3.5" />
         </Link>
       </div>
 
@@ -112,12 +112,12 @@ const TeamMatrix = () => {
                 </div>
                 <p className="text-xs text-muted-foreground mb-3 line-clamp-1">{exec.tagline}</p>
                 <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
-                  <span>{exec.performanceScore}% performance</span>
-                  <span>{exec.tasksCompleted.toLocaleString()} tasks</span>
+                  <span>%{exec.performanceScore} performans</span>
+                  <span>{exec.tasksCompleted.toLocaleString()} görev</span>
                 </div>
                 <div className="flex gap-2">
-                  <Link to={`/workspace/${exec.id}`} className="flex-1 text-center text-xs py-2 rounded-2xl bg-secondary hover:bg-secondary/80 text-foreground transition-colors">Open Console</Link>
-                  <button className="flex-1 text-xs py-2 rounded-2xl bg-primary/10 hover:bg-primary/20 text-primary transition-colors">Assign Task</button>
+                  <Link to={`/workspace/${exec.id}`} className="flex-1 text-center text-xs py-2 rounded-2xl bg-secondary hover:bg-secondary/80 text-foreground transition-colors">Konsolu Aç</Link>
+                  <button className="flex-1 text-xs py-2 rounded-2xl bg-primary/10 hover:bg-primary/20 text-primary transition-colors">Görev Ata</button>
                   <button className="text-xs py-2 px-3 rounded-2xl bg-secondary hover:bg-secondary/80 text-muted-foreground transition-colors">
                     <Pause className="h-3 w-3" />
                   </button>

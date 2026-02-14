@@ -17,15 +17,15 @@ const Marketplace = () => {
       <div className="p-6 max-w-5xl mx-auto">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
-          <h1 className="text-2xl font-bold text-foreground mb-1">Expand Your AI Workforce</h1>
-          <p className="text-sm text-muted-foreground">Upgrade your tier or activate add-on packs for specialized capabilities.</p>
+          <h1 className="text-2xl font-bold text-foreground mb-1">AI İş Gücünüzü Genişletin</h1>
+          <p className="text-sm text-muted-foreground">Planınızı yükseltin veya özelleştirilmiş yetenekler için ek paketleri aktifleştirin.</p>
         </motion.div>
 
         {/* TIERS */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mb-12">
           <div className="flex items-center gap-2 mb-5">
             <Shield className="h-4 w-4 text-primary" />
-            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">Subscription Tiers</h2>
+            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">Abonelik Planları</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-5">
@@ -55,7 +55,7 @@ const Marketplace = () => {
                       </div>
                     </div>
                     {isActive && (
-                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-2xl bg-primary/15 text-primary">Current</span>
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-2xl bg-primary/15 text-primary">Mevcut</span>
                     )}
                     {tier.badge && !isActive && (
                       <span className="text-[10px] font-bold px-2.5 py-1 rounded-2xl bg-accent/15 text-accent">{tier.badge}</span>
@@ -67,27 +67,27 @@ const Marketplace = () => {
                       <p key={a.id} className="text-xs text-muted-foreground">• {a.role}</p>
                     ))}
                     {tier.agents.length > 4 && (
-                      <p className="text-[10px] text-muted-foreground">+{tier.agents.length - 4} more agents</p>
+                      <p className="text-[10px] text-muted-foreground">+{tier.agents.length - 4} ajan daha</p>
                     )}
                   </div>
 
                   <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
                     <div>
                       <span className="text-xl font-bold text-foreground">${tier.monthlyPrice}</span>
-                      <span className="text-xs text-muted-foreground">/mo</span>
+                      <span className="text-xs text-muted-foreground">/ay</span>
                     </div>
                     {isActive ? (
                       <span className="text-xs font-medium text-primary flex items-center gap-1.5">
-                        <Check className="h-3.5 w-3.5" /> Active
+                        <Check className="h-3.5 w-3.5" /> Aktif
                       </span>
                     ) : isDowngrade ? (
-                      <span className="text-xs text-muted-foreground">Included</span>
+                      <span className="text-xs text-muted-foreground">Dahil</span>
                     ) : (
                       <button
                         onClick={() => activateTier(tier.id)}
                         className="btn-primary px-5 py-2.5 text-xs flex items-center gap-1.5"
                       >
-                        Upgrade <ArrowRight className="h-3.5 w-3.5" />
+                        Yükselt <ArrowRight className="h-3.5 w-3.5" />
                       </button>
                     )}
                   </div>
@@ -101,7 +101,7 @@ const Marketplace = () => {
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <div className="flex items-center gap-2 mb-5">
             <Zap className="h-4 w-4 text-accent" />
-            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">Optional Add-on Packs</h2>
+            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">İsteğe Bağlı Ek Paketler</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -126,7 +126,7 @@ const Marketplace = () => {
                         </div>
                       </div>
                       {active && (
-                        <span className="text-[10px] font-bold px-2.5 py-1 rounded-2xl bg-success/15 text-success">Active</span>
+                        <span className="text-[10px] font-bold px-2.5 py-1 rounded-2xl bg-success/15 text-success">Aktif</span>
                       )}
                     </div>
 
@@ -151,25 +151,25 @@ const Marketplace = () => {
                         </div>
                       ))}
                       {pack.capabilities.length > 3 && (
-                        <p className="text-[10px] text-muted-foreground ml-5">+{pack.capabilities.length - 3} more</p>
+                        <p className="text-[10px] text-muted-foreground ml-5">+{pack.capabilities.length - 3} daha</p>
                       )}
                     </div>
 
                     <div className="flex items-center justify-between pt-4 border-t border-border">
                       <div>
                         <span className="text-lg font-bold text-foreground">${pack.monthlyPrice}</span>
-                        <span className="text-xs text-muted-foreground">/mo</span>
+                        <span className="text-xs text-muted-foreground">/ay</span>
                       </div>
                       {active ? (
                         <span className="text-xs font-medium text-success flex items-center gap-1.5">
-                          <Check className="h-3.5 w-3.5" /> Active
+                          <Check className="h-3.5 w-3.5" /> Aktif
                         </span>
                       ) : (
                         <button
                           onClick={() => setSelectedPack(pack)}
                           className="btn-primary px-5 py-2.5 text-xs flex items-center gap-1.5"
                         >
-                          Add Pack <ArrowRight className="h-3.5 w-3.5" />
+                          Paket Ekle <ArrowRight className="h-3.5 w-3.5" />
                         </button>
                       )}
                     </div>

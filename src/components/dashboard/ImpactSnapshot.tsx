@@ -3,10 +3,10 @@ import { TrendingUp, Activity, Shield, Zap } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const impact = [
-  { label: "Revenue Impact", value: "$2.4M", icon: TrendingUp },
-  { label: "Margin Improvement", value: "+3.2%", icon: Activity },
-  { label: "Risks Prevented", value: "23", icon: Shield },
-  { label: "Automations Executed", value: "47", icon: Zap },
+  { label: "Gelir Etkisi", value: "$2.4M", icon: TrendingUp },
+  { label: "Marj İyileştirme", value: "+%3.2", icon: Activity },
+  { label: "Önlenen Riskler", value: "23", icon: Shield },
+  { label: "Yürütülen Otomasyonlar", value: "47", icon: Zap },
 ];
 
 const ImpactSnapshot = () => {
@@ -15,7 +15,7 @@ const ImpactSnapshot = () => {
   if (isMobile) {
     return (
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-        <h2 className="text-base font-semibold text-foreground mb-3">Impact Summary</h2>
+        <h2 className="text-base font-semibold text-foreground mb-3">Etki Özeti</h2>
         <div className="grid grid-cols-2 gap-3">
           {impact.map((item) => (
             <div key={item.label} className="glass-card p-4 text-center">
@@ -31,7 +31,7 @@ const ImpactSnapshot = () => {
 
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-      <h2 className="text-lg font-semibold text-foreground mb-4">Impact Summary</h2>
+      <h2 className="text-lg font-semibold text-foreground mb-4">Etki Özeti</h2>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {impact.map((item) => (
           <div key={item.label} className="glass-card p-5 text-center">
