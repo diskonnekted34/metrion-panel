@@ -4,44 +4,45 @@
 
 @layer base {
   :root {
-    --background: 220 16% 6%;
-    --foreground: 30 10% 92%;
+    --background: 210 20% 98%;
+    --foreground: 216 28% 7%;
 
-    --card: 220 14% 9%;
-    --card-foreground: 30 10% 92%;
+    --card: 0 0% 100%;
+    --card-foreground: 216 28% 7%;
 
-    --popover: 220 14% 9%;
-    --popover-foreground: 30 10% 92%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 216 28% 7%;
 
-    --primary: 8 76% 47%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 100 62% 75%;
+    --primary-dark: 156 32% 70%;
+    --primary-foreground: 216 28% 7%;
 
-    --secondary: 220 12% 14%;
-    --secondary-foreground: 30 10% 80%;
+    --secondary: 210 18% 96%;
+    --secondary-foreground: 215 16% 35%;
 
-    --muted: 220 12% 14%;
-    --muted-foreground: 220 10% 55%;
+    --muted: 210 14% 95%;
+    --muted-foreground: 215 12% 42%;
 
-    --accent: 220 12% 12%;
-    --accent-foreground: 30 10% 88%;
+    --accent: 120 28% 82%;
+    --accent-foreground: 216 28% 7%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 12% 16%;
-    --input: 220 12% 16%;
-    --ring: 8 76% 47%;
+    --border: 210 14% 90%;
+    --input: 210 14% 90%;
+    --ring: 100 62% 75%;
 
     --radius: 1.25rem;
 
-    --sidebar-background: 220 14% 8%;
-    --sidebar-foreground: 30 10% 80%;
-    --sidebar-primary: 8 76% 47%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 12% 12%;
-    --sidebar-accent-foreground: 30 10% 88%;
-    --sidebar-border: 220 12% 16%;
-    --sidebar-ring: 8 76% 47%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 12% 42%;
+    --sidebar-primary: 100 62% 75%;
+    --sidebar-primary-foreground: 216 28% 7%;
+    --sidebar-accent: 210 18% 96%;
+    --sidebar-accent-foreground: 216 28% 7%;
+    --sidebar-border: 210 14% 90%;
+    --sidebar-ring: 100 62% 75%;
   }
 }
 
@@ -58,47 +59,60 @@
 
 @layer components {
   .glass {
-    @apply bg-white/[0.04] backdrop-blur-xl border border-white/[0.06] shadow-lg shadow-black/10;
+    @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-sm;
   }
 
   .glass-strong {
-    @apply bg-white/[0.06] backdrop-blur-2xl border border-white/[0.08] shadow-lg shadow-black/20;
+    @apply bg-white/80 backdrop-blur-2xl border border-white/[0.22] shadow-sm;
   }
 
   .glass-card {
-    @apply bg-white/[0.04] backdrop-blur-xl border border-white/[0.06] shadow-lg shadow-black/10 rounded-[20px] transition-all duration-300;
+    @apply bg-white/60 backdrop-blur-xl border border-white/20 shadow-sm rounded-[20px] transition-all duration-300;
   }
 
   .glass-card:hover {
-    @apply shadow-xl shadow-black/20 border-white/[0.1] -translate-y-0.5;
+    @apply shadow-md border-white/30 -translate-y-0.5;
   }
 
   .glass-bento {
-    @apply bg-white/[0.03] backdrop-blur-[200px] border border-white/[0.05] shadow-2xl shadow-black/30 rounded-[20px];
+    @apply bg-white/50 backdrop-blur-[200px] border border-white/[0.18] shadow-lg rounded-[20px];
   }
 
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-[hsl(8,76%,57%)] to-primary/60;
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #96D1B6 0%, #BCEB93 50%, #A9DDA6 100%);
   }
 
   .gradient-bg {
-    background: linear-gradient(135deg, hsl(220 16% 6%) 0%, hsl(8 76% 47% / 0.03) 50%, hsl(220 12% 8%) 100%);
+    background: linear-gradient(160deg, #f0faf4 0%, #e8f5e9 30%, #f6f8fa 70%, #eef2f5 100%);
   }
 
   .gradient-hero {
-    background: radial-gradient(ellipse at 30% 20%, hsl(8 76% 47% / 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 80%, hsl(8 60% 50% / 0.05) 0%, transparent 50%),
-                hsl(220 16% 6%);
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(188, 235, 147, 0.25) 0%, transparent 55%),
+      radial-gradient(ellipse at 75% 60%, rgba(150, 209, 182, 0.2) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 90%, rgba(169, 221, 166, 0.12) 0%, transparent 40%),
+      linear-gradient(180deg, #f8fcf6 0%, #f6f8fa 100%);
+    position: relative;
+  }
+
+  .gradient-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
   }
 
   .btn-glow {
     @apply relative overflow-hidden;
+    background: linear-gradient(135deg, #BCEB93 0%, #96D1B6 100%);
   }
 
   .btn-glow::after {
     content: '';
     @apply absolute inset-0 opacity-0 transition-opacity duration-300;
-    background: radial-gradient(circle at center, hsl(var(--primary) / 0.2) 0%, transparent 70%);
+    background: radial-gradient(circle at center, rgba(188, 235, 147, 0.3) 0%, transparent 70%);
   }
 
   .btn-glow:hover::after {
@@ -116,9 +130,43 @@
   .float-animation-delayed-2 {
     animation: float 6s ease-in-out 4s infinite;
   }
+
+  .marquee {
+    animation: marquee 30s linear infinite;
+  }
+
+  .blob-move {
+    animation: blobMove 20s ease-in-out infinite;
+  }
+
+  .blob-move-2 {
+    animation: blobMove2 25s ease-in-out infinite;
+  }
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes blobMove {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 15px) scale(0.95); }
+}
+
+@keyframes blobMove2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-25px, 20px) scale(0.97); }
+  66% { transform: translate(15px, -30px) scale(1.03); }
+}
+
+@keyframes pulse-line {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
 }

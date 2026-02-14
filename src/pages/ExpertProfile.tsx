@@ -16,7 +16,7 @@ const ExpertProfile = () => {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-2">{t.profile.notFound}</h1>
-          <Link to="/marketplace" className="text-primary hover:underline">{t.profile.back}</Link>
+          <Link to="/marketplace" className="text-mint-500 hover:underline">{t.profile.back}</Link>
         </div>
       </div>
     );
@@ -35,14 +35,14 @@ const ExpertProfile = () => {
           </motion.div>
 
           {/* Header */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-bento p-8 mb-8">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ease: [0.2, 0.8, 0.2, 1] }} className="glass-bento p-8 mb-8">
             <div className="flex flex-col md:flex-row gap-8 items-start">
-              <img src={exec.avatar} alt={exec.name} className="h-28 w-28 rounded-[24px] object-cover ring-4 ring-white/[0.06] shadow-lg" />
+              <img src={exec.avatar} alt={exec.name} className="h-28 w-28 rounded-[24px] object-cover ring-4 ring-border shadow-sm" />
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3 mb-1">
                   <h1 className="text-3xl font-bold text-foreground">{exec.role}</h1>
                   <span className={`text-xs font-semibold px-3 py-1 rounded-[12px] ${
-                    exec.badge === "C-Level" ? "bg-primary/15 text-primary" : "bg-accent text-muted-foreground"
+                    exec.badge === "C-Level" ? "bg-mint-200/30 text-mint-500" : "bg-muted text-muted-foreground"
                   }`}>{exec.badge}</span>
                 </div>
                 <p className="text-lg text-muted-foreground mb-1">{exec.name}</p>
@@ -50,26 +50,26 @@ const ExpertProfile = () => {
 
                 <div className="flex flex-wrap gap-6 mb-6">
                   <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                    <Zap className="h-4 w-4 text-primary" />
+                    <Zap className="h-4 w-4 text-mint-400" />
                     <span className="font-semibold text-foreground">{exec.performanceScore}%</span>
                     <span>{t.profile.performanceScore}</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    <CheckCircle2 className="h-4 w-4 text-mint-400" />
                     {exec.tasksCompleted.toLocaleString()} {t.profile.tasksCompleted}
                   </div>
                   <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4 text-primary" />
+                    <Calendar className="h-4 w-4 text-mint-400" />
                     {t.profile.weeklyDelivery}: {exec.weekday} — {exec.weekdayOutput}
                   </div>
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  <button className="rounded-[20px] bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 active:scale-[0.98] btn-glow">
+                  <button className="rounded-[20px] btn-glow px-6 py-3 text-sm font-medium text-foreground transition-all hover:opacity-90 active:scale-[0.98]">
                     {t.profile.hireTeam}
                   </button>
-                  <Link to="/pricing" className="rounded-[20px] glass px-6 py-3 text-sm font-medium text-foreground flex items-center gap-2 hover:border-white/[0.12] transition-all">
-                    <Crown className="h-3.5 w-3.5 text-primary" />
+                  <Link to="/pricing" className="rounded-[20px] glass px-6 py-3 text-sm font-medium text-foreground flex items-center gap-2 hover:border-border transition-all">
+                    <Crown className="h-3.5 w-3.5 text-mint-500" />
                     {t.profile.getBundle}
                   </Link>
                 </div>
@@ -85,40 +85,36 @@ const ExpertProfile = () => {
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
-              {/* About */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card p-8">
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card p-8">
                 <h2 className="text-xl font-semibold text-foreground mb-4">About</h2>
                 <p className="text-muted-foreground leading-relaxed">{exec.about}</p>
               </motion.div>
 
-              {/* Responsibilities */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-8">
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-8">
                 <h2 className="text-xl font-semibold text-foreground mb-4">{t.profile.responsibilities}</h2>
                 <div className="grid sm:grid-cols-2 gap-3">
                   {exec.responsibilities.map((r) => (
                     <div key={r} className="flex items-center gap-2.5">
-                      <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-mint-400 shrink-0" />
                       <span className="text-sm text-muted-foreground">{r}</span>
                     </div>
                   ))}
                 </div>
               </motion.div>
 
-              {/* Structured Outputs */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-bento p-8">
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-bento p-8">
                 <h2 className="text-xl font-semibold text-foreground mb-4">{t.profile.outputs}</h2>
                 <div className="space-y-2.5">
                   {exec.outputs.map((o) => (
                     <div key={o} className="flex items-start gap-2.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-mint-400 mt-1.5 shrink-0" />
                       <span className="text-sm text-muted-foreground">{o}</span>
                     </div>
                   ))}
                 </div>
               </motion.div>
 
-              {/* Skills */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass-card p-8">
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass-card p-8">
                 <h2 className="text-xl font-semibold text-foreground mb-6">{t.profile.skills}</h2>
                 <div className="space-y-4">
                   {exec.skills.map((skill) => (
@@ -127,12 +123,13 @@ const ExpertProfile = () => {
                         <span className="text-foreground font-medium">{skill.name}</span>
                         <span className="text-muted-foreground">{skill.level}%</span>
                       </div>
-                      <div className="h-2 rounded-[20px] bg-accent overflow-hidden">
+                      <div className="h-2 rounded-[20px] bg-muted overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${skill.level}%` }}
                           transition={{ duration: 1, delay: 0.3 }}
-                          className="h-full rounded-[20px] bg-gradient-to-r from-primary to-primary/60"
+                          className="h-full rounded-[20px]"
+                          style={{ background: "linear-gradient(90deg, #BCEB93, #96D1B6)" }}
                         />
                       </div>
                     </div>
@@ -140,16 +137,15 @@ const ExpertProfile = () => {
                 </div>
               </motion.div>
 
-              {/* Reviews */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass-card p-8">
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass-card p-8">
                 <h2 className="text-xl font-semibold text-foreground mb-6">{t.profile.reviews}</h2>
                 <div className="space-y-4">
                   {exec.reviews.map((review, i) => (
-                    <div key={i} className="p-4 rounded-[20px] bg-accent/50">
+                    <div key={i} className="p-4 rounded-[20px] bg-muted/50">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-[14px] bg-primary/10 flex items-center justify-center">
-                            <Users className="h-3.5 w-3.5 text-primary" />
+                          <div className="h-8 w-8 rounded-[14px] bg-mint-200/20 flex items-center justify-center">
+                            <Users className="h-3.5 w-3.5 text-mint-500" />
                           </div>
                           <span className="text-sm font-medium text-foreground">{review.name}</span>
                         </div>
@@ -157,7 +153,7 @@ const ExpertProfile = () => {
                       </div>
                       <div className="flex gap-0.5 mb-2">
                         {Array.from({ length: review.rating }).map((_, j) => (
-                          <Star key={j} className="h-3 w-3 text-primary fill-primary" />
+                          <Star key={j} className="h-3 w-3 text-mint-400 fill-mint-400" />
                         ))}
                       </div>
                       <p className="text-sm text-muted-foreground">{review.comment}</p>
@@ -169,36 +165,36 @@ const ExpertProfile = () => {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-6">
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-6">
                 <h3 className="text-lg font-semibold text-foreground mb-4">{t.profile.automations}</h3>
                 <div className="space-y-2.5">
                   {exec.automations.map((a) => (
                     <div key={a} className="flex items-start gap-2.5">
-                      <Zap className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
+                      <Zap className="h-3.5 w-3.5 text-mint-400 shrink-0 mt-0.5" />
                       <span className="text-xs text-muted-foreground">{a}</span>
                     </div>
                   ))}
                 </div>
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-bento p-6">
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-bento p-6">
                 <h3 className="text-lg font-semibold text-foreground mb-4">{t.profile.kpis}</h3>
                 <div className="space-y-2">
                   {exec.kpis.map((kpi) => (
                     <div key={kpi} className="text-xs text-muted-foreground flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-mint-400 shrink-0" />
                       {kpi}
                     </div>
                   ))}
                 </div>
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass-card p-6">
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass-card p-6">
                 <h3 className="text-lg font-semibold text-foreground mb-4">{t.profile.collaborations}</h3>
                 <div className="space-y-2">
                   {exec.collaborations.map((c) => (
                     <div key={c} className="text-xs text-muted-foreground flex items-start gap-2">
-                      <Users className="h-3 w-3 text-primary shrink-0 mt-0.5" />
+                      <Users className="h-3 w-3 text-mint-500 shrink-0 mt-0.5" />
                       {c}
                     </div>
                   ))}

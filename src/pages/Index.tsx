@@ -1,9 +1,12 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import HowItWorks from "@/components/HowItWorks";
-import PainPoints from "@/components/PainPoints";
 import TrustStrip from "@/components/TrustStrip";
+import HowItWorks from "@/components/HowItWorks";
+import StatsCounter from "@/components/StatsCounter";
+import FeatureTabs from "@/components/FeatureTabs";
+import PainPoints from "@/components/PainPoints";
 import FeaturedExperts from "@/components/FeaturedExperts";
+import LegalHighlight from "@/components/LegalHighlight";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -13,8 +16,11 @@ const Index = () => {
       <Hero />
       <TrustStrip />
       <HowItWorks />
-      <PainPoints />
+      <StatsCounter />
+      <FeatureTabs />
       <FeaturedExperts />
+      <LegalHighlight />
+      <PainPoints />
       <Footer />
     </div>
   );

@@ -13,18 +13,21 @@ const TrustStrip = () => {
     { icon: Shield, label: t.trustStrip.item5 },
   ];
 
+  const doubled = [...items, ...items];
+
   return (
-    <section className="py-12 px-6 border-y border-white/[0.06]">
-      <div className="container mx-auto">
+    <section className="py-8 px-6 border-y border-border/60 overflow-hidden bg-white/40">
+      <div className="relative">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="flex flex-wrap justify-center gap-8 md:gap-12"
+          className="flex gap-12 marquee"
+          style={{ width: "max-content" }}
         >
-          {items.map((item) => (
-            <div key={item.label} className="flex items-center gap-2.5 text-sm text-muted-foreground">
-              <item.icon className="h-4 w-4 text-primary" />
+          {doubled.map((item, i) => (
+            <div key={`${item.label}-${i}`} className="flex items-center gap-2.5 text-sm text-muted-foreground whitespace-nowrap">
+              <item.icon className="h-4 w-4 text-mint-400" />
               <span className="font-medium">{item.label}</span>
             </div>
           ))}
