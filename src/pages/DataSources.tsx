@@ -7,10 +7,12 @@ import {
 import AppLayout from "@/components/AppLayout";
 import { useIntegrations } from "@/contexts/IntegrationContext";
 import { useRBAC } from "@/contexts/RBACContext";
+import { useActionMode } from "@/contexts/ActionModeContext";
 import {
   Integration, IntegrationStatus, IntegrationCategory,
   categoryLabels, categoryOrder,
 } from "@/data/integrations";
+import ActionModeToggle from "@/components/integrations/ActionModeToggle";
 
 const statusConfig: Record<IntegrationStatus, { label: string; color: string; icon: typeof CheckCircle2 }> = {
   connected: { label: "Bağlı", color: "text-success", icon: CheckCircle2 },
@@ -107,6 +109,13 @@ const IntegrationCard = ({ integration }: { integration: Integration }) => {
               {integration.lastSync && (
                 <div className="text-[10px] text-muted-foreground">
                   Son senkronizasyon: {new Date(integration.lastSync).toLocaleString("tr-TR")}
+                </div>
+              )}
+
+              {/* Action Mode Toggle — only for actionable integrations */}
+              {(integration.id === "meta-ads" || integration.id === "google-ads") && (
+                <div className="pt-2 border-t border-border">
+                  <ActionModeToggle integrationId={integration.id} integrationName={integration.name} />
                 </div>
               )}
 

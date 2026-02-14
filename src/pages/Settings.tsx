@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Settings as SettingsIcon, User, Building2, CreditCard, Bell, ChevronDown, ChevronUp, Users, Shield, Plus, Trash2, Package, X } from "lucide-react";
+import { Settings as SettingsIcon, User, Building2, CreditCard, Bell, ChevronDown, ChevronUp, Users, Shield, Plus, Trash2, Package, X, DollarSign, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";
 import { useRBAC, UserRole, DepartmentId } from "@/contexts/RBACContext";
 import { usePacks } from "@/contexts/PackContext";
+import { useActionMode } from "@/contexts/ActionModeContext";
 
 const Settings = () => {
   const { currentUser, team, roleLabels, departments, canPerform, setCurrentUser } = useRBAC();
   const { activeTier, getActivePacks, getMonthlyTotal, deactivateAddon, isTrial, trialDaysRemaining } = usePacks();
+  const { budgetCaps, updateBudgetCaps } = useActionMode();
   const [notifOpen, setNotifOpen] = useState(false);
   const [teamOpen, setTeamOpen] = useState(false);
   const [roleSimOpen, setRoleSimOpen] = useState(false);
   const [subOpen, setSubOpen] = useState(false);
+  const [budgetOpen, setBudgetOpen] = useState(false);
   const [notifPrefs, setNotifPrefs] = useState({
     level: "critical_reco",
     email: false,
@@ -350,6 +353,68 @@ const Settings = () => {
                 </div>
               )}
             </div>
+
+            {/* Budget Caps */}
+            {canPerform("canManageBilling") && (
+              <div className="glass-card overflow-hidden">
+                <button onClick={() => setBudgetOpen(!budgetOpen)} className="w-full p-5 flex items-center gap-4 text-left">
+                  <div className="h-10 w-10 rounded-2xl bg-warning/10 flex items-center justify-center shrink-0">
+                    <DollarSign className="h-5 w-5 text-warning" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-foreground">Bütçe Limitleri</p>
+                    <p className="text-xs text-muted-foreground">Aksiyon Modu harcama sınırları ve kısıtlamalar</p>
+                  </div>
+                  {budgetOpen ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+                </button>
+                {budgetOpen && (
+                  <div className="px-5 pb-5 pt-0 border-t border-border space-y-4">
+                    <div className="pt-4 space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Günlük Harcama Limiti ($)</label>
+                          <input
+                            type="number"
+                            value={budgetCaps.dailySpendLimit}
+                            onChange={(e) => updateBudgetCaps({ dailySpendLimit: Number(e.target.value) })}
+                            className="w-full mt-1.5 px-3 py-2 rounded-xl bg-secondary/50 border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Haftalık Harcama Limiti ($)</label>
+                          <input
+                            type="number"
+                            value={budgetCaps.weeklySpendLimit}
+                            onChange={(e) => updateBudgetCaps({ weeklySpendLimit: Number(e.target.value) })}
+                            className="w-full mt-1.5 px-3 py-2 rounded-xl bg-secondary/50 border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Maks. Bütçe Değişim Oranı (%)</label>
+                        <input
+                          type="number"
+                          value={budgetCaps.maxBudgetChangePercent}
+                          onChange={(e) => updateBudgetCaps({ maxBudgetChangePercent: Number(e.target.value) })}
+                          className="w-full mt-1.5 px-3 py-2 rounded-xl bg-secondary/50 border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">İzin Verilen Kampanya Hedefleri</label>
+                        <div className="flex flex-wrap gap-2">
+                          {budgetCaps.allowedObjectives.map((obj) => (
+                            <span key={obj} className="text-xs px-3 py-1.5 rounded-xl bg-secondary/50 text-foreground">{obj}</span>
+                          ))}
+                        </div>
+                      </div>
+                      <Link to="/action-center" className="flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 transition-colors">
+                        <Zap className="h-3 w-3" /> Aksiyon Merkezi'ne Git
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </motion.div>
       </div>
