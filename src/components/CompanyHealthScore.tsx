@@ -9,11 +9,11 @@ interface MiniMetric {
 }
 
 const metrics: MiniMetric[] = [
-  { label: "Revenue Stability", score: 82, trend: "up", sparkline: [40, 45, 42, 50, 55, 58, 62] },
-  { label: "Profit Strength", score: 71, trend: "down", sparkline: [60, 58, 55, 52, 50, 48, 46] },
-  { label: "Growth Momentum", score: 88, trend: "up", sparkline: [30, 35, 42, 50, 58, 65, 72] },
-  { label: "Inventory Risk", score: 64, trend: "down", sparkline: [80, 75, 70, 68, 65, 62, 60] },
-  { label: "Operational Load", score: 76, trend: "flat", sparkline: [50, 52, 48, 50, 51, 49, 50] },
+  { label: "Gelir Stabilitesi", score: 82, trend: "up", sparkline: [40, 45, 42, 50, 55, 58, 62] },
+  { label: "Kâr Gücü", score: 71, trend: "down", sparkline: [60, 58, 55, 52, 50, 48, 46] },
+  { label: "Büyüme İvmesi", score: 88, trend: "up", sparkline: [30, 35, 42, 50, 58, 65, 72] },
+  { label: "Envanter Riski", score: 64, trend: "down", sparkline: [80, 75, 70, 68, 65, 62, 60] },
+  { label: "Operasyonel Yük", score: 76, trend: "flat", sparkline: [50, 52, 48, 50, 51, 49, 50] },
 ];
 
 const TrendIcon = ({ trend }: { trend: string }) => {
@@ -43,7 +43,7 @@ const CompanyHealthScore = () => {
 
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mb-10">
-      <h2 className="text-lg font-semibold text-foreground mb-4">Company Health Score</h2>
+      <h2 className="text-lg font-semibold text-foreground mb-4">Şirket Sağlık Skoru</h2>
       <div className="glass-card p-6">
         <div className="flex flex-col lg:flex-row items-center gap-8">
           {/* Score Ring */}

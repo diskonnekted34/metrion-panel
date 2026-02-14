@@ -13,27 +13,27 @@ interface Task {
   eta: string;
   status: string;
   time: string;
-  source: "Insight" | "Manual" | "Agent";
+  source: "İçgörü" | "Manuel" | "Ajan";
 }
 
 const allTasks: Task[] = [
-  { title: "Review Q4 campaign creative performance", agent: "AI CMO", department: "marketing", severity: "High", eta: "2h", status: "In Progress", time: "12m ago", source: "Insight" },
-  { title: "Update 8-week cashflow forecast", agent: "AI CFO", department: "finance", severity: "Critical", eta: "1h", status: "In Progress", time: "28m ago", source: "Agent" },
-  { title: "Map top 10 automation opportunities", agent: "AI CTO", department: "operations", severity: "Medium", eta: "4h", status: "In Progress", time: "2h ago", source: "Manual" },
-  { title: "Score supplier contract risks", agent: "Legal Desk", department: "legal", severity: "Medium", eta: "—", status: "Completed", time: "4h ago", source: "Agent" },
-  { title: "Generate weekly CEO briefing", agent: "AI CEO", department: "executive", severity: "Low", eta: "—", status: "Completed", time: "6h ago", source: "Agent" },
+  { title: "Q4 kampanya kreatif performansını incele", agent: "AI CMO", department: "marketing", severity: "Yüksek", eta: "2s", status: "Devam Ediyor", time: "12 dk önce", source: "İçgörü" },
+  { title: "8 haftalık nakit akışı tahminini güncelle", agent: "AI CFO", department: "finance", severity: "Kritik", eta: "1s", status: "Devam Ediyor", time: "28 dk önce", source: "Ajan" },
+  { title: "İlk 10 otomasyon fırsatını haritalandır", agent: "AI CTO", department: "operations", severity: "Orta", eta: "4s", status: "Devam Ediyor", time: "2 saat önce", source: "Manuel" },
+  { title: "Tedarikçi sözleşme risklerini puanla", agent: "Hukuk Masası", department: "legal", severity: "Orta", eta: "—", status: "Tamamlandı", time: "4 saat önce", source: "Ajan" },
+  { title: "Haftalık CEO brifingini oluştur", agent: "AI CEO", department: "executive", severity: "Düşük", eta: "—", status: "Tamamlandı", time: "6 saat önce", source: "Ajan" },
 ];
 
 const severityColor = (s: string) => {
-  if (s === "Critical") return "bg-destructive/15 text-destructive";
-  if (s === "High") return "bg-warning/15 text-warning";
-  if (s === "Medium") return "bg-primary/15 text-primary";
+  if (s === "Kritik") return "bg-destructive/15 text-destructive";
+  if (s === "Yüksek") return "bg-warning/15 text-warning";
+  if (s === "Orta") return "bg-primary/15 text-primary";
   return "bg-secondary text-muted-foreground";
 };
 
 const deptLabel: Record<DepartmentId, string> = {
-  executive: "Executive", marketing: "Marketing", finance: "Finance",
-  operations: "Operations", technology: "Technology", legal: "Legal",
+  executive: "Yönetim", marketing: "Pazarlama", finance: "Finans",
+  operations: "Operasyon", technology: "Teknoloji", legal: "Hukuk",
 };
 
 const PrioritizedTasks = () => {
@@ -52,14 +52,14 @@ const PrioritizedTasks = () => {
     .filter(t => statusFilter === "all" || t.status === statusFilter);
 
   if (isMobile) {
-    const active = filtered.filter(t => t.status === "In Progress");
+    const active = filtered.filter(t => t.status === "Devam Ediyor");
     return (
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-6">
-        <h2 className="text-base font-semibold text-foreground mb-3">Today's Priorities</h2>
+        <h2 className="text-base font-semibold text-foreground mb-3">Bugünün Öncelikleri</h2>
         {active.length === 0 ? (
           <div className="glass-card p-6 flex items-center justify-center gap-2">
             <Radio className="h-3.5 w-3.5 text-success" />
-            <p className="text-xs text-muted-foreground">No active tasks. System monitoring.</p>
+            <p className="text-xs text-muted-foreground">Aktif görev yok. Sistem izleme yapıyor.</p>
           </div>
         ) : (
           <div className="glass-card divide-y divide-border">
@@ -81,16 +81,16 @@ const PrioritizedTasks = () => {
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="mb-10">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-foreground">Prioritized Tasks</h2>
+        <h2 className="text-lg font-semibold text-foreground">Öncelikli Görevler</h2>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={`text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-2xl transition-colors ${showFilters ? "bg-primary/10 text-primary" : "bg-secondary text-muted-foreground hover:text-foreground"}`}
           >
-            <Filter className="h-3 w-3" /> Filters
+            <Filter className="h-3 w-3" /> Filtreler
           </button>
           <Link to="/tasks" className="text-sm text-primary hover:underline flex items-center gap-1">
-            View All <ChevronRight className="h-3.5 w-3.5" />
+            Tümünü Gör <ChevronRight className="h-3.5 w-3.5" />
           </Link>
         </div>
       </div>
@@ -98,23 +98,23 @@ const PrioritizedTasks = () => {
       {showFilters && (
         <div className="glass-card p-4 mb-4 flex flex-wrap gap-3">
           <div>
-            <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Severity</label>
+            <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Aciliyet</label>
             <div className="flex gap-1.5">
-              {["all", "Critical", "High", "Medium", "Low"].map(s => (
+              {["all", "Kritik", "Yüksek", "Orta", "Düşük"].map(s => (
                 <button key={s} onClick={() => setSeverityFilter(s)}
                   className={`text-[11px] px-2.5 py-1 rounded-full transition-colors ${severityFilter === s ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
-                  {s === "all" ? "All" : s}
+                  {s === "all" ? "Tümü" : s}
                 </button>
               ))}
             </div>
           </div>
           <div>
-            <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Status</label>
+            <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Durum</label>
             <div className="flex gap-1.5">
-              {["all", "In Progress", "Completed"].map(s => (
+              {["all", "Devam Ediyor", "Tamamlandı"].map(s => (
                 <button key={s} onClick={() => setStatusFilter(s)}
                   className={`text-[11px] px-2.5 py-1 rounded-full transition-colors ${statusFilter === s ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
-                  {s === "all" ? "All" : s}
+                  {s === "all" ? "Tümü" : s}
                 </button>
               ))}
             </div>
@@ -125,7 +125,7 @@ const PrioritizedTasks = () => {
       {filtered.length === 0 ? (
         <div className="glass-card p-8 flex items-center justify-center gap-3">
           <Radio className="h-4 w-4 text-success animate-pulse" />
-          <p className="text-sm text-muted-foreground">No active tasks. System monitoring.</p>
+          <p className="text-sm text-muted-foreground">Aktif görev yok. Sistem izleme yapıyor.</p>
         </div>
       ) : (
         <div className="glass-card divide-y divide-border">
@@ -145,7 +145,7 @@ const PrioritizedTasks = () => {
                 <span className="text-xs text-muted-foreground">{task.eta}</span>
                 <span className={`text-[10px] font-medium px-2 py-0.5 rounded-2xl ${severityColor(task.severity)}`}>{task.severity}</span>
                 <span className={`text-[10px] font-medium px-2 py-0.5 rounded-2xl ${
-                  task.status === "In Progress" ? "bg-success/15 text-success" : "bg-secondary text-muted-foreground"
+                  task.status === "Devam Ediyor" ? "bg-success/15 text-success" : "bg-secondary text-muted-foreground"
                 }`}>{task.status}</span>
                 <span className="text-[10px] text-muted-foreground">{task.source}</span>
               </div>

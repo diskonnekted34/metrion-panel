@@ -62,7 +62,7 @@ const UpgradeModal = ({ pack, open, onClose }: UpgradeModalProps) => {
             <div className="mb-6">
               <p className="text-xs font-semibold text-foreground mb-3 flex items-center gap-2">
                 <Users className="h-3.5 w-3.5 text-primary" />
-                Included Agents
+                Dahil Ajanlar
               </p>
               <div className="space-y-2">
                 {pack.agents.map(agent => (
@@ -83,7 +83,7 @@ const UpgradeModal = ({ pack, open, onClose }: UpgradeModalProps) => {
             <div className="mb-6">
               <p className="text-xs font-semibold text-foreground mb-3 flex items-center gap-2">
                 <Zap className="h-3.5 w-3.5 text-accent" />
-                Capabilities
+                Yetenekler
               </p>
               <div className="grid grid-cols-1 gap-1.5">
                 {pack.capabilities.slice(0, 5).map(cap => (
@@ -99,18 +99,18 @@ const UpgradeModal = ({ pack, open, onClose }: UpgradeModalProps) => {
             <div className="glass-card p-4 mb-6 !bg-secondary/30">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-muted-foreground">{pack.name}</span>
-                <span className="text-sm font-bold text-foreground">${pack.monthlyPrice}/mo</span>
+                <span className="text-sm font-bold text-foreground">${pack.monthlyPrice}/ay</span>
               </div>
               <div className="border-t border-border pt-2 flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">New Monthly Total</span>
-                <span className="text-sm font-bold text-primary">${newTotal}/mo</span>
+                <span className="text-xs text-muted-foreground">Yeni Aylık Toplam</span>
+                <span className="text-sm font-bold text-primary">${newTotal}/ay</span>
               </div>
-              <p className="text-[10px] text-muted-foreground mt-2">Immediate activation. Billed monthly.</p>
+              <p className="text-[10px] text-muted-foreground mt-2">Anında aktifleştirilir. Aylık faturalandırılır.</p>
             </div>
 
             {!canActivate && (
               <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/20 mb-4">
-                <p className="text-xs text-destructive">Executive Bundle must be active before adding this pack.</p>
+                <p className="text-xs text-destructive">Bu paketi eklemeden önce Yönetici Paketi aktif olmalıdır.</p>
               </div>
             )}
 
@@ -119,7 +119,7 @@ const UpgradeModal = ({ pack, open, onClose }: UpgradeModalProps) => {
               disabled={!canActivate || confirming}
               className="w-full btn-primary px-6 py-3.5 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {confirming ? "Activating..." : `Activate — $${pack.monthlyPrice}/mo`}
+              {confirming ? "Aktifleştiriliyor..." : `Aktifleştir — $${pack.monthlyPrice}/ay`}
             </button>
           </motion.div>
         </motion.div>
