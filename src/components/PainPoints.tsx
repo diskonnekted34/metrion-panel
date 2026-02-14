@@ -14,6 +14,9 @@ const PainPoints = () => {
     { icon: Brain, title: t.painPoints.overload, items: t.painPoints.overloadItems },
   ];
 
+  // Use glass-bento for the first and last cards
+  const bentoIndices = [0, 3, 5];
+
   return (
     <section className="py-24 px-6 gradient-bg">
       <div className="container mx-auto max-w-6xl">
@@ -35,10 +38,10 @@ const PainPoints = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06 }}
-              className="glass-card p-6"
+              className={`${bentoIndices.includes(i) ? "glass-bento" : "glass-card"} p-6`}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="rounded-xl bg-primary/10 p-2.5">
+                <div className="rounded-[14px] bg-primary/10 p-2.5">
                   <group.icon className="h-4 w-4 text-primary" />
                 </div>
                 <h3 className="font-semibold text-foreground text-sm">{group.title}</h3>

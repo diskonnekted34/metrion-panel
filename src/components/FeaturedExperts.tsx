@@ -43,12 +43,12 @@ const FeaturedExperts = () => {
             >
               <Link to={`/expert/${exec.id}`} className="block glass-card p-6 h-full group">
                 <div className="flex items-start gap-4 mb-4">
-                  <img src={exec.avatar} alt={exec.name} className="h-14 w-14 rounded-2xl object-cover ring-2 ring-border/60" />
+                  <img src={exec.avatar} alt={exec.name} className="h-14 w-14 rounded-[18px] object-cover ring-2 ring-white/[0.06]" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <h3 className="font-bold text-primary text-sm">{exec.role}</h3>
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${
-                        exec.badge === "C-Level" ? "bg-primary/10 text-primary" : "bg-accent text-muted-foreground"
+                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-[10px] ${
+                        exec.badge === "C-Level" ? "bg-primary/15 text-primary" : "bg-accent text-muted-foreground"
                       }`}>
                         {exec.badge}
                       </span>
@@ -68,14 +68,14 @@ const FeaturedExperts = () => {
                   ))}
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-border/50">
+                <div className="flex items-center justify-between pt-4 border-t border-white/[0.06]">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-medium text-foreground">{exec.performanceScore}%</span>
                     <span className="text-xs text-muted-foreground">performance</span>
                   </div>
-                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${
-                    exec.status === "Monitoring" ? "bg-primary/10 text-primary" :
-                    exec.status === "Alerting" ? "bg-destructive/10 text-destructive" :
+                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded-[10px] ${
+                    exec.status === "Monitoring" ? "bg-primary/15 text-primary" :
+                    exec.status === "Alerting" ? "bg-destructive/15 text-destructive" :
                     exec.status === "Running Task" ? "bg-accent text-accent-foreground" :
                     "bg-muted text-muted-foreground"
                   }`}>

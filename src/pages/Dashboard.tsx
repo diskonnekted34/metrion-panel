@@ -10,9 +10,9 @@ const Dashboard = () => {
   const { t } = useLanguage();
 
   const statusColor = (s: string) => {
-    if (s === "Monitoring") return "bg-primary/10 text-primary";
+    if (s === "Monitoring") return "bg-primary/15 text-primary";
     if (s === "Running Task") return "bg-accent text-accent-foreground";
-    if (s === "Alerting") return "bg-destructive/10 text-destructive";
+    if (s === "Alerting") return "bg-destructive/15 text-destructive";
     return "bg-muted text-muted-foreground";
   };
 
@@ -33,8 +33,8 @@ const Dashboard = () => {
     { day: t.weekdays.monday, output: "CEO Brief", agent: "AI CEO" },
     { day: t.weekdays.tuesday, output: "Growth Plan", agent: "AI CSO" },
     { day: t.weekdays.wednesday, output: "Finance Brief", agent: "AI CFO" },
-    { day: t.weekdays.thursday, output: "Systems & Automation Brief", agent: "AI CTO" },
-    { day: t.weekdays.friday, output: "Weekly Wrap + Next Week Priorities", agent: "AI CEO" },
+    { day: t.weekdays.thursday, output: "Systems Brief", agent: "AI CTO" },
+    { day: t.weekdays.friday, output: "Weekly Wrap", agent: "AI CEO" },
   ];
 
   const tasks = [
@@ -68,18 +68,18 @@ const Dashboard = () => {
             <h2 className="text-lg font-semibold text-foreground mb-4">{t.dashboard.insightBar}</h2>
             <div className="space-y-3">
               {insights.map((insight, i) => (
-                <div key={i} className="glass-card p-5 flex items-center justify-between gap-4">
+                <div key={i} className={`${i === 1 ? "glass-bento" : "glass-card"} p-5 flex items-center justify-between gap-4`}>
                   <div className="flex items-start gap-3 flex-1">
-                    <div className={`rounded-xl p-2 shrink-0 ${insight.urgency === "Critical" ? "bg-destructive/10" : insight.urgency === "High" ? "bg-primary/10" : "bg-accent"}`}>
+                    <div className={`rounded-[14px] p-2 shrink-0 ${insight.urgency === "Critical" ? "bg-destructive/15" : insight.urgency === "High" ? "bg-primary/15" : "bg-accent"}`}>
                       <AlertTriangle className={`h-4 w-4 ${insight.urgency === "Critical" ? "text-destructive" : "text-primary"}`} />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">{insight.text}</p>
                       <div className="flex items-center gap-3 mt-1">
                         <span className="text-xs text-muted-foreground">{insight.agent}</span>
-                        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${
-                          insight.urgency === "Critical" ? "bg-destructive/10 text-destructive" :
-                          insight.urgency === "High" ? "bg-primary/10 text-primary" :
+                        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-[10px] ${
+                          insight.urgency === "Critical" ? "bg-destructive/15 text-destructive" :
+                          insight.urgency === "High" ? "bg-primary/15 text-primary" :
                           "bg-accent text-muted-foreground"
                         }`}>{t.dashboard.urgency}: {insight.urgency}</span>
                         <span className="text-[10px] text-muted-foreground">{t.dashboard.confidence}: {insight.confidence}</span>
@@ -113,12 +113,12 @@ const Dashboard = () => {
                   className="glass-card p-5"
                 >
                   <div className="flex items-center gap-3 mb-3">
-                    <img src={exec.avatar} alt={exec.name} className="h-11 w-11 rounded-xl object-cover ring-2 ring-border/40" />
+                    <img src={exec.avatar} alt={exec.name} className="h-11 w-11 rounded-[14px] object-cover ring-2 ring-white/[0.06]" />
                     <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-primary text-sm">{exec.role}</h3>
                       <p className="text-xs text-muted-foreground truncate">{exec.name}</p>
                     </div>
-                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${statusColor(exec.status)}`}>
+                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-[10px] ${statusColor(exec.status)}`}>
                       {statusLabel(exec.status)}
                     </span>
                   </div>
@@ -129,10 +129,10 @@ const Dashboard = () => {
                   </div>
 
                   <div className="flex gap-2">
-                    <Link to={`/expert/${exec.id}`} className="flex-1 text-center text-xs py-2 rounded-lg bg-accent hover:bg-accent/80 text-foreground transition-colors">
+                    <Link to={`/expert/${exec.id}`} className="flex-1 text-center text-xs py-2 rounded-[14px] bg-accent hover:bg-accent/80 text-foreground transition-colors">
                       {t.dashboard.open}
                     </Link>
-                    <button className="flex-1 text-xs py-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
+                    <button className="flex-1 text-xs py-2 rounded-[14px] bg-primary/15 hover:bg-primary/25 text-primary transition-colors">
                       {t.dashboard.assign}
                     </button>
                   </div>
@@ -144,10 +144,10 @@ const Dashboard = () => {
           {/* Weekly Rhythm */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="mb-10">
             <h2 className="text-lg font-semibold text-foreground mb-4">{t.dashboard.weeklyRhythm}</h2>
-            <div className="glass-card p-6">
+            <div className="glass-bento p-6">
               <div className="grid grid-cols-5 gap-3">
                 {weeklyRhythm.map((day, i) => (
-                  <div key={i} className="text-center p-4 rounded-xl bg-accent/50 hover:bg-accent transition-colors">
+                  <div key={i} className="text-center p-4 rounded-[20px] bg-white/[0.03] hover:bg-white/[0.06] transition-colors">
                     <div className="flex items-center justify-center mb-2">
                       <Calendar className="h-4 w-4 text-primary" />
                     </div>
@@ -163,11 +163,11 @@ const Dashboard = () => {
           {/* Priority Tasks */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mb-10">
             <h2 className="text-lg font-semibold text-foreground mb-4">{t.dashboard.topTasks}</h2>
-            <div className="glass-card divide-y divide-border/50">
+            <div className="glass-card divide-y divide-white/[0.06]">
               {tasks.map((task, i) => (
                 <div key={i} className="flex items-center justify-between px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <div className="h-8 w-8 rounded-[14px] bg-primary/10 flex items-center justify-center">
                       <Activity className="h-3.5 w-3.5 text-primary" />
                     </div>
                     <div>
@@ -175,8 +175,8 @@ const Dashboard = () => {
                       <p className="text-xs text-muted-foreground">{task.agent} · {task.time}</p>
                     </div>
                   </div>
-                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${
-                    task.status === "In Progress" ? "bg-primary/10 text-primary" : "bg-accent text-muted-foreground"
+                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded-[10px] ${
+                    task.status === "In Progress" ? "bg-primary/15 text-primary" : "bg-accent text-muted-foreground"
                   }`}>
                     {task.status}
                   </span>
@@ -190,8 +190,8 @@ const Dashboard = () => {
             <h2 className="text-lg font-semibold text-foreground mb-4">{t.dashboard.impactSnapshot}</h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {impact.map((item, i) => (
-                <div key={item.label} className="glass-card p-5 text-center">
-                  <div className="mx-auto w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+                <div key={item.label} className={`${i === 0 || i === 3 ? "glass-bento" : "glass-card"} p-5 text-center`}>
+                  <div className="mx-auto w-10 h-10 rounded-[16px] bg-primary/10 flex items-center justify-center mb-3">
                     <item.icon className="h-4 w-4 text-primary" />
                   </div>
                   <p className="text-2xl font-bold text-foreground mb-1">{item.value}</p>

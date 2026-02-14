@@ -14,7 +14,7 @@ const TrustStrip = () => {
   ];
 
   return (
-    <section className="py-12 px-6 border-y border-border/50">
+    <section className="py-12 px-6 border-y border-white/[0.06]">
       <div className="container mx-auto">
         <motion.div
           initial={{ opacity: 0 }}
