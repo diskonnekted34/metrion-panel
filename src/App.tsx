@@ -14,6 +14,7 @@ import Reports from "./pages/Reports";
 import Marketplace from "./pages/Marketplace";
 import Settings from "./pages/Settings";
 import Pricing from "./pages/Pricing";
+import AgentWorkspace from "./pages/AgentWorkspace";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/expert/:id" element={<ExpertProfile />} />
+            <Route path="/workspace/:agentId" element={<AgentWorkspace />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

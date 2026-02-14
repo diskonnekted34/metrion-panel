@@ -226,7 +226,7 @@ const Dashboard = () => {
                   <span>{exec.tasksCompleted.toLocaleString()} görev</span>
                 </div>
                 <div className="flex gap-2">
-                  <Link to={`/expert/${exec.id}`} className="flex-1 text-center text-xs py-2 rounded-2xl bg-secondary hover:bg-secondary/80 text-foreground transition-colors">Aç</Link>
+                  <Link to={`/workspace/${exec.id}`} className="flex-1 text-center text-xs py-2 rounded-2xl bg-secondary hover:bg-secondary/80 text-foreground transition-colors">Aç</Link>
                   <button className="flex-1 text-xs py-2 rounded-2xl bg-primary/10 hover:bg-primary/20 text-primary transition-colors">Görev Ata</button>
                   <button className="text-xs py-2 px-3 rounded-2xl bg-secondary hover:bg-secondary/80 text-muted-foreground transition-colors">
                     <Pause className="h-3 w-3" />

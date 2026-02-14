@@ -33,7 +33,7 @@ const AppSidebar = () => {
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-1">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
+          const isActive = location.pathname === item.path || (item.path === "/team" && location.pathname.startsWith("/workspace"));
           return (
             <Link
               key={item.path}
