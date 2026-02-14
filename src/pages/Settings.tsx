@@ -8,7 +8,7 @@ import { usePacks } from "@/contexts/PackContext";
 
 const Settings = () => {
   const { currentUser, team, roleLabels, departments, canPerform, setCurrentUser } = useRBAC();
-  const { getActivePacks, getMonthlyTotal, deactivatePack, isCorActive } = usePacks();
+  const { activeTier, getActivePacks, getMonthlyTotal, deactivateAddon, isTrial, trialDaysRemaining } = usePacks();
   const [notifOpen, setNotifOpen] = useState(false);
   const [teamOpen, setTeamOpen] = useState(false);
   const [roleSimOpen, setRoleSimOpen] = useState(false);
@@ -87,7 +87,7 @@ const Settings = () => {
                 <div className="flex-1">
                   <p className="text-sm font-medium text-foreground">Subscription</p>
                   <p className="text-xs text-muted-foreground">
-                    {activePacks.length} active pack{activePacks.length !== 1 ? "s" : ""} · ${monthlyTotal}/mo
+                    {activeTier.name}{activePacks.length > 0 ? ` + ${activePacks.length} add-on${activePacks.length !== 1 ? "s" : ""}` : ""} · ${monthlyTotal}/mo
                   </p>
                 </div>
                 {subOpen ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
@@ -95,32 +95,43 @@ const Settings = () => {
               {subOpen && (
                 <div className="px-5 pb-5 pt-0 border-t border-border space-y-4">
                   <div className="pt-4">
-                    {activePacks.length === 0 ? (
-                      <div className="text-center py-6">
-                        <Package className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
-                        <p className="text-sm text-muted-foreground mb-3">No active packs.</p>
-                        <Link to="/marketplace" className="btn-primary px-5 py-2 text-xs inline-block">
-                          Browse Marketplace
-                        </Link>
+                    {/* Current Tier */}
+                    <div className="flex items-center justify-between p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                      <div className="flex items-center gap-3">
+                        <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                          <Shield className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{activeTier.name}</p>
+                          <p className="text-[10px] text-muted-foreground">
+                            {activeTier.cumulativeAgentIds.length} agents · Current Tier
+                            {isTrial && <span className="text-warning ml-2">Trial: {trialDaysRemaining} days left</span>}
+                          </p>
+                        </div>
                       </div>
-                    ) : (
-                      <div className="space-y-3">
+                      <span className="text-sm font-bold text-foreground">${activeTier.monthlyPrice}/mo</span>
+                    </div>
+
+                    {/* Active Add-ons */}
+                    {activePacks.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Active Add-ons</p>
                         {activePacks.map(pack => (
                           <div key={pack.id} className="flex items-center justify-between p-4 rounded-2xl bg-secondary/30">
                             <div className="flex items-center gap-3">
-                              <div className={`h-9 w-9 rounded-xl flex items-center justify-center ${pack.type === "core" ? "bg-primary/10" : "bg-accent/10"}`}>
-                                {pack.type === "core" ? <Shield className="h-4 w-4 text-primary" /> : <Package className="h-4 w-4 text-accent" />}
+                              <div className="h-9 w-9 rounded-xl bg-accent/10 flex items-center justify-center">
+                                <Package className="h-4 w-4 text-accent" />
                               </div>
                               <div>
                                 <p className="text-sm font-medium text-foreground">{pack.name}</p>
-                                <p className="text-[10px] text-muted-foreground">{pack.agents.length} agents · {pack.tagline}</p>
+                                <p className="text-[10px] text-muted-foreground">{pack.agents.length} agents</p>
                               </div>
                             </div>
                             <div className="flex items-center gap-3">
                               <span className="text-sm font-bold text-foreground">${pack.monthlyPrice}/mo</span>
                               {canPerform("canManageBilling") && (
                                 <button
-                                  onClick={() => deactivatePack(pack.id)}
+                                  onClick={() => deactivateAddon(pack.id)}
                                   className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors"
                                   title="Remove Pack"
                                 >
@@ -130,18 +141,18 @@ const Settings = () => {
                             </div>
                           </div>
                         ))}
-
-                        {/* Total */}
-                        <div className="flex items-center justify-between pt-3 border-t border-border">
-                          <span className="text-sm font-medium text-foreground">Monthly Total</span>
-                          <span className="text-lg font-bold text-primary">${monthlyTotal}/mo</span>
-                        </div>
-
-                        <Link to="/marketplace" className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1.5 mt-2">
-                          <Plus className="h-3 w-3" /> Add More Packs
-                        </Link>
                       </div>
                     )}
+
+                    {/* Total */}
+                    <div className="flex items-center justify-between pt-3 border-t border-border">
+                      <span className="text-sm font-medium text-foreground">Monthly Total</span>
+                      <span className="text-lg font-bold text-primary">${monthlyTotal}/mo</span>
+                    </div>
+
+                    <Link to="/marketplace" className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1.5 mt-2">
+                      <Plus className="h-3 w-3" /> Upgrade Tier or Add Packs
+                    </Link>
                   </div>
                 </div>
               )}
