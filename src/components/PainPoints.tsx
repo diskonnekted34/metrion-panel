@@ -40,7 +40,7 @@ const PainPoints = () => {
               className={`${bentoIndices.includes(i) ? "glass-bento" : "glass-card"} p-6`}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="rounded-[14px] bg-primary/10 p-2.5">
+                <div className="rounded-[5px] bg-primary/10 p-2.5">
                   <group.icon className="h-4 w-4 text-primary" />
                 </div>
                 <h3 className="font-semibold text-foreground text-sm">{group.title}</h3>

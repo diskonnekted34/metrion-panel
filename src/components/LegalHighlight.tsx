@@ -32,7 +32,7 @@ const LegalHighlight = () => {
           className="glass-bento p-10 md:p-14 relative overflow-hidden"
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-[20px] bg-accent/10 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-[5px] bg-accent/10 flex items-center justify-center">
               <Shield className="h-6 w-6 text-accent" />
             </div>
             <div>
@@ -61,7 +61,7 @@ const LegalHighlight = () => {
             ))}
           </div>
 
-          <div className="flex items-start gap-2 p-4 rounded-[16px] bg-white/[0.03]">
+          <div className="flex items-start gap-2 p-4 rounded-[5px] bg-white/[0.03]">
             <AlertTriangle className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
             <p className="text-xs text-muted-foreground italic">
               {lang === "en"

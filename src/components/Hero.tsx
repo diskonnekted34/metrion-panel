@@ -29,7 +29,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0)" }}
               transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
-              className="inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6"
+              className="inline-flex items-center gap-2 rounded-[5px] glass px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6"
             >
               <Sparkles className="h-3.5 w-3.5 text-primary" />
               {t.hero.badge}
@@ -67,7 +67,7 @@ const Hero = () => {
                 {t.hero.cta1}
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link to="/pricing" className="inline-flex items-center gap-2 rounded-[20px] glass px-6 py-3 text-sm font-medium text-foreground transition-all hover:border-white/[0.18] active:scale-[0.98]">
+              <Link to="/pricing" className="inline-flex items-center gap-2 rounded-[5px] glass px-6 py-3 text-sm font-medium text-foreground transition-all hover:border-white/[0.18] active:scale-[0.98]">
                 {t.hero.cta2}
               </Link>
             </motion.div>
@@ -114,14 +114,14 @@ const Hero = () => {
                 }}
               >
                 <div className="flex items-center gap-3 mb-2">
-                  <img src={exec.avatar} alt={exec.name} className="h-9 w-9 rounded-[14px] object-cover ring-2 ring-white/[0.08]" />
+                  <img src={exec.avatar} alt={exec.name} className="h-9 w-9 rounded-[5px] object-cover ring-2 ring-white/[0.08]" />
                   <div>
                     <p className="text-xs font-bold text-primary">{exec.role}</p>
                     <p className="text-[11px] text-muted-foreground">{exec.name}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded-[10px] ${
+                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded-[5px] ${
                     exec.status === "Monitoring" ? "bg-accent/15 text-accent" :
                     exec.status === "Alerting" ? "bg-destructive/15 text-destructive" :
                     "bg-white/[0.06] text-muted-foreground"

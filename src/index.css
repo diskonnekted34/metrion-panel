@@ -32,7 +32,7 @@
     --input: 220 14% 14%;
     --ring: 210 80% 55%;
 
-    --radius: 1.25rem;
+    --radius: 0.3125rem;
 
     --sidebar-background: 220 18% 7%;
     --sidebar-foreground: 210 14% 70%;
@@ -66,7 +66,7 @@
   }
 
   .glass-card {
-    @apply bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] shadow-lg shadow-black/20 rounded-[20px] transition-all duration-300;
+    @apply bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] shadow-lg shadow-black/20 rounded-[5px] transition-all duration-300;
   }
 
   .glass-card:hover {
@@ -74,7 +74,7 @@
   }
 
   .glass-bento {
-    @apply bg-white/[0.04] backdrop-blur-[200px] border border-white/[0.07] shadow-2xl shadow-black/40 rounded-[20px];
+    @apply bg-white/[0.04] backdrop-blur-[200px] border border-white/[0.07] shadow-2xl shadow-black/40 rounded-[5px];
   }
 
   .gradient-text {
@@ -104,7 +104,7 @@
   }
 
   .btn-primary {
-    @apply relative overflow-hidden rounded-[20px] text-sm font-medium transition-all;
+    @apply relative overflow-hidden rounded-[5px] text-sm font-medium transition-all;
     background: linear-gradient(135deg, hsl(210 80% 50%) 0%, hsl(210 80% 60%) 100%);
     color: white;
   }
@@ -120,7 +120,7 @@
   }
 
   .btn-accent {
-    @apply relative overflow-hidden rounded-[20px] text-sm font-medium transition-all;
+    @apply relative overflow-hidden rounded-[5px] text-sm font-medium transition-all;
     background: linear-gradient(135deg, hsl(152 60% 42%) 0%, hsl(152 60% 52%) 100%);
     color: white;
   }

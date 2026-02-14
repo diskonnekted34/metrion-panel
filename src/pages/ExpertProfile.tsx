@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2, Users, Zap, Shield, Calendar, Star, Crown } from "lucide-react";
-import { executives } from "@/data/experts";
+import { allExperts } from "@/data/experts";
 import { useLanguage } from "@/i18n/LanguageContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 const ExpertProfile = () => {
   const { id } = useParams();
   const { t } = useLanguage();
-  const exec = executives.find((e) => e.id === id);
+  const exec = allExperts.find((e) => e.id === id);
 
   if (!exec) {
     return (
@@ -36,12 +36,12 @@ const ExpertProfile = () => {
 
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ease: [0.2, 0.8, 0.2, 1] }} className="glass-bento p-8 mb-8">
             <div className="flex flex-col md:flex-row gap-8 items-start">
-              <img src={exec.avatar} alt={exec.name} className="h-28 w-28 rounded-[24px] object-cover ring-4 ring-white/[0.06] shadow-lg" />
+              <img src={exec.avatar} alt={exec.name} className="h-28 w-28 rounded-[5px] object-cover ring-4 ring-white/[0.06] shadow-lg" />
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3 mb-1">
                   <h1 className="text-3xl font-bold text-foreground">{exec.role}</h1>
-                  <span className={`text-xs font-semibold px-3 py-1 rounded-[12px] ${
-                    exec.badge === "C-Level" ? "bg-primary/15 text-primary" : "bg-white/[0.06] text-muted-foreground"
+                   <span className={`text-xs font-semibold px-3 py-1 rounded-[5px] ${
+                    exec.badge === "C-Level" ? "bg-primary/15 text-primary" : exec.badge === "Agent" ? "bg-accent/15 text-accent" : "bg-white/[0.06] text-muted-foreground"
                   }`}>{exec.badge}</span>
                 </div>
                 <p className="text-lg text-muted-foreground mb-1">{exec.name}</p>
@@ -67,7 +67,7 @@ const ExpertProfile = () => {
                   <button className="btn-primary px-6 py-3 active:scale-[0.98]">
                     {t.profile.hireTeam}
                   </button>
-                  <Link to="/pricing" className="rounded-[20px] glass px-6 py-3 text-sm font-medium text-foreground flex items-center gap-2 hover:border-white/[0.14] transition-all">
+                  <Link to="/pricing" className="rounded-[5px] glass px-6 py-3 text-sm font-medium text-foreground flex items-center gap-2 hover:border-white/[0.14] transition-all">
                     <Crown className="h-3.5 w-3.5 text-primary" />
                     {t.profile.getBundle}
                   </Link>
@@ -122,12 +122,12 @@ const ExpertProfile = () => {
                         <span className="text-foreground font-medium">{skill.name}</span>
                         <span className="text-muted-foreground">{skill.level}%</span>
                       </div>
-                      <div className="h-2 rounded-[20px] bg-white/[0.04] overflow-hidden">
+                       <div className="h-2 rounded-[5px] bg-white/[0.04] overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${skill.level}%` }}
                           transition={{ duration: 1, delay: 0.3 }}
-                          className="h-full rounded-[20px]"
+                          className="h-full rounded-[5px]"
                           style={{ background: "linear-gradient(90deg, hsl(210 80% 50%), hsl(152 60% 48%))" }}
                         />
                       </div>
@@ -140,10 +140,10 @@ const ExpertProfile = () => {
                 <h2 className="text-xl font-semibold text-foreground mb-6">{t.profile.reviews}</h2>
                 <div className="space-y-4">
                   {exec.reviews.map((review, i) => (
-                    <div key={i} className="p-4 rounded-[20px] bg-white/[0.03]">
+                    <div key={i} className="p-4 rounded-[5px] bg-white/[0.03]">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-[14px] bg-primary/10 flex items-center justify-center">
+                          <div className="h-8 w-8 rounded-[5px] bg-primary/10 flex items-center justify-center">
                             <Users className="h-3.5 w-3.5 text-primary" />
                           </div>
                           <span className="text-sm font-medium text-foreground">{review.name}</span>
