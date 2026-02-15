@@ -1,11 +1,17 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Building2, AlertTriangle, ListTodo, TrendingUp, TrendingDown, Minus, Lock, ChevronRight } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
-import { useRBAC } from "@/contexts/RBACContext";
+import { useRBAC, type DepartmentId } from "@/contexts/RBACContext";
+import { usePacks } from "@/contexts/PackContext";
+import UpgradeModal from "@/components/UpgradeModal";
 
 const Departments = () => {
   const { departments, hasAccessToDepartment, currentUser, roleLabels } = useRBAC();
+  const { isDepartmentUnlocked } = usePacks();
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [upgradeDeptId, setUpgradeDeptId] = useState<DepartmentId | undefined>();
 
   const trendIcon = (t: "up" | "down" | "stable") => {
     if (t === "up") return <TrendingUp className="h-3.5 w-3.5 text-success" />;
@@ -39,6 +45,9 @@ const Departments = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {departments.map((dept, i) => {
             const hasAccess = hasAccessToDepartment(dept.id);
+            const unlocked = isDepartmentUnlocked(dept.id);
+            const isLegal = dept.id === "legal";
+
             return (
               <motion.div
                 key={dept.id}
@@ -46,7 +55,7 @@ const Departments = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
               >
-                {hasAccess ? (
+                {unlocked && hasAccess ? (
                   <Link to={`/departments/${dept.id}`} className="block">
                     <div className="glass-card p-5 h-full group">
                       <div className="flex items-center justify-between mb-4">
@@ -86,21 +95,34 @@ const Departments = () => {
                     </div>
                   </Link>
                 ) : (
-                  <div className="glass-card p-5 h-full opacity-50 relative">
+                  /* Locked department card */
+                  <div
+                    className="glass-card p-5 h-full relative cursor-pointer"
+                    onClick={() => {
+                      if (!isLegal) {
+                        setUpgradeDeptId(dept.id);
+                        setUpgradeOpen(true);
+                      }
+                    }}
+                  >
                     <div className="absolute inset-0 rounded-2xl bg-background/60 backdrop-blur-sm flex flex-col items-center justify-center z-10">
                       <Lock className="h-5 w-5 text-muted-foreground mb-2" />
-                      <p className="text-xs text-muted-foreground text-center px-4">
-                        Erişim Kısıtlı
+                      <p className="text-xs font-medium text-muted-foreground text-center px-4">
+                        {isLegal ? "Yakında" : "Planı Yükselterek Aç"}
                       </p>
-                      <p className="text-[10px] text-muted-foreground mt-1">
-                        Departman liderinize başvurun
-                      </p>
+                      {!isLegal && (
+                        <p className="text-[10px] text-primary mt-1.5 font-medium">
+                          Yükselt →
+                        </p>
+                      )}
                     </div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-2xl">{dept.icon}</span>
-                      <h3 className="text-sm font-semibold text-foreground">{dept.name}</h3>
+                    <div className="opacity-30">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-2xl">{dept.icon}</span>
+                        <h3 className="text-sm font-semibold text-foreground">{dept.name}</h3>
+                      </div>
+                      <div className="h-20" />
                     </div>
-                    <div className="h-20" />
                   </div>
                 )}
               </motion.div>
@@ -108,6 +130,8 @@ const Departments = () => {
           })}
         </div>
       </div>
+
+      <UpgradeModal open={upgradeOpen} onClose={() => setUpgradeOpen(false)} departmentId={upgradeDeptId} />
     </AppLayout>
   );
 };

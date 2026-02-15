@@ -181,7 +181,6 @@ const Marketplace = () => {
       </div>
 
       <UpgradeModal
-        pack={selectedPack}
         open={!!selectedPack}
         onClose={() => setSelectedPack(null)}
       />

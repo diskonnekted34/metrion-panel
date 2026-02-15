@@ -2,7 +2,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 
 export type UserRole = "owner" | "admin" | "department_lead" | "operator" | "viewer";
 
-export type DepartmentId = "executive" | "marketing" | "finance" | "operations" | "technology" | "legal" | "creative";
+export type DepartmentId = "executive" | "marketing" | "finance" | "operations" | "creative" | "marketplace" | "legal";
 
 export interface Department {
   id: DepartmentId;
@@ -13,6 +13,7 @@ export interface Department {
   activeAlerts: number;
   activeTasks: number;
   trend: "up" | "down" | "stable";
+  description: string;
 }
 
 export interface MockUser {
@@ -34,21 +35,21 @@ export interface TeamMember {
 }
 
 export const departments: Department[] = [
-  { id: "executive", name: "Yönetim", icon: "👔", agentIds: ["ceo", "cso"], healthScore: 82, activeAlerts: 1, activeTasks: 4, trend: "up" },
-  { id: "marketing", name: "Pazarlama", icon: "📢", agentIds: ["cmo", "brand-manager", "nova", "muse", "content-strategist", "social-media-manager", "seo-specialist", "email-marketing", "influencer-manager"], healthScore: 68, activeAlerts: 3, activeTasks: 8, trend: "down" },
-  { id: "finance", name: "Finans", icon: "💰", agentIds: ["cfo", "atlas"], healthScore: 91, activeAlerts: 1, activeTasks: 3, trend: "up" },
-  { id: "operations", name: "Operasyon", icon: "⚙️", agentIds: ["cto", "aria"], healthScore: 74, activeAlerts: 2, activeTasks: 5, trend: "stable" },
-  { id: "technology", name: "Teknoloji", icon: "🖥️", agentIds: ["cto"], healthScore: 88, activeAlerts: 0, activeTasks: 2, trend: "up" },
-  { id: "legal", name: "Hukuk", icon: "⚖️", agentIds: ["legal", "lexis"], healthScore: 85, activeAlerts: 1, activeTasks: 2, trend: "stable" },
-  { id: "creative", name: "Kreatif", icon: "🎨", agentIds: ["muse", "art-director", "graphic-designer", "brand-manager", "social-media-manager"], healthScore: 79, activeAlerts: 1, activeTasks: 6, trend: "up" },
+  { id: "executive", name: "Yönetim", icon: "👔", agentIds: ["ceo"], healthScore: 82, activeAlerts: 1, activeTasks: 4, trend: "up", description: "Stratejik önceliklendirme, karar yönetimi ve yönetici brifingleri." },
+  { id: "marketing", name: "Pazarlama", icon: "📢", agentIds: ["cmo", "nova"], healthScore: 68, activeAlerts: 3, activeTasks: 8, trend: "down", description: "Kampanya stratejisi, performans izleme ve büyüme yönetimi." },
+  { id: "finance", name: "Finans", icon: "💰", agentIds: ["cfo", "accounting"], healthScore: 91, activeAlerts: 1, activeTasks: 3, trend: "up", description: "Kârlılık analizi, nakit akış tahmini ve bütçe kontrolü." },
+  { id: "operations", name: "Operasyon", icon: "⚙️", agentIds: ["coo", "inventory"], healthScore: 74, activeAlerts: 2, activeTasks: 5, trend: "stable", description: "Tedarik zinciri, envanter yönetimi ve süreç optimizasyonu." },
+  { id: "creative", name: "Kreatif", icon: "🎨", agentIds: ["creative-director", "graphic-designer", "art-director"], healthScore: 79, activeAlerts: 1, activeTasks: 6, trend: "up", description: "Marka yönetimi, görsel üretim ve kreatif strateji." },
+  { id: "marketplace", name: "Pazaryeri", icon: "🏪", agentIds: ["marketplace-manager"], healthScore: 76, activeAlerts: 1, activeTasks: 4, trend: "stable", description: "Çoklu pazaryeri listeleme, fiyat senkronizasyonu ve sipariş yönetimi." },
+  { id: "legal", name: "Hukuk", icon: "⚖️", agentIds: ["legal-advisor"], healthScore: 85, activeAlerts: 0, activeTasks: 0, trend: "stable", description: "Sözleşme analizi, uyum denetimi ve hukuki risk değerlendirmesi." },
 ];
 
 const mockTeam: TeamMember[] = [
-  { id: "u1", name: "Ahmet Yılmaz", email: "ahmet@company.com", role: "owner", departments: ["executive", "marketing", "finance", "operations", "technology", "legal", "creative"], joinedAt: "2024-01-15" },
-  { id: "u2", name: "Zeynep Kaya", email: "zeynep@company.com", role: "admin", departments: ["executive", "marketing", "finance", "operations", "technology", "legal", "creative"], joinedAt: "2024-02-01" },
+  { id: "u1", name: "Ahmet Yılmaz", email: "ahmet@company.com", role: "owner", departments: ["executive", "marketing", "finance", "operations", "creative", "marketplace", "legal"], joinedAt: "2024-01-15" },
+  { id: "u2", name: "Zeynep Kaya", email: "zeynep@company.com", role: "admin", departments: ["executive", "marketing", "finance", "operations", "creative", "marketplace", "legal"], joinedAt: "2024-02-01" },
   { id: "u3", name: "Mehmet Demir", email: "mehmet@company.com", role: "department_lead", departments: ["marketing"], joinedAt: "2024-03-10" },
   { id: "u4", name: "Elif Öztürk", email: "elif@company.com", role: "department_lead", departments: ["finance"], joinedAt: "2024-03-15" },
-  { id: "u5", name: "Can Arslan", email: "can@company.com", role: "operator", departments: ["operations", "technology"], joinedAt: "2024-04-01" },
+  { id: "u5", name: "Can Arslan", email: "can@company.com", role: "operator", departments: ["operations"], joinedAt: "2024-04-01" },
   { id: "u6", name: "Selin Çelik", email: "selin@company.com", role: "viewer", departments: ["marketing", "finance"], joinedAt: "2024-05-20" },
 ];
 
@@ -97,7 +98,7 @@ export const RBACProvider = ({ children }: { children: ReactNode }) => {
     name: "Ahmet Yılmaz",
     email: "ahmet@company.com",
     role: "owner",
-    departments: ["executive", "marketing", "finance", "operations", "technology", "legal"],
+    departments: ["executive", "marketing", "finance", "operations", "creative", "marketplace", "legal"],
   });
 
   const [viewMode, setViewMode] = useState<DepartmentId | "company">("company");

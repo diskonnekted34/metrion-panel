@@ -1,3 +1,5 @@
+import type { DepartmentId } from "@/contexts/RBACContext";
+
 export interface PackAgent {
   id: string;
   role: string;
@@ -18,13 +20,14 @@ export interface Tier {
   badge?: string;
   agents: PackAgent[];
   departments: string[];
+  /** Department IDs unlocked by this tier (cumulative) */
+  departmentIds: DepartmentId[];
   features: string[];
   integrations: TierIntegration[];
   teamMembers: string;
   approvalModel: string;
   aiProcessing: string;
   capabilities: string[];
-  /** IDs of agents included cumulatively (including lower tiers) */
   cumulativeAgentIds: string[];
 }
 
@@ -65,7 +68,8 @@ export const tiers: Tier[] = [
     tagline: "Temel yönetim istihbaratı.",
     description: "Yönetici, pazarlama ve finans departmanlarında çekirdek AI yönetimi.",
     monthlyPrice: 349,
-    departments: ["Yönetici", "Pazarlama", "Finans"],
+    departments: ["Yönetim", "Pazarlama", "Finans"],
+    departmentIds: ["executive", "marketing", "finance"],
     agents: [
       { id: "ceo", role: "AI CEO", name: "CEO Agent" },
       { id: "cmo", role: "AI CMO", name: "CMO Agent" },
@@ -110,7 +114,8 @@ export const tiers: Tier[] = [
     description: "Core'daki her şey + Operasyon departmanı ve gelişmiş büyüme yetenekleri.",
     monthlyPrice: 599,
     badge: "Önerilen",
-    departments: ["Yönetici", "Pazarlama", "Finans", "Operasyon"],
+    departments: ["Yönetim", "Pazarlama", "Finans", "Operasyon"],
+    departmentIds: ["executive", "marketing", "finance", "operations"],
     agents: [
       { id: "coo", role: "AI COO", name: "COO Agent" },
       { id: "inventory", role: "AI Envanter Yöneticisi", name: "Inventory Agent" },
@@ -151,16 +156,19 @@ export const tiers: Tier[] = [
     description: "Tüm departmanlar, tüm ajanlar, sınırsız ekip.",
     monthlyPrice: 899,
     badge: "En Kapsamlı",
-    departments: ["Yönetici", "Pazarlama", "Finans", "Operasyon", "Kreatif", "Hukuk"],
+    departments: ["Yönetim", "Pazarlama", "Finans", "Operasyon", "Kreatif", "Pazaryeri"],
+    departmentIds: ["executive", "marketing", "finance", "operations", "creative", "marketplace"],
     agents: [
       { id: "creative-director", role: "AI Kreatif Direktör", name: "Creative Director" },
       { id: "graphic-designer", role: "AI Grafik Tasarımcı", name: "Graphic Designer" },
       { id: "art-director", role: "AI Sanat Yönetmeni", name: "Art Director" },
+      { id: "marketplace-manager", role: "AI Pazaryeri Yöneticisi", name: "Marketplace Agent" },
     ],
     features: [
       "Performance'daki tüm özellikler",
       "Kreatif departmanı açık",
-      "Hukuk departmanı (placeholder)",
+      "Pazaryeri departmanı açık",
+      "Hukuk departmanı (yakında)",
       "Sınırsız ekip üyesi",
       "Çok seviyeli onay zinciri",
       "Öncelikli senkronizasyon",
@@ -172,7 +180,7 @@ export const tiers: Tier[] = [
       { name: "Tüm Performance entegrasyonları" },
       { name: "Figma" },
       { name: "Adobe Creative Cloud" },
-      { name: "Trendyol / Hepsiburada" },
+      { name: "Trendyol / Hepsiburada / Amazon" },
       { name: "Slack / Notion" },
     ],
     teamMembers: "Sınırsız",
@@ -181,6 +189,7 @@ export const tiers: Tier[] = [
     capabilities: [
       "Performance'daki tüm yetenekler",
       "Tam AI kreatif departman",
+      "Çoklu pazaryeri yönetimi",
       "Gelişmiş tahminleme",
       "Çok seviyeli onay zinciri",
       "Gelişmiş denetim dışa aktarımı",
@@ -189,6 +198,7 @@ export const tiers: Tier[] = [
       "ceo", "cmo", "cfo", "accounting",
       "coo", "inventory",
       "creative-director", "graphic-designer", "art-director",
+      "marketplace-manager",
     ],
   },
 ];
@@ -225,7 +235,7 @@ export const addonPacks: Pack[] = [
     description: "Trendyol, Hepsiburada, Amazon ve Etsy entegrasyonları.",
     monthlyPrice: 99,
     type: "addon",
-    department: "operations",
+    department: "marketplace",
     requiresCore: true,
     agents: [
       { id: "marketplace-manager", role: "AI Pazaryeri Yöneticisi", name: "Nexus" },
@@ -274,6 +284,26 @@ export const corePack: Pack = {
 
 export const allPacks: Pack[] = [corePack, ...addonPacks];
 
+// ── DEPARTMENT → INTEGRATION MAPPING ──
+
+export const departmentIntegrationMap: Record<string, string[]> = {
+  executive: [], // executive uses cross-department data
+  marketing: ["meta-ads", "google-ads", "tiktok-ads", "pinterest-ads", "snap-ads", "linkedin-ads", "ga4", "gsc", "mixpanel", "amplitude", "hotjar", "clarity", "klaviyo", "mailchimp", "hubspot", "activecampaign", "omnisend", "instagram-business", "facebook-pages", "tiktok-business", "youtube-studio"],
+  finance: ["stripe", "shopify-payments", "paypal", "iyzico", "paytr", "parasut", "logo", "quickbooks", "xero", "mikro", "netsuite"],
+  operations: ["shopify", "woocommerce", "bigcommerce", "magento", "shippo", "shipstation", "easyship", "dhl", "ups", "fedex", "yurtici", "mng", "hepsijet", "recharge", "bold-subscriptions"],
+  creative: ["canva", "figma", "adobe-cc"],
+  marketplace: ["amazon-seller", "trendyol", "hepsiburada", "etsy", "ebay"],
+  legal: [],
+};
+
+/** Get the department that owns an integration */
+export function getIntegrationDepartment(integrationId: string): string | undefined {
+  for (const [deptId, ids] of Object.entries(departmentIntegrationMap)) {
+    if (ids.includes(integrationId)) return deptId;
+  }
+  return undefined;
+}
+
 // ── COMPARISON FEATURES ──
 
 export interface ComparisonRow {
@@ -286,12 +316,13 @@ export interface ComparisonRow {
 
 export const comparisonData: ComparisonRow[] = [
   // Departments
-  { label: "Yönetici Departmanı", category: "Departmanlar", core: true, performance: true, workforce: true },
+  { label: "Yönetim Departmanı", category: "Departmanlar", core: true, performance: true, workforce: true },
   { label: "Pazarlama Departmanı", category: "Departmanlar", core: true, performance: true, workforce: true },
   { label: "Finans Departmanı", category: "Departmanlar", core: true, performance: true, workforce: true },
   { label: "Operasyon Departmanı", category: "Departmanlar", core: false, performance: true, workforce: true },
   { label: "Kreatif Departmanı", category: "Departmanlar", core: false, performance: false, workforce: true },
-  { label: "Hukuk Departmanı", category: "Departmanlar", core: false, performance: false, workforce: "Placeholder" },
+  { label: "Pazaryeri Departmanı", category: "Departmanlar", core: false, performance: false, workforce: true },
+  { label: "Hukuk Departmanı", category: "Departmanlar", core: false, performance: false, workforce: "Yakında" },
   // Agents
   { label: "CEO Agent", category: "Ajanlar", core: true, performance: true, workforce: true },
   { label: "CMO Agent", category: "Ajanlar", core: true, performance: true, workforce: true },
@@ -302,6 +333,16 @@ export const comparisonData: ComparisonRow[] = [
   { label: "Creative Director", category: "Ajanlar", core: false, performance: false, workforce: true },
   { label: "Graphic Designer", category: "Ajanlar", core: false, performance: false, workforce: true },
   { label: "Art Director", category: "Ajanlar", core: false, performance: false, workforce: true },
+  { label: "Marketplace Agent", category: "Ajanlar", core: false, performance: false, workforce: true },
+  // Data & Action Sources
+  { label: "Shopify", category: "Veri & Aksiyon Kaynakları", core: true, performance: true, workforce: true },
+  { label: "Meta Ads", category: "Veri & Aksiyon Kaynakları", core: true, performance: true, workforce: true },
+  { label: "Stripe", category: "Veri & Aksiyon Kaynakları", core: true, performance: true, workforce: true },
+  { label: "GA4", category: "Veri & Aksiyon Kaynakları", core: true, performance: true, workforce: true },
+  { label: "Google Ads", category: "Veri & Aksiyon Kaynakları", core: false, performance: true, workforce: true },
+  { label: "Kargo Entegrasyonları", category: "Veri & Aksiyon Kaynakları", core: false, performance: true, workforce: true },
+  { label: "Canva / Figma", category: "Veri & Aksiyon Kaynakları", core: "Taslak", performance: "Taslak", workforce: true },
+  { label: "Pazaryeri Platformları", category: "Veri & Aksiyon Kaynakları", core: false, performance: false, workforce: true },
   // Capabilities
   { label: "Draft-first yazma otomasyonu", category: "Özellikler", core: true, performance: true, workforce: true },
   { label: "Risk Engine", category: "Özellikler", core: "Varsayılan eşikler", performance: "Özel eşikler", workforce: "Özel eşikler" },

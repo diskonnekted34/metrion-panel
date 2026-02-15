@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from "react";
-import { Pack, Tier, tiers, addonPacks, allPacks, CreditPack, creditPacks } from "@/data/packs";
+import { Pack, Tier, tiers, addonPacks, allPacks, creditPacks } from "@/data/packs";
+import type { DepartmentId } from "@/contexts/RBACContext";
 import { toast } from "sonner";
 
 interface PackContextType {
@@ -11,6 +12,8 @@ interface PackContextType {
   deactivateAddon: (packId: string) => void;
   isAddonActive: (packId: string) => boolean;
   isAgentUnlocked: (agentId: string) => boolean;
+  isDepartmentUnlocked: (deptId: DepartmentId) => boolean;
+  getRequiredTierForDepartment: (deptId: DepartmentId) => Tier | undefined;
   getPackForAgent: (agentId: string) => Pack | undefined;
   getMonthlyTotal: () => number;
   getActivePacks: () => Pack[];
@@ -69,6 +72,20 @@ export const PackProvider = ({ children }: { children: ReactNode }) => {
 
   const isAddonActive = useCallback((packId: string) => activeAddons.includes(packId), [activeAddons]);
 
+  const isDepartmentUnlocked = useCallback((deptId: DepartmentId) => {
+    // Legal is always locked (future)
+    if (deptId === "legal") return false;
+    // Check if current tier unlocks this department
+    if (activeTier.departmentIds.includes(deptId)) return true;
+    // Check if an active addon unlocks it
+    const addon = addonPacks.find(p => p.department === deptId && activeAddons.includes(p.id));
+    return !!addon;
+  }, [activeTier, activeAddons]);
+
+  const getRequiredTierForDepartment = useCallback((deptId: DepartmentId) => {
+    return tiers.find(t => t.departmentIds.includes(deptId));
+  }, []);
+
   const isAgentUnlocked = useCallback((agentId: string) => {
     if (activeTier.cumulativeAgentIds.includes(agentId)) return true;
     return addonPacks.some(p => activeAddons.includes(p.id) && p.agents.some(a => a.id === agentId));
@@ -111,7 +128,8 @@ export const PackProvider = ({ children }: { children: ReactNode }) => {
     <PackContext.Provider value={{
       currentTierId, activeTier, activeAddons,
       activateTier, activateAddon, deactivateAddon, isAddonActive,
-      isAgentUnlocked, getPackForAgent, getMonthlyTotal, getActivePacks,
+      isAgentUnlocked, isDepartmentUnlocked, getRequiredTierForDepartment,
+      getPackForAgent, getMonthlyTotal, getActivePacks,
       trialDaysRemaining, isTrial,
       creditBalance, autoTopUp, setAutoTopUp, purchaseCredits,
       isCorActive, activePacks, isPackActive, activatePack, deactivatePack,
