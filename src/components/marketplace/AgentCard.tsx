@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, TrendingUp, BarChart3, Layers, Palette, ShoppingCart, FileText, Check, FileBarChart, ArrowRight, ChevronDown } from "lucide-react";
+import { Brain, TrendingUp, BarChart3, Layers, Palette, ShoppingCart, FileText, Check, FileBarChart, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Executive } from "@/data/experts";
 
@@ -16,42 +16,17 @@ interface AgentCardProps {
   index: number;
 }
 
-const VISIBLE_CAP_COUNT = 6;
-
 const CapabilityMatrix = ({ capabilities }: { capabilities: string[] }) => {
-  const [expanded, setExpanded] = useState(false);
-  const visible = capabilities.slice(0, VISIBLE_CAP_COUNT);
-  const hidden = capabilities.slice(VISIBLE_CAP_COUNT);
-  const hasMore = hidden.length > 0;
-
   return (
     <div className="mb-3">
-      <p className="text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: "rgba(30, 107, 255, 0.7)" }}>
+      <p className="text-[9px] font-bold uppercase tracking-widest mb-[12px]" style={{ color: "rgba(30, 107, 255, 0.7)" }}>
         Yetkinlik Matrisi
       </p>
-      <div className="grid grid-cols-2 gap-x-3 gap-y-[10px]">
-        {visible.map((cap, i) => (
+      <div className="flex flex-col gap-[8px]">
+        {capabilities.map((cap, i) => (
           <CapabilityItem key={i} cap={cap} />
         ))}
-        {hasMore && expanded && hidden.map((cap, i) => (
-          <CapabilityItem key={`h-${i}`} cap={cap} />
-        ))}
       </div>
-      {hasMore && (
-        <button
-          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setExpanded(!expanded); }}
-          className="flex items-center gap-1 mt-2 text-[10px] font-medium transition-colors duration-150"
-          style={{ color: "rgba(30, 107, 255, 0.7)" }}
-          onMouseEnter={e => { e.currentTarget.style.color = "rgba(30, 107, 255, 1)"; }}
-          onMouseLeave={e => { e.currentTarget.style.color = "rgba(30, 107, 255, 0.7)"; }}
-        >
-          <ChevronDown
-            className="h-3 w-3 transition-transform duration-200"
-            style={{ transform: expanded ? "rotate(180deg)" : "rotate(0)" }}
-          />
-          {expanded ? "Daralt" : `+${hidden.length} yetkinlik daha`}
-        </button>
-      )}
     </div>
   );
 };

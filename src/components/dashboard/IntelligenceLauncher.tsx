@@ -55,53 +55,47 @@ const IntelligenceLauncher = () => {
         <span className="text-[10px] text-muted-foreground">Gelişmiş AI işlem gücüyle detaylı analiz çalıştırın.</span>
       </div>
 
-      <div className="glass-card p-4 relative overflow-hidden">
+      <div className="glass-card p-5 relative overflow-hidden">
         {/* Subtle grid */}
         <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{
           backgroundImage: "linear-gradient(hsl(var(--primary)/0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)/0.3) 1px, transparent 1px)",
           backgroundSize: "40px 40px"
         }} />
 
-        <div className="relative z-10 flex gap-4 items-start">
-          {/* Left — Input */}
-          <div className="flex-1 min-w-0">
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder={displayedPlaceholder}
-                  className="w-full h-10 pl-10 pr-4 rounded-xl border border-white/[0.08] bg-secondary/60 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/30 transition-all"
-                />
-              </div>
-              <Button onClick={() => handleLaunch()} className="h-10 px-5 gap-2 shrink-0">
-                <Zap className="h-4 w-4" />
-                Başlat
-              </Button>
+        <div className="relative z-10 space-y-4">
+          {/* Full-width input */}
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={displayedPlaceholder}
+                className="w-full h-11 pl-10 pr-4 rounded-xl border border-white/[0.08] bg-secondary/60 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/30 transition-all"
+              />
             </div>
-            <p className="text-[9px] text-muted-foreground mt-1.5 ml-1">Gelişmiş analizler ek işlem gücü kullanabilir.</p>
+            <Button onClick={() => handleLaunch()} className="h-11 px-6 gap-2 shrink-0">
+              <Zap className="h-4 w-4" />
+              Derin Analiz Başlat
+            </Button>
           </div>
 
-          {/* Right — 3 horizontal templates */}
-          <div className="flex gap-3 shrink-0 overflow-x-auto">
+          {/* Templates row below input */}
+          <div className="flex gap-3 overflow-x-auto">
             {quickTemplates.map((t) => (
               <button
                 key={t.title}
                 onClick={() => handleLaunch(t.clusterId)}
-                className="glass-card px-3.5 py-3 text-left group hover:border-primary/30 hover:shadow-[0_0_16px_rgba(30,107,255,0.08)] transition-all cursor-pointer min-w-[190px] max-w-[220px] flex flex-col"
+                className="glass-card px-3.5 py-2.5 text-left group hover:border-primary/30 hover:shadow-[0_0_16px_rgba(30,107,255,0.08)] transition-all cursor-pointer min-w-[190px] flex items-center gap-3 shrink-0"
               >
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="h-6 w-6 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <t.icon className="h-3 w-3 text-primary" />
-                  </div>
-                  <span className="text-[8px] font-medium px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
-                    Advanced
-                  </span>
+                <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shrink-0">
+                  <t.icon className="h-3.5 w-3.5 text-primary" />
                 </div>
-                <p className="text-[13px] font-medium text-foreground leading-[1.3] group-hover:text-white transition-colors">{t.title}</p>
-                <p className="text-[11px] text-muted-foreground/65 leading-[1.35] mt-1 line-clamp-2 group-hover:text-muted-foreground/80 transition-colors">{t.description}</p>
+                <div className="min-w-0">
+                  <p className="text-[12px] font-medium text-foreground leading-[1.3] group-hover:text-white transition-colors truncate">{t.title}</p>
+                  <p className="text-[10px] text-muted-foreground/60 leading-[1.35] mt-0.5 line-clamp-1 group-hover:text-muted-foreground/80 transition-colors">{t.description}</p>
+                </div>
               </button>
             ))}
           </div>
