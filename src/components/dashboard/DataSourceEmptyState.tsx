@@ -10,17 +10,17 @@ const DataSourceEmptyState = () => (
         Rol eğitimli AI ajanlarınızın gerçek verilerle çalışabilmesi için departman bazlı veri kaynaklarınızı bağlayın.
       </p>
       <div className="flex flex-wrap items-center justify-center gap-3">
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-secondary hover:bg-secondary/80 text-sm text-foreground transition-colors">
-          <ShoppingBag className="h-4 w-4 text-primary" /> Shopify Bağla
+        <button className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 text-sm transition-colors">
+          <ShoppingBag className="h-4 w-4" /> Shopify Bağla
         </button>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-secondary hover:bg-secondary/80 text-sm text-foreground transition-colors">
-          <Globe className="h-4 w-4 text-primary" /> Meta Ads Bağla
+        <button className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 text-sm transition-colors">
+          <Globe className="h-4 w-4" /> Meta Ads Bağla
         </button>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-secondary hover:bg-secondary/80 text-sm text-foreground transition-colors">
-          <BarChart3 className="h-4 w-4 text-primary" /> Google Ads Bağla
+        <button className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 text-sm transition-colors">
+          <BarChart3 className="h-4 w-4" /> Google Ads Bağla
         </button>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-secondary hover:bg-secondary/80 text-sm text-foreground transition-colors">
-          <Upload className="h-4 w-4 text-primary" /> CSV Yükle
+        <button className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 text-sm transition-colors">
+          <Upload className="h-4 w-4" /> CSV Yükle
         </button>
       </div>
     </div>
