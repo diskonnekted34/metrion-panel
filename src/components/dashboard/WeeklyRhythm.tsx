@@ -22,8 +22,8 @@ const WeeklyRhythm = () => (
             <p className="text-xs font-semibold text-foreground mb-1">{day.day}</p>
             <p className="text-[11px] text-muted-foreground">{day.output}</p>
             <p className="text-[10px] text-accent mt-1">{day.agent}</p>
-            <span className={`text-[9px] mt-2 inline-block px-1.5 py-0.5 rounded-2xl ${
-              day.status === "Tamamlandı" ? "bg-success/15 text-success" : "bg-secondary text-muted-foreground"
+            <span className={`text-[9px] mt-2 inline-block px-1.5 py-0.5 rounded-2xl font-medium ${
+              day.status === "Tamamlandı" ? "bg-success/15 text-success" : day.status === "Bekliyor" ? "border border-border text-muted-foreground" : "bg-primary/15 text-primary"
             }`}>{day.status}</span>
           </div>
         ))}

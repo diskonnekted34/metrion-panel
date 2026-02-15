@@ -74,7 +74,8 @@ export const tiers: Tier[] = [
       { id: "ceo", role: "AI CEO", name: "CEO Agent" },
       { id: "cmo", role: "AI CMO", name: "CMO Agent" },
       { id: "cfo", role: "AI CFO", name: "CFO Agent" },
-      { id: "accounting", role: "AI Muhasebe", name: "Accounting Agent" },
+      { id: "accounting-agent", role: "AI Muhasebe", name: "Accounting Agent" },
+      { id: "growth-agent", role: "AI Büyüme", name: "Growth Agent" },
     ],
     features: [
       "Draft-first yazma otomasyonu",
@@ -105,7 +106,7 @@ export const tiers: Tier[] = [
       "Draft-first otomasyon",
       "Denetim günlükleri",
     ],
-    cumulativeAgentIds: ["ceo", "cmo", "cfo", "accounting"],
+    cumulativeAgentIds: ["ceo", "cmo", "cfo", "accounting-agent", "growth-agent"],
   },
   {
     id: "performance",
@@ -118,7 +119,7 @@ export const tiers: Tier[] = [
     departmentIds: ["executive", "marketing", "finance", "operations"],
     agents: [
       { id: "coo", role: "AI COO", name: "COO Agent" },
-      { id: "inventory", role: "AI Envanter Yöneticisi", name: "Inventory Agent" },
+      { id: "inventory-agent", role: "AI Envanter Yöneticisi", name: "Inventory Agent" },
     ],
     features: [
       "Core'daki tüm özellikler",
@@ -147,7 +148,7 @@ export const tiers: Tier[] = [
       "Envanter risk tespiti",
       "Bütçe yeniden dağıtım modellemesi",
     ],
-    cumulativeAgentIds: ["ceo", "cmo", "cfo", "accounting", "coo", "inventory"],
+    cumulativeAgentIds: ["ceo", "cmo", "cfo", "accounting-agent", "growth-agent", "coo", "inventory-agent"],
   },
   {
     id: "workforce",
@@ -162,7 +163,7 @@ export const tiers: Tier[] = [
       { id: "creative-director", role: "AI Kreatif Direktör", name: "Creative Director" },
       { id: "graphic-designer", role: "AI Grafik Tasarımcı", name: "Graphic Designer" },
       { id: "art-director", role: "AI Sanat Yönetmeni", name: "Art Director" },
-      { id: "marketplace-manager", role: "AI Pazaryeri Yöneticisi", name: "Marketplace Agent" },
+      { id: "marketplace-agent", role: "AI Pazaryeri Yöneticisi", name: "Marketplace Agent" },
     ],
     features: [
       "Performance'daki tüm özellikler",
@@ -195,10 +196,10 @@ export const tiers: Tier[] = [
       "Gelişmiş denetim dışa aktarımı",
     ],
     cumulativeAgentIds: [
-      "ceo", "cmo", "cfo", "accounting",
-      "coo", "inventory",
+      "ceo", "cmo", "cfo", "accounting-agent", "growth-agent",
+      "coo", "inventory-agent",
       "creative-director", "graphic-designer", "art-director",
-      "marketplace-manager",
+      "marketplace-agent",
     ],
   },
 ];

@@ -36,12 +36,12 @@ export interface TeamMember {
 
 export const departments: Department[] = [
   { id: "executive", name: "Yönetim", icon: "👔", agentIds: ["ceo"], healthScore: 82, activeAlerts: 1, activeTasks: 4, trend: "up", description: "Stratejik önceliklendirme, karar yönetimi ve yönetici brifingleri." },
-  { id: "marketing", name: "Pazarlama", icon: "📢", agentIds: ["cmo", "nova"], healthScore: 68, activeAlerts: 3, activeTasks: 8, trend: "down", description: "Kampanya stratejisi, performans izleme ve büyüme yönetimi." },
-  { id: "finance", name: "Finans", icon: "💰", agentIds: ["cfo", "accounting"], healthScore: 91, activeAlerts: 1, activeTasks: 3, trend: "up", description: "Kârlılık analizi, nakit akış tahmini ve bütçe kontrolü." },
-  { id: "operations", name: "Operasyon", icon: "⚙️", agentIds: ["coo", "inventory"], healthScore: 74, activeAlerts: 2, activeTasks: 5, trend: "stable", description: "Tedarik zinciri, envanter yönetimi ve süreç optimizasyonu." },
+  { id: "marketing", name: "Pazarlama", icon: "📢", agentIds: ["cmo", "growth-agent"], healthScore: 68, activeAlerts: 3, activeTasks: 8, trend: "down", description: "Kampanya stratejisi, performans izleme ve büyüme yönetimi." },
+  { id: "finance", name: "Finans", icon: "💰", agentIds: ["cfo", "accounting-agent"], healthScore: 91, activeAlerts: 1, activeTasks: 3, trend: "up", description: "Kârlılık analizi, nakit akış tahmini ve bütçe kontrolü." },
+  { id: "operations", name: "Operasyon", icon: "⚙️", agentIds: ["coo", "inventory-agent"], healthScore: 74, activeAlerts: 2, activeTasks: 5, trend: "stable", description: "Tedarik zinciri, envanter yönetimi ve süreç optimizasyonu." },
   { id: "creative", name: "Kreatif", icon: "🎨", agentIds: ["creative-director", "graphic-designer", "art-director"], healthScore: 79, activeAlerts: 1, activeTasks: 6, trend: "up", description: "Marka yönetimi, görsel üretim ve kreatif strateji." },
-  { id: "marketplace", name: "Pazaryeri", icon: "🏪", agentIds: ["marketplace-manager"], healthScore: 76, activeAlerts: 1, activeTasks: 4, trend: "stable", description: "Çoklu pazaryeri listeleme, fiyat senkronizasyonu ve sipariş yönetimi." },
-  { id: "legal", name: "Hukuk", icon: "⚖️", agentIds: ["legal-advisor"], healthScore: 85, activeAlerts: 0, activeTasks: 0, trend: "stable", description: "Sözleşme analizi, uyum denetimi ve hukuki risk değerlendirmesi." },
+  { id: "marketplace", name: "Pazaryeri", icon: "🏪", agentIds: ["marketplace-agent"], healthScore: 76, activeAlerts: 1, activeTasks: 4, trend: "stable", description: "Çoklu pazaryeri listeleme, fiyat senkronizasyonu ve sipariş yönetimi." },
+  { id: "legal", name: "Hukuk", icon: "⚖️", agentIds: ["legal"], healthScore: 85, activeAlerts: 0, activeTasks: 0, trend: "stable", description: "Sözleşme analizi, uyum denetimi ve hukuki risk değerlendirmesi." },
 ];
 
 const mockTeam: TeamMember[] = [
