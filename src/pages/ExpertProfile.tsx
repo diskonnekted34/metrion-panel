@@ -1,237 +1,62 @@
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Users, Zap, Shield, Calendar, Brain, FileText, BarChart3 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { allExperts } from "@/data/experts";
-import { useLanguage } from "@/i18n/LanguageContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ProfileHero from "@/components/profile/ProfileHero";
+import CompetencyMatrix from "@/components/profile/CompetencyMatrix";
+import StrategicOutputs from "@/components/profile/StrategicOutputs";
+import ScenarioExamples from "@/components/profile/ScenarioExamples";
+import CrossDepartmentImpact from "@/components/profile/CrossDepartmentImpact";
+import ContinuousIntelligenceSection from "@/components/profile/ContinuousIntelligenceSection";
+import TrustLayer from "@/components/profile/TrustLayer";
+import ProfileSidebar from "@/components/profile/ProfileSidebar";
 
 const ExpertProfile = () => {
   const { id } = useParams();
-  const { t } = useLanguage();
   const exec = allExperts.find((e) => e.id === id);
 
   if (!exec) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2">{t.profile.notFound}</h1>
-          <Link to="/marketplace" className="text-primary hover:underline">{t.profile.back}</Link>
+          <h1 className="text-2xl font-bold mb-2">Ajan bulunamadı</h1>
+          <Link to="/marketplace" className="text-primary hover:underline">Geri dön</Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {/* Subtle grid bg */}
+      <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.02]" style={{ backgroundImage: "linear-gradient(rgba(30,107,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(30,107,255,0.4) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
+
       <Navbar />
 
-      <div className="pt-24 pb-16 px-6">
-        <div className="container mx-auto max-w-5xl">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-8">
-            <Link to="/marketplace" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              <ArrowLeft className="h-4 w-4" /> {t.profile.back}
+      <div className="relative z-10 pt-24 pb-16 px-6">
+        <div className="container mx-auto max-w-6xl">
+          {/* Back link */}
+          <div className="mb-8">
+            <Link to="/marketplace" className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft className="h-3.5 w-3.5" /> Ekibi Genişlet
             </Link>
-          </motion.div>
+          </div>
 
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ease: [0.2, 0.8, 0.2, 1] }} className="glass-bento p-8 mb-8">
-            <div className="flex flex-col md:flex-row gap-8 items-start">
-              {/* Abstract icon instead of avatar */}
-              <div className="h-28 w-28 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 ring-4 ring-white/[0.06]">
-                <Brain className="h-12 w-12 text-primary" />
-              </div>
-              <div className="flex-1">
-                <div className="flex flex-wrap items-center gap-3 mb-1">
-                  <h1 className="text-3xl font-bold text-foreground">{exec.role}</h1>
-                   <span className={`text-xs font-semibold px-3 py-1 rounded-2xl ${
-                    exec.badge === "C-Level" ? "bg-primary/15 text-primary" : exec.badge === "Agent" ? "bg-accent/15 text-accent" : "bg-white/[0.06] text-muted-foreground"
-                  }`}>{exec.badge}</span>
-                </div>
-                <p className="text-sm text-muted-foreground mb-1">{exec.intelligenceDomain || "İstihbarat Katmanı"}</p>
-                <p className="text-sm text-muted-foreground mb-4">{exec.tagline}</p>
+          {/* Hero */}
+          <ProfileHero agent={exec} />
 
-                <div className="flex flex-wrap gap-6 mb-6">
-                  <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                    <Zap className="h-4 w-4 text-primary" />
-                    <span className="font-semibold text-foreground">{exec.performanceScore}%</span>
-                    <span>{t.profile.performanceScore}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-accent" />
-                    {exec.tasksCompleted.toLocaleString()} {t.profile.tasksCompleted}
-                  </div>
-                  <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4 text-primary" />
-                    {t.profile.weeklyDelivery}: {exec.weekday} — {exec.weekdayOutput}
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-3">
-                  <Link to="/pricing" className="btn-primary px-6 py-3 active:scale-[0.98]">
-                    Planı İncele
-                  </Link>
-                  <Link to="/departments" className="rounded-2xl glass px-6 py-3 text-sm font-medium text-foreground flex items-center gap-2 hover:border-white/[0.14] transition-all">
-                    <BarChart3 className="h-3.5 w-3.5 text-primary" />
-                    Departmanları Gör
-                  </Link>
-                </div>
-
-                {exec.id === "legal" && (
-                  <p className="mt-4 text-xs text-muted-foreground italic flex items-center gap-1.5">
-                    <Shield className="h-3.5 w-3.5" /> {t.profile.legalNote}
-                  </p>
-                )}
-              </div>
-            </div>
-          </motion.div>
-
-          <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main content */}
+          <div className="grid lg:grid-cols-3 gap-8 mt-8">
             <div className="lg:col-span-2 space-y-8">
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card p-8">
-                <h2 className="text-xl font-semibold text-foreground mb-4">İstihbarat Alanı</h2>
-                <p className="text-muted-foreground leading-relaxed">{exec.about}</p>
-              </motion.div>
-
-              {/* Generated Reports */}
-              {exec.reports && exec.reports.length > 0 && (
-                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="glass-bento p-8">
-                  <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-primary" />
-                    Üretilen Raporlar
-                  </h2>
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    {exec.reports.map((report) => (
-                      <div key={report} className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.03]">
-                        <FileText className="h-4 w-4 text-primary shrink-0" />
-                        <span className="text-sm text-foreground">{report}</span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Capabilities */}
-              {exec.capabilities && exec.capabilities.length > 0 && (
-                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-8">
-                  <h2 className="text-xl font-semibold text-foreground mb-4">Analitik Yetenekler</h2>
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    {exec.capabilities.map((cap) => (
-                      <div key={cap} className="flex items-center gap-2.5">
-                        <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
-                        <span className="text-sm text-muted-foreground">{cap}</span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-8">
-                <h2 className="text-xl font-semibold text-foreground mb-4">{t.profile.responsibilities}</h2>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {exec.responsibilities.map((r) => (
-                    <div key={r} className="flex items-center gap-2.5">
-                      <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
-                      <span className="text-sm text-muted-foreground">{r}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Decision Impact */}
-              {exec.decisionImpact && exec.decisionImpact.length > 0 && (
-                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="glass-card p-8">
-                  <h2 className="text-xl font-semibold text-foreground mb-4">Karar Etki Alanları</h2>
-                  <div className="flex flex-wrap gap-2">
-                    {exec.decisionImpact.map((area) => (
-                      <span key={area} className="text-xs font-medium px-3 py-1.5 rounded-2xl bg-primary/10 text-primary">
-                        {area}
-                      </span>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass-card p-8">
-                <h2 className="text-xl font-semibold text-foreground mb-6">{t.profile.skills}</h2>
-                <div className="space-y-4">
-                  {exec.skills.map((skill) => (
-                    <div key={skill.name}>
-                      <div className="flex justify-between text-sm mb-1.5">
-                        <span className="text-foreground font-medium">{skill.name}</span>
-                        <span className="text-muted-foreground">{skill.level}%</span>
-                      </div>
-                       <div className="h-2 rounded-2xl bg-white/[0.04] overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${skill.level}%` }}
-                          transition={{ duration: 1, delay: 0.3 }}
-                          className="h-full rounded-2xl"
-                          style={{ background: "linear-gradient(90deg, hsl(210 80% 50%), hsl(152 60% 48%))" }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass-card p-8">
-                <h2 className="text-xl font-semibold text-foreground mb-6">Operasyonel Değerlendirmeler</h2>
-                <div className="space-y-4">
-                  {exec.reviews.map((review, i) => (
-                    <div key={i} className="p-4 rounded-2xl bg-white/[0.03]">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-2xl bg-primary/10 flex items-center justify-center">
-                            <Users className="h-3.5 w-3.5 text-primary" />
-                          </div>
-                          <span className="text-sm font-medium text-foreground">{review.name}</span>
-                        </div>
-                        <span className="text-xs text-muted-foreground">{review.date}</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{review.comment}</p>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
+              <CompetencyMatrix agent={exec} />
+              <StrategicOutputs agent={exec} />
+              <ScenarioExamples agentId={exec.id} />
+              <CrossDepartmentImpact agent={exec} />
+              <ContinuousIntelligenceSection />
+              <TrustLayer />
             </div>
-
-            <div className="space-y-6">
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-4">{t.profile.automations}</h3>
-                <div className="space-y-2.5">
-                  {exec.automations.map((a) => (
-                    <div key={a} className="flex items-start gap-2.5">
-                      <Zap className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
-                      <span className="text-xs text-muted-foreground">{a}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-bento p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-4">{t.profile.kpis}</h3>
-                <div className="space-y-2">
-                  {exec.kpis.map((kpi) => (
-                    <div key={kpi} className="text-xs text-muted-foreground flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                      {kpi}
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass-card p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-4">{t.profile.collaborations}</h3>
-                <div className="space-y-2">
-                  {exec.collaborations.map((c) => (
-                    <div key={c} className="text-xs text-muted-foreground flex items-start gap-2">
-                      <Users className="h-3 w-3 text-primary shrink-0 mt-0.5" />
-                      {c}
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
+            <ProfileSidebar agent={exec} />
           </div>
         </div>
       </div>
