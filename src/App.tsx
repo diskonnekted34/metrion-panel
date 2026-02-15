@@ -25,6 +25,7 @@ import DepartmentDetail from "./pages/DepartmentDetail";
 import DepartmentReports from "./pages/DepartmentReports";
 import DepartmentActions from "./pages/DepartmentActions";
 import DepartmentModules from "./pages/DepartmentModules";
+import DepartmentIntelligenceView from "./pages/DepartmentIntelligenceView";
 import DataSources from "./pages/DataSources";
 import ActionCenter from "./pages/ActionCenter";
 import CreativeWorkspace from "./pages/CreativeWorkspace";
@@ -58,6 +59,7 @@ const App = () => (
               <Route path="/departments/:deptId/reports" element={<DepartmentReports />} />
               <Route path="/departments/:deptId/actions" element={<DepartmentActions />} />
               <Route path="/departments/:deptId/modules" element={<DepartmentModules />} />
+              <Route path="/departments/:deptId/intelligence/:metricId" element={<DepartmentIntelligenceView />} />
               <Route path="/team" element={<Team />} />
               <Route path="/tasks" element={<Tasks />} />
               <Route path="/alerts" element={<Alerts />} />

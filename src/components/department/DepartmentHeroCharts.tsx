@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { DepartmentId } from "@/contexts/RBACContext";
 import { LineChartMock, BarChartMock, DonutChartMock, GaugeMock, HeatmapMock } from "@/components/dashboard/tabs/MockChart";
+import { getMetricId } from "@/data/intelligenceMetrics";
 
 interface ChartDef {
   title: string;
@@ -292,7 +293,7 @@ const DepartmentHeroCharts = ({ departmentId }: DepartmentHeroChartsProps) => {
           <p className="text-[10px] text-muted-foreground mb-3">{chart.subtitle}</p>
           {chart.render()}
           <Link
-            to={`/intelligence/${departmentId}`}
+            to={`/departments/${departmentId}/intelligence/${departmentId}-metric-${i}`}
             className="mt-3 flex items-center justify-center gap-1.5 text-[10px] text-primary hover:text-primary/80 transition-colors opacity-0 group-hover:opacity-100"
           >
             Intelligence View Aç <ArrowRight className="h-3 w-3" />
