@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from "react";
-import { Integration, IntegrationStatus, integrations as defaultIntegrations } from "@/data/integrations";
+import { Integration, IntegrationStatus, DataHealth, integrations as defaultIntegrations } from "@/data/integrations";
 import { toast } from "sonner";
 
 interface IntegrationContextType {
@@ -15,6 +15,9 @@ interface IntegrationContextType {
   totalAvailable: number;
   hasAnyConnection: boolean;
   isDemoMode: boolean;
+  getDataHealth: (id: string) => DataHealth;
+  isWriteEnabled: (id: string) => boolean;
+  toggleWriteAccess: (id: string, enabled: boolean) => void;
 }
 
 const IntegrationContext = createContext<IntegrationContextType | null>(null);
@@ -32,19 +35,30 @@ export const IntegrationProvider = ({ children }: { children: ReactNode }) => {
     .filter(i => i.status === "connected" || i.status === "syncing")
     .map(i => i.id);
 
-  const updateStatus = (id: string, status: IntegrationStatus, lastSync?: string) => {
+  const updateIntegration = (id: string, patch: Partial<Integration>) => {
     setIntegrationState(prev =>
-      prev.map(i => i.id === id ? { ...i, status, lastSync: lastSync || i.lastSync } : i)
+      prev.map(i => i.id === id ? { ...i, ...patch } : i)
     );
   };
 
   const connect = useCallback((id: string) => {
     const integ = integrationState.find(i => i.id === id);
     if (!integ || integ.comingSoon || integ.phase2) return;
-    updateStatus(id, "syncing");
-    // Simulate sync
+    updateIntegration(id, {
+      status: "syncing",
+      dataHealth: { syncStatus: "healthy", apiHealth: "operational", rateLimitPercent: 5 },
+    });
     setTimeout(() => {
-      updateStatus(id, "connected", new Date().toISOString());
+      updateIntegration(id, {
+        status: "connected",
+        lastSync: new Date().toISOString(),
+        dataHealth: {
+          syncStatus: "healthy",
+          apiHealth: "operational",
+          rateLimitPercent: 8,
+          tokenExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        },
+      });
       toast.success(`${integ.name} başarıyla bağlandı.`);
     }, 1500);
   }, [integrationState]);
@@ -52,16 +66,24 @@ export const IntegrationProvider = ({ children }: { children: ReactNode }) => {
   const disconnect = useCallback((id: string) => {
     const integ = integrationState.find(i => i.id === id);
     if (!integ) return;
-    updateStatus(id, "not_connected");
-    toast.info(`${integ.name} bağlantısı kesildi.`);
+    updateIntegration(id, {
+      status: "not_connected",
+      writeEnabled: false,
+      dataHealth: { syncStatus: "idle", apiHealth: "unknown" },
+    });
+    toast.info(`${integ.name} bağlantısı kesildi. Token'lar silindi.`);
   }, [integrationState]);
 
   const syncManual = useCallback((id: string) => {
     const integ = integrationState.find(i => i.id === id);
     if (!integ || integ.status !== "connected") return;
-    updateStatus(id, "syncing");
+    updateIntegration(id, { status: "syncing" });
     setTimeout(() => {
-      updateStatus(id, "connected", new Date().toISOString());
+      updateIntegration(id, {
+        status: "connected",
+        lastSync: new Date().toISOString(),
+        dataHealth: { ...integ.dataHealth, syncStatus: "healthy" },
+      });
       toast.success(`${integ.name} senkronizasyonu tamamlandı.`);
     }, 2000);
   }, [integrationState]);
@@ -69,7 +91,11 @@ export const IntegrationProvider = ({ children }: { children: ReactNode }) => {
   const uploadCSV = useCallback((id: string, fileName: string) => {
     const integ = integrationState.find(i => i.id === id);
     if (!integ) return;
-    updateStatus(id, "connected", new Date().toISOString());
+    updateIntegration(id, {
+      status: "connected",
+      lastSync: new Date().toISOString(),
+      dataHealth: { syncStatus: "healthy", apiHealth: "unknown" },
+    });
     toast.success(`${fileName} yüklendi — ${integ.name} manuel senkronizasyon aktif.`);
   }, [integrationState]);
 
@@ -81,6 +107,21 @@ export const IntegrationProvider = ({ children }: { children: ReactNode }) => {
     const s = getStatus(id);
     return s === "connected" || s === "syncing";
   }, [getStatus]);
+
+  const getDataHealth = useCallback((id: string): DataHealth => {
+    return integrationState.find(i => i.id === id)?.dataHealth || { syncStatus: "idle", apiHealth: "unknown" };
+  }, [integrationState]);
+
+  const isWriteEnabled = useCallback((id: string) => {
+    return integrationState.find(i => i.id === id)?.writeEnabled || false;
+  }, [integrationState]);
+
+  const toggleWriteAccess = useCallback((id: string, enabled: boolean) => {
+    updateIntegration(id, { writeEnabled: enabled });
+    toast[enabled ? "warning" : "info"](
+      enabled ? "Yazma erişimi etkinleştirildi." : "Yazma erişimi devre dışı bırakıldı."
+    );
+  }, []);
 
   const available = integrationState.filter(i => !i.comingSoon && !i.phase2);
   const connectedCount = connectedIds.length;
@@ -102,6 +143,9 @@ export const IntegrationProvider = ({ children }: { children: ReactNode }) => {
       totalAvailable,
       hasAnyConnection,
       isDemoMode,
+      getDataHealth,
+      isWriteEnabled,
+      toggleWriteAccess,
     }}>
       {children}
     </IntegrationContext.Provider>
