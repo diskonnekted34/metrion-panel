@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, TrendingUp, BarChart3, Layers, Palette, ShoppingCart, FileText, Check, FileBarChart, ArrowRight } from "lucide-react";
+import { Brain, TrendingUp, BarChart3, Layers, Palette, ShoppingCart, FileText, Check, FileBarChart, ArrowRight, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Executive } from "@/data/experts";
 
@@ -15,6 +15,73 @@ interface AgentCardProps {
   agent: Executive;
   index: number;
 }
+
+const VISIBLE_CAP_COUNT = 6;
+
+const CapabilityMatrix = ({ capabilities }: { capabilities: string[] }) => {
+  const [expanded, setExpanded] = useState(false);
+  const visible = capabilities.slice(0, VISIBLE_CAP_COUNT);
+  const hidden = capabilities.slice(VISIBLE_CAP_COUNT);
+  const hasMore = hidden.length > 0;
+
+  return (
+    <div className="mb-3">
+      <p className="text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: "rgba(30, 107, 255, 0.7)" }}>
+        Yetkinlik Matrisi
+      </p>
+      <div className="grid grid-cols-2 gap-x-3 gap-y-[10px]">
+        {visible.map((cap, i) => (
+          <CapabilityItem key={i} cap={cap} />
+        ))}
+        {hasMore && expanded && hidden.map((cap, i) => (
+          <CapabilityItem key={`h-${i}`} cap={cap} />
+        ))}
+      </div>
+      {hasMore && (
+        <button
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setExpanded(!expanded); }}
+          className="flex items-center gap-1 mt-2 text-[10px] font-medium transition-colors duration-150"
+          style={{ color: "rgba(30, 107, 255, 0.7)" }}
+          onMouseEnter={e => { e.currentTarget.style.color = "rgba(30, 107, 255, 1)"; }}
+          onMouseLeave={e => { e.currentTarget.style.color = "rgba(30, 107, 255, 0.7)"; }}
+        >
+          <ChevronDown
+            className="h-3 w-3 transition-transform duration-200"
+            style={{ transform: expanded ? "rotate(180deg)" : "rotate(0)" }}
+          />
+          {expanded ? "Daralt" : `+${hidden.length} yetkinlik daha`}
+        </button>
+      )}
+    </div>
+  );
+};
+
+const CapabilityItem = ({ cap }: { cap: string }) => {
+  const desc = getCapabilityDescription(cap);
+  return (
+    <div className="flex items-start gap-[6px] min-w-0">
+      <div className="w-[16px] shrink-0 pt-[2px]">
+        <Check
+          className="h-3 w-3"
+          style={{
+            color: "#00E676",
+            filter: "drop-shadow(0 0 4px rgba(0, 230, 118, 0.5))",
+          }}
+        />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[11px] font-medium leading-tight truncate" style={{ color: "rgba(255,255,255,0.85)" }}>
+          {cap}
+        </p>
+        {desc && (
+          <p className="text-[10px] leading-[1.4] mt-[2px] line-clamp-2" style={{ color: "rgba(255,255,255,0.35)" }}>
+            {desc}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const AgentCard = ({ agent, index }: AgentCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -105,37 +172,11 @@ const AgentCard = ({ agent, index }: AgentCardProps) => {
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
+                transition={{ duration: 0.15, ease: [0.2, 0.8, 0.2, 1] }}
                 className="overflow-hidden"
               >
                 {/* Section A — Yetkinlik Matrisi */}
-                <div className="mb-3">
-                  <p className="text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: "rgba(30, 107, 255, 0.7)" }}>
-                    Yetkinlik Matrisi
-                  </p>
-                  <div className="space-y-1.5">
-                    {capabilities.map((cap, i) => {
-                      const capDesc = getCapabilityDescription(cap);
-                      return (
-                        <div key={i} className="flex items-start gap-1.5">
-                          <Check
-                            className="h-3 w-3 shrink-0 mt-0.5"
-                            style={{
-                              color: "#00E676",
-                              filter: "drop-shadow(0 0 3px rgba(0, 230, 118, 0.4))",
-                            }}
-                          />
-                          <div className="min-w-0">
-                            <span className="text-[10px] font-medium" style={{ color: "rgba(255,255,255,0.75)" }}>{cap}</span>
-                            {capDesc && (
-                              <span className="text-[9px] ml-1" style={{ color: "rgba(255,255,255,0.3)" }}>— {capDesc}</span>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                <CapabilityMatrix capabilities={capabilities} />
 
                 {/* Divider */}
                 <div className="h-px mb-3" style={{ background: "linear-gradient(90deg, transparent, rgba(30, 107, 255, 0.2), transparent)" }} />
