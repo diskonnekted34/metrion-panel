@@ -1,6 +1,6 @@
 import { useParams, Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Lock, AlertTriangle, TrendingUp, TrendingDown, Minus, Database, Brain, FileText, BarChart3 } from "lucide-react";
+import { ArrowLeft, Lock, AlertTriangle, TrendingUp, TrendingDown, Minus, Database, Brain, FileText } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { useRBAC, DepartmentId } from "@/contexts/RBACContext";
 import { usePacks } from "@/contexts/PackContext";
@@ -8,6 +8,8 @@ import { executives, agents } from "@/data/experts";
 import { departmentIntegrationMap } from "@/data/packs";
 import { integrations } from "@/data/integrations";
 import { useIntegrations } from "@/contexts/IntegrationContext";
+import DepartmentHeroCharts from "@/components/department/DepartmentHeroCharts";
+import DepartmentInsightStrip from "@/components/department/DepartmentInsightStrip";
 
 const allAgents = [...executives, ...agents];
 
@@ -42,13 +44,21 @@ const DepartmentDetail = () => {
   }
 
   const deptAgents = allAgents.filter(a => dept.agentIds.includes(a.id));
-
-  // Get department integrations
   const deptIntegrationIds = departmentIntegrationMap[dept.id] || [];
   const deptIntegrations = integrations.filter(i => deptIntegrationIds.includes(i.id));
   const activeIntegrations = deptIntegrations.filter(i => !i.comingSoon && !i.phase2);
-  const comingSoonIntegrations = deptIntegrations.filter(i => i.comingSoon);
-  const betaIntegrations = deptIntegrations.filter(i => i.phase2);
+
+  const healthColor = (score: number) => {
+    if (score >= 85) return "text-success";
+    if (score >= 70) return "text-warning";
+    return "text-destructive";
+  };
+
+  const trendIcon = (t: "up" | "down" | "stable") => {
+    if (t === "up") return <TrendingUp className="h-4 w-4 text-success" />;
+    if (t === "down") return <TrendingDown className="h-4 w-4 text-destructive" />;
+    return <Minus className="h-4 w-4 text-muted-foreground" />;
+  };
 
   const statusColor = (s: string) => {
     if (s === "Monitoring") return "bg-success/15 text-success";
@@ -64,27 +74,14 @@ const DepartmentDetail = () => {
     return "Beklemede";
   };
 
-  const healthColor = (score: number) => {
-    if (score >= 85) return "text-success";
-    if (score >= 70) return "text-warning";
-    return "text-destructive";
-  };
-
-  const trendIcon = (t: "up" | "down" | "stable") => {
-    if (t === "up") return <TrendingUp className="h-4 w-4 text-success" />;
-    if (t === "down") return <TrendingDown className="h-4 w-4 text-destructive" />;
-    return <Minus className="h-4 w-4 text-muted-foreground" />;
-  };
-
   return (
     <AppLayout>
       <div className="p-6 max-w-5xl mx-auto">
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <Link to="/departments" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
-            <ArrowLeft className="h-4 w-4" /> Departmanlar
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+          <Link to="/dashboard" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
+            <ArrowLeft className="h-4 w-4" /> Genel Bakış
           </Link>
-
           <div className="glass-card p-6">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-4">
@@ -118,21 +115,21 @@ const DepartmentDetail = () => {
           </div>
         </motion.div>
 
-        {/* Agent Grid — Abstract, no avatars */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+        {/* 4 Hero Charts */}
+        <DepartmentHeroCharts departmentId={dept.id as DepartmentId} />
+
+        {/* Insight Strip */}
+        <DepartmentInsightStrip departmentId={dept.id as DepartmentId} />
+
+        {/* Agent Grid */}
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mt-8">
           <h2 className="text-lg font-semibold text-foreground mb-4">İstihbarat Modülleri</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             {deptAgents.map((agent, i) => {
               const canAccess = hasAccessToAgent(agent.id);
               const unlocked = isAgentUnlocked(agent.id);
-
               return (
-                <motion.div
-                  key={agent.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15 + i * 0.04 }}
-                >
+                <motion.div key={agent.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 + i * 0.04 }}>
                   {canAccess && unlocked ? (
                     <div className="glass-card p-5">
                       <div className="flex items-center gap-3 mb-3">
@@ -148,8 +145,6 @@ const DepartmentDetail = () => {
                         </span>
                       </div>
                       <p className="text-xs text-muted-foreground mb-3 line-clamp-1">{agent.tagline}</p>
-                      
-                      {/* Reports preview */}
                       {agent.reports && agent.reports.length > 0 && (
                         <div className="space-y-1 mb-3">
                           {agent.reports.slice(0, 2).map(r => (
@@ -160,15 +155,11 @@ const DepartmentDetail = () => {
                           ))}
                         </div>
                       )}
-
                       <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
                         <span>{agent.performanceScore}% performans</span>
                         <span>{agent.tasksCompleted.toLocaleString()} görev</span>
                       </div>
-                      <Link
-                        to={`/workspace/${agent.id}`}
-                        className="w-full text-center text-xs py-2 rounded-2xl bg-secondary hover:bg-secondary/80 text-foreground transition-colors block"
-                      >
+                      <Link to={`/workspace/${agent.id}`} className="w-full text-center text-xs py-2 rounded-2xl bg-secondary hover:bg-secondary/80 text-foreground transition-colors block">
                         Konsolu Aç
                       </Link>
                     </div>
@@ -182,9 +173,7 @@ const DepartmentDetail = () => {
                       </div>
                       <div className="flex items-center gap-3 mb-3">
                         <div className="h-11 w-11 rounded-2xl bg-secondary" />
-                        <div>
-                          <h3 className="font-bold text-muted-foreground text-sm">{agent.role}</h3>
-                        </div>
+                        <div><h3 className="font-bold text-muted-foreground text-sm">{agent.role}</h3></div>
                       </div>
                     </div>
                   )}
@@ -194,57 +183,21 @@ const DepartmentDetail = () => {
           </div>
         </motion.div>
 
-        {/* Connected Data & Action Layers */}
-        {deptIntegrations.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+        {/* Connected Data Layers */}
+        {activeIntegrations.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
               <Database className="h-5 w-5 text-primary" />
-              Bağlı Veri & Aksiyon Katmanları
+              Bağlı Veri Katmanları
             </h2>
-
-            {activeIntegrations.length > 0 && (
-              <div className="mb-4">
-                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Aktif</p>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                  {activeIntegrations.map(integ => (
-                    <div key={integ.id} className="glass-card p-3 flex items-center gap-2">
-                      <div className={`h-2 w-2 rounded-full ${connectedIds.includes(integ.id) ? "bg-success" : "bg-muted-foreground/30"}`} />
-                      <span className="text-xs text-foreground">{integ.name}</span>
-                      {integ.writeCapabilities.length > 0 && (
-                        <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary ml-auto">W</span>
-                      )}
-                    </div>
-                  ))}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+              {activeIntegrations.map(integ => (
+                <div key={integ.id} className="glass-card p-3 flex items-center gap-2">
+                  <div className={`h-2 w-2 rounded-full ${connectedIds.includes(integ.id) ? "bg-success" : "bg-muted-foreground/30"}`} />
+                  <span className="text-xs text-foreground">{integ.name}</span>
                 </div>
-              </div>
-            )}
-
-            {betaIntegrations.length > 0 && (
-              <div className="mb-4">
-                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Beta</p>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                  {betaIntegrations.map(integ => (
-                    <div key={integ.id} className="glass-card p-3 flex items-center gap-2 opacity-60">
-                      <span className="text-xs text-muted-foreground">{integ.name}</span>
-                      <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-warning/10 text-warning ml-auto">Beta</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {comingSoonIntegrations.length > 0 && (
-              <div>
-                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Yakında</p>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                  {comingSoonIntegrations.map(integ => (
-                    <div key={integ.id} className="glass-card p-3 flex items-center gap-2 opacity-40">
-                      <span className="text-xs text-muted-foreground">{integ.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+              ))}
+            </div>
           </motion.div>
         )}
       </div>
