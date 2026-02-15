@@ -102,7 +102,7 @@ const BottomNav = () => {
                 <item.icon className="h-5 w-5" />
                 <span className="text-[10px] font-medium">{item.label}</span>
                 {isActive && (
-                  <div className="absolute bottom-1 w-5 h-[2px] rounded-full bg-primary" style={{ boxShadow: "0 0 6px rgba(232,80,2,0.4)" }} />
+                  <div className="absolute bottom-1 w-5 h-[2px] rounded-full bg-primary" style={{ boxShadow: "0 0 8px rgba(56,189,248,0.5)" }} />
                 )}
               </Link>
             );

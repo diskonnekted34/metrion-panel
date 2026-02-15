@@ -21,7 +21,7 @@ export default {
         md: "calc(var(--radius) - 4px)",
         sm: "calc(var(--radius) - 8px)",
         "2xl": "16px",
-        "3xl": "16px",
+        "3xl": "20px",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -103,6 +103,10 @@ export default {
           "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        "glow-pulse": {
+          "0%, 100%": { opacity: "0.4" },
+          "50%": { opacity: "0.8" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -113,6 +117,7 @@ export default {
         shimmer: "shimmer 2s linear infinite",
         "pulse-line": "pulse-line 3s ease-in-out infinite",
         "count-up": "count-up 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards",
+        "glow-pulse": "glow-pulse 3s ease-in-out infinite",
       },
     },
   },
