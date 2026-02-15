@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['"Geist"', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['"Helvetica Neue"', '"Helvetica"', '"Arial"', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
