@@ -1,17 +1,30 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Database, Brain, CheckSquare } from "lucide-react";
-import { useLanguage } from "@/i18n/LanguageContext";
+import { Layers, Brain, Shield } from "lucide-react";
 
 const HowItWorks = () => {
-  const { t } = useLanguage();
   const [activeStep, setActiveStep] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const steps = [
-    { icon: Database, title: t.howItWorks.step1Title, desc: t.howItWorks.step1Desc, num: "01" },
-    { icon: Brain, title: t.howItWorks.step2Title, desc: t.howItWorks.step2Desc, num: "02" },
-    { icon: CheckSquare, title: t.howItWorks.step3Title, desc: t.howItWorks.step3Desc, num: "03" },
+    { 
+      icon: Layers, 
+      title: "Departman Bazlı AI İş Gücü", 
+      desc: "Sabit departmanlar altında rol eğitimli AI ajanlarını aktifleştirin. Her ajan, belirli bir yönetici fonksiyonu için eğitilmiştir ve gerçek iş verilerinizi anlayarak çalışır.", 
+      num: "01" 
+    },
+    { 
+      icon: Brain, 
+      title: "Sürekli Güncellenen Yapılandırılmış Çıktılar", 
+      desc: "Her ajan, sürekli rafine edilen istihbaratla yapılandırılmış brifingler, proaktif uyarılar ve performans içgörüleri üretir. Tahminler, risk modelleri ve karar altyapısı sürekli gelişir.", 
+      num: "02" 
+    },
+    { 
+      icon: Shield, 
+      title: "Kontrollü Otomasyon ile Yürütme", 
+      desc: "Tüm eylemler taslak olarak oluşturulur, risk motoru tarafından değerlendirilir ve onay sürecinden geçer. Kör otomasyon değil — kontrollü otomasyon.", 
+      num: "03" 
+    },
   ];
 
   useEffect(() => {
@@ -26,7 +39,7 @@ const HowItWorks = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const previewIcons = [Database, Brain, CheckSquare];
+  const previewIcons = [Layers, Brain, Shield];
 
   return (
     <section ref={sectionRef} className="relative py-0" style={{ minHeight: "200vh" }}>
@@ -39,7 +52,8 @@ const HowItWorks = () => {
             transition={{ ease: [0.2, 0.8, 0.2, 1] }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{t.howItWorks.title}</h2>
+            <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">Stratejik Karar Altyapısı</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Nasıl Çalışır</h2>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -67,7 +81,7 @@ const HowItWorks = () => {
                     <div>
                       <h3 className="text-lg font-semibold text-foreground mb-1">{step.title}</h3>
                       <p className={`text-sm leading-relaxed transition-all duration-500 ${
-                        activeStep === i ? "text-muted-foreground max-h-20 opacity-100" : "text-muted-foreground/40 max-h-0 opacity-0 overflow-hidden"
+                        activeStep === i ? "text-muted-foreground max-h-24 opacity-100" : "text-muted-foreground/40 max-h-0 opacity-0 overflow-hidden"
                       }`}>{step.desc}</p>
                     </div>
                   </div>
@@ -95,7 +109,7 @@ const HowItWorks = () => {
                           <Icon className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Step {step.num}</p>
+                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Adım {step.num}</p>
                           <p className="text-lg font-semibold text-foreground">{step.title}</p>
                         </div>
                       </div>

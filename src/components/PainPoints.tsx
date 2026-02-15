@@ -1,17 +1,68 @@
 import { motion } from "framer-motion";
 import { TrendingUp, DollarSign, Settings, Cpu, Shield, Brain } from "lucide-react";
-import { useLanguage } from "@/i18n/LanguageContext";
 
 const PainPoints = () => {
-  const { t } = useLanguage();
-
   const groups = [
-    { icon: TrendingUp, title: t.painPoints.growth, items: t.painPoints.growthItems },
-    { icon: DollarSign, title: t.painPoints.profitability, items: t.painPoints.profitabilityItems },
-    { icon: Settings, title: t.painPoints.operations, items: t.painPoints.operationsItems },
-    { icon: Cpu, title: t.painPoints.technology, items: t.painPoints.technologyItems },
-    { icon: Shield, title: t.painPoints.risk, items: t.painPoints.riskItems },
-    { icon: Brain, title: t.painPoints.overload, items: t.painPoints.overloadItems },
+    { 
+      icon: TrendingUp, 
+      title: "Gelir & Büyüme İstihbaratı", 
+      items: [
+        "Çapraz kanal atıflandırma istihbaratı",
+        "CAC volatilite takibi ve uyarıları",
+        "Kampanya doygunluk ve ölçekleme riski tespiti",
+        "Marjinal ROAS modelleme",
+      ] 
+    },
+    { 
+      icon: DollarSign, 
+      title: "Kârlılık & Nakit Akışı Koruması", 
+      items: [
+        "Dinamik katkı marjı modelleme",
+        "Nakit akışı şok simülasyonu",
+        "İndirim kaçağı ve birim ekonomisi analizi",
+        "Finansal anomali tespiti",
+      ] 
+    },
+    { 
+      icon: Settings, 
+      title: "Operasyonel Disiplin", 
+      items: [
+        "Envanter hız modelleme ve sermaye kilitleme",
+        "Teslimat gecikme tahmini",
+        "Operasyonel marjin erozyonu uyarıları",
+        "Darboğaz analizi ve tedarik riski tespiti",
+      ] 
+    },
+    { 
+      icon: Cpu, 
+      title: "Teknoloji & Otomasyon", 
+      items: [
+        "Entegrasyon sağlık izleme",
+        "Veri tutarsızlık tespiti",
+        "Otomasyon ROI haritalama",
+        "Sistem darboğaz dedektörü",
+      ] 
+    },
+    { 
+      icon: Shield, 
+      title: "Risk & Hukuki Koruma", 
+      items: [
+        "Sözleşme risk puanlama",
+        "KVKK/GDPR uyumluluk kontrolleri",
+        "Reklam iddia risk tespiti",
+        "Eskalasyon bazlı kurucu onayı",
+      ] 
+    },
+    { 
+      icon: Brain, 
+      title: "Yönetici Karar Altyapısı", 
+      items: [
+        "Departmanlar arası risk sentezi",
+        "Senaryo bazlı yönetici simülasyonu",
+        "Stratejik nakit pisti modelleme",
+        "Rekabetçi performans kıyaslama",
+      ] 
+    },
   ];
 
   const bentoIndices = [0, 3, 5];
@@ -25,8 +76,9 @@ const PainPoints = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{t.painPoints.title}</h2>
-          <p className="text-muted-foreground max-w-lg mx-auto">{t.painPoints.subtitle}</p>
+          <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">Kâr Koruma Motoru</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">AI İş Gücünüzün İzlediği Sinyaller</h2>
+          <p className="text-muted-foreground max-w-lg mx-auto">Rol eğitimli ajanlarınız bu iş sinyallerini sürekli izler ve yapılandırılmış çıktılarla raporlar.</p>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">

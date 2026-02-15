@@ -1,61 +1,56 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Crown, Bell, FileText, Shield } from "lucide-react";
-import { useLanguage } from "@/i18n/LanguageContext";
+import { Layers, Shield, Brain, Zap } from "lucide-react";
 
 const tabs = [
   {
-    id: "bundle",
-    icon: Crown,
+    id: "workforce",
+    icon: Layers,
+    label: "AI İş Gücü",
     features: [
-      "5 AI Executives working in coordination",
-      "Weekly structured briefs (Mon–Fri rhythm)",
-      "Cross-functional decision tracking",
-      "Unified priority management",
+      "Departman bazlı rol eğitimli AI ajanlar",
+      "Her ajan belirli yönetici fonksiyonu için eğitilmiş",
+      "Entegrasyon farkındalığı ile gerçek verilerle çalışma",
+      "Sürekli güncellenen ve rafine edilen istihbarat",
     ],
   },
   {
-    id: "alerts",
-    icon: Bell,
-    features: [
-      "ROAS drop alerts from AI CMO",
-      "Margin breach warnings from AI CFO",
-      "System health alerts from AI CTO",
-      "Contract deadline reminders from Legal Desk",
-    ],
-  },
-  {
-    id: "reports",
-    icon: FileText,
-    features: [
-      "CEO Brief every Monday",
-      "Growth Plan every Tuesday",
-      "Finance Brief every Wednesday",
-      "Systems & Automation Brief every Thursday",
-    ],
-  },
-  {
-    id: "legal",
+    id: "risk",
     icon: Shield,
+    label: "Risk & Kontrol",
     features: [
-      "Contract risk scoring (high / medium / low)",
-      "GDPR/KVKK compliance checklists",
-      "Advertising claim risk detection",
-      "Supplier/agency contract red flags",
+      "Tüm eylemler taslak olarak oluşturulur — kör otomasyon yok",
+      "Risk motoru her yazma eylemini değerlendirir",
+      "Eskalasyon bazlı onay zincirleri",
+      "Değiştirilemez denetim günlükleri",
+    ],
+  },
+  {
+    id: "intelligence",
+    icon: Brain,
+    label: "Sürekli İstihbarat",
+    features: [
+      "Ajanlar düzenli olarak rafine edilir ve güncellenir",
+      "Risk modelleri gelişmiş iş zekâsıyla güçlendirilir",
+      "Performans lojiği sürekli iyileştirilir",
+      "Entegrasyon kapasiteleri genişletilir",
+    ],
+  },
+  {
+    id: "execution",
+    icon: Zap,
+    label: "Yapılandırılmış Yürütme",
+    features: [
+      "Haftalık yönetici ritimleri ile öngörülebilir çıktılar",
+      "Proaktif uyarılar ve anomali tespiti",
+      "Tek tıkla göreve dönüştürme",
+      "Departmanlar arası koordineli karar altyapısı",
     ],
   },
 ];
 
-const tabLabels: Record<string, { en: string; tr: string }> = {
-  bundle: { en: "Executive Bundle", tr: "Yönetici Paketi" },
-  alerts: { en: "Proactive Alerts", tr: "Proaktif Uyarılar" },
-  reports: { en: "Weekly Reports", tr: "Haftalık Raporlar" },
-  legal: { en: "Legal Desk", tr: "Hukuk Masası" },
-};
-
 const FeatureTabs = () => {
-  const [active, setActive] = useState("bundle");
-  const { lang } = useLanguage();
+  const [active, setActive] = useState("workforce");
   const currentTab = tabs.find(t => t.id === active)!;
 
   return (
@@ -68,8 +63,9 @@ const FeatureTabs = () => {
           transition={{ ease: [0.2, 0.8, 0.2, 1] }}
           className="text-center mb-12"
         >
+          <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">Stratejik Karar Altyapısı</p>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            {lang === "en" ? "What's Included" : "Neler Dahil"}
+            Yapılandırılmış AI Operasyon Sistemi
           </h2>
         </motion.div>
 
@@ -98,7 +94,7 @@ const FeatureTabs = () => {
               )}
               <span className="relative flex items-center gap-2">
                 <tab.icon className="h-4 w-4" />
-                {tabLabels[tab.id][lang]}
+                {tab.label}
               </span>
             </button>
           ))}
@@ -117,7 +113,7 @@ const FeatureTabs = () => {
               <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
                 <currentTab.icon className="h-5 w-5 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold text-foreground">{tabLabels[active][lang]}</h3>
+              <h3 className="text-xl font-semibold text-foreground">{currentTab.label}</h3>
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
               {currentTab.features.map((f, i) => (

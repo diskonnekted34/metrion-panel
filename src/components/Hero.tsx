@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, Shield, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { executives } from "@/data/experts";
-import { useLanguage } from "@/i18n/LanguageContext";
 
 const cardPositions = [
   { top: "5%", right: "5%", rotate: -2 },
@@ -13,8 +12,6 @@ const cardPositions = [
 ];
 
 const Hero = () => {
-  const { t } = useLanguage();
-
   return (
     <section className="relative min-h-screen gradient-hero flex items-center overflow-hidden pt-16">
       {/* Subtle gradient blobs */}
@@ -32,7 +29,7 @@ const Hero = () => {
               className="inline-flex items-center gap-2 rounded-2xl glass px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6"
             >
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              {t.hero.badge}
+              AI Workforce Operating System
             </motion.div>
 
             <motion.h1
@@ -41,35 +38,57 @@ const Hero = () => {
               transition={{ duration: 0.5, delay: 0.1, ease: [0.2, 0.8, 0.2, 1] }}
               className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-[1.08] mb-6"
             >
-              {t.hero.title1}{" "}
-              <span className="gradient-text">{t.hero.title2}</span>
+              Rol Eğitimli{" "}
+              <span className="gradient-text">AI İş Gücünüz</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0)" }}
               transition={{ duration: 0.5, delay: 0.2, ease: [0.2, 0.8, 0.2, 1] }}
-              className="text-lg text-muted-foreground leading-relaxed mb-8"
+              className="text-lg text-muted-foreground leading-relaxed mb-4"
             >
-              {t.hero.subtitle}
+              Her biri belirli bir yönetici fonksiyonu için eğitilmiş, gerçek iş verilerinizi anlayan ve risk kontrolleri içinde çalışan departman bazlı AI ajanları.
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0)" }}
+              transition={{ duration: 0.5, delay: 0.25, ease: [0.2, 0.8, 0.2, 1] }}
+              className="text-sm text-muted-foreground/70 mb-8 flex items-center gap-2"
+            >
+              <Zap className="h-3.5 w-3.5 text-primary shrink-0" />
+              Sürekli güncellenen yönetici istihbaratı ile rafine edilen ajanlar.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0)" }}
               transition={{ duration: 0.5, delay: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
-              className="flex flex-wrap gap-4"
+              className="flex flex-wrap gap-4 mb-8"
             >
               <Link
-                to="/marketplace"
+                to="/departments"
                 className="btn-primary inline-flex items-center gap-2 px-6 py-3 active:scale-[0.98]"
               >
-                {t.hero.cta1}
+                Departmanları Keşfet
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link to="/pricing" className="inline-flex items-center gap-2 rounded-2xl glass px-6 py-3 text-sm font-medium text-foreground transition-all hover:border-primary/20 active:scale-[0.98]">
-                {t.hero.cta2}
+                Planları İncele
               </Link>
+            </motion.div>
+
+            {/* Trust indicators */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="flex flex-wrap gap-4 text-xs text-muted-foreground/60"
+            >
+              <span className="flex items-center gap-1.5"><Shield className="h-3 w-3 text-primary/50" /> Kontrollü Otomasyon</span>
+              <span className="flex items-center gap-1.5"><Shield className="h-3 w-3 text-primary/50" /> Risk Motoru Koruması</span>
+              <span className="flex items-center gap-1.5"><Shield className="h-3 w-3 text-primary/50" /> Taslak-Önce Yürütme</span>
             </motion.div>
           </div>
 
@@ -127,8 +146,9 @@ const Hero = () => {
                     exec.status === "Alerting" ? "bg-destructive/15 text-destructive" :
                     "bg-secondary text-muted-foreground"
                   }`}>
-                    {exec.status}
+                    {exec.status === "Monitoring" ? "İzleniyor" : exec.status === "Alerting" ? "Uyarı" : exec.status === "Running Task" ? "Çalışıyor" : "Boşta"}
                   </span>
+                  <span className="text-[9px] text-muted-foreground/50">Rol Eğitimli</span>
                 </div>
               </motion.div>
             ))}

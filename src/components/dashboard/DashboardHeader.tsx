@@ -17,8 +17,8 @@ const DashboardHeader = () => {
   if (isMobile) {
     return (
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground mb-1">Şirket Genel Bakış</h1>
-        <p className="text-sm text-muted-foreground">Yönetici izleme ve departmanlar arası istihbarat.</p>
+        <h1 className="text-2xl font-bold text-foreground mb-1">AI Workforce OS</h1>
+        <p className="text-sm text-muted-foreground">Departman bazlı yönetici istihbaratı · Sürekli güncellenen zekâ</p>
       </div>
     );
   }
@@ -27,8 +27,8 @@ const DashboardHeader = () => {
     <>
       <div className="flex items-start justify-between mb-10">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-1">Şirket Genel Bakış</h1>
-          <p className="text-muted-foreground text-sm">Yönetici izleme ve departmanlar arası istihbarat.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-1">AI Workforce OS</h1>
+          <p className="text-muted-foreground text-sm">Rol eğitimli departman istihbaratı · Kontrollü otomasyon · Sürekli güncellenen zekâ</p>
         </div>
 
         <div className="flex items-center gap-3">
