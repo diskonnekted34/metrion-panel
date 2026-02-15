@@ -8,6 +8,7 @@ import { executives, agents } from "@/data/experts";
 import { departmentIntegrationMap } from "@/data/packs";
 import { integrations } from "@/data/integrations";
 import { useIntegrations } from "@/contexts/IntegrationContext";
+import { techConnectors } from "@/data/techIntegrations";
 import DepartmentHeroCharts from "@/components/department/DepartmentHeroCharts";
 import DepartmentInsightStrip from "@/components/department/DepartmentInsightStrip";
 
@@ -183,8 +184,23 @@ const DepartmentDetail = () => {
           </div>
         </motion.div>
 
-        {/* Connected Data Layers */}
-        {activeIntegrations.length > 0 && (
+        {/* Connected Data Layers - Tech department uses techConnectors */}
+        {dept.id === "technology" ? (
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+            <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Database className="h-5 w-5 text-primary" />
+              Bağlı Veri Katmanları
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+              {techConnectors.map(tc => (
+                <div key={tc.id} className="glass-card p-3 flex items-center gap-2">
+                  <div className={`h-2 w-2 rounded-full ${tc.status === "connected" ? "bg-success" : tc.status === "error" ? "bg-destructive" : "bg-muted-foreground/30"}`} />
+                  <span className="text-xs text-foreground">{tc.name_tr}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        ) : activeIntegrations.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
               <Database className="h-5 w-5 text-primary" />
