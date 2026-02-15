@@ -1,33 +1,22 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  Brain, TrendingUp, BarChart3, Layers, Palette, ShoppingCart, FileText,
   ArrowRight, Check, Crown, Zap, Rocket, Shield, Lock, Eye, Sparkles,
-  Play, ChevronDown,
+  Play,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";
-import { executives, agents, allExperts } from "@/data/experts";
+import { executives, agents } from "@/data/experts";
 import { tiers, addonPacks } from "@/data/packs";
 import { usePacks } from "@/contexts/PackContext";
 import UpgradeModal from "@/components/UpgradeModal";
-
-const domainIcons: Record<string, any> = {
-  ceo: Brain, cmo: TrendingUp, cfo: BarChart3, coo: Layers, legal: FileText,
-  "accounting-agent": BarChart3, "growth-agent": TrendingUp, "inventory-agent": Layers,
-  "creative-director": Palette, "graphic-designer": Palette, "art-director": Palette,
-  "marketplace-agent": ShoppingCart,
-};
+import AgentCard from "@/components/marketplace/AgentCard";
 
 const tierIcons = [Crown, Zap, Rocket];
 
 const Marketplace = () => {
   const { currentTierId, isAddonActive, activateTier, activateAddon, isAgentUnlocked } = usePacks();
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [demoRunsLeft] = useState(2);
-
-  const allAgents = allExperts;
 
   return (
     <AppLayout>
@@ -99,7 +88,7 @@ const Marketplace = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-14">
               {executives.map((agent, i) => (
-                <AgentCard key={agent.id} agent={agent} index={i} hoveredId={hoveredId} setHoveredId={setHoveredId} />
+                <AgentCard key={agent.id} agent={agent} index={i} />
               ))}
             </div>
 
@@ -112,7 +101,7 @@ const Marketplace = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {agents.map((agent, i) => (
-                <AgentCard key={agent.id} agent={agent} index={i} hoveredId={hoveredId} setHoveredId={setHoveredId} />
+                <AgentCard key={agent.id} agent={agent} index={i} />
               ))}
             </div>
           </div>
@@ -325,119 +314,6 @@ const Marketplace = () => {
 
       <UpgradeModal open={upgradeOpen} onClose={() => setUpgradeOpen(false)} />
     </AppLayout>
-  );
-};
-
-/* ─── AGENT CARD COMPONENT ─── */
-
-interface AgentCardProps {
-  agent: typeof allExperts[number];
-  index: number;
-  hoveredId: string | null;
-  setHoveredId: (id: string | null) => void;
-}
-
-const AgentCard = ({ agent, index, hoveredId, setHoveredId }: AgentCardProps) => {
-  const Icon = domainIcons[agent.id] || Brain;
-  const isHovered = hoveredId === agent.id;
-  const isCLevel = agent.tier === "c-level";
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0)" }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: index * 0.06, ease: [0.2, 0.8, 0.2, 1] }}
-      onMouseEnter={() => setHoveredId(agent.id)}
-      onMouseLeave={() => setHoveredId(null)}
-      className="group"
-    >
-      <div className={`glass-card p-5 h-full flex flex-col transition-all duration-300 ${
-        isHovered ? "border-primary/25 shadow-[0_0_32px_rgba(30,107,255,0.08)] -translate-y-1" : ""
-      }`}>
-        {/* Header */}
-        <div className="flex items-start gap-3 mb-3">
-          <div className={`h-12 w-12 rounded-2xl flex items-center justify-center shrink-0 ${
-            isCLevel ? "bg-primary/10" : "bg-accent/10"
-          }`}>
-            <Icon className={`h-5 w-5 ${isCLevel ? "text-primary" : "text-accent"}`} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-foreground text-sm truncate">{agent.role}</h3>
-            <p className="text-[10px] text-muted-foreground mt-0.5">{agent.intelligenceDomain}</p>
-          </div>
-        </div>
-
-        {/* Tagline */}
-        <p className="text-[11px] text-muted-foreground mb-3 line-clamp-2">{agent.tagline}</p>
-
-        {/* Tags */}
-        {agent.tags && (
-          <div className="flex flex-wrap gap-1 mb-3">
-            {agent.tags.slice(0, 3).map(tag => (
-              <span key={tag} className="text-[9px] px-2 py-0.5 rounded-full border border-border text-muted-foreground">{tag}</span>
-            ))}
-          </div>
-        )}
-
-        {/* Capabilities on hover */}
-        {agent.capabilities && (
-          <AnimatePresence>
-            {isHovered && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden"
-              >
-                <div className="space-y-1 mb-3">
-                  {agent.capabilities.slice(0, 3).map(cap => (
-                    <div key={cap} className="flex items-center gap-1.5">
-                      <Check className="h-3 w-3 text-success shrink-0" />
-                      <span className="text-[10px] text-muted-foreground">{cap}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        )}
-
-        {/* Confidence Score */}
-        <div className="flex items-center justify-between pt-3 border-t border-border mt-auto">
-          <div className="flex items-center gap-1.5">
-            <div className="h-1.5 w-12 rounded-full bg-secondary overflow-hidden">
-              <motion.div
-                className="h-full rounded-full bg-primary"
-                initial={{ width: 0 }}
-                whileInView={{ width: `${agent.performanceScore}%` }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, delay: 0.3 }}
-              />
-            </div>
-            <span className="text-[10px] font-bold text-foreground">{agent.performanceScore}%</span>
-          </div>
-          <span className="text-[9px] text-muted-foreground">{agent.tasksCompleted.toLocaleString()} analiz</span>
-        </div>
-
-        {/* CTAs */}
-        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border/50">
-          <Link
-            to={`/expert/${agent.id}`}
-            className="flex-1 text-center text-[11px] font-medium px-3 py-2 rounded-xl border border-border text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all"
-          >
-            Profili İncele
-          </Link>
-          <Link
-            to={`/workspace/${agent.id}`}
-            className="flex-1 text-center text-[11px] font-medium px-3 py-2 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-all"
-          >
-            Demo Çalıştır
-          </Link>
-        </div>
-      </div>
-    </motion.div>
   );
 };
 
