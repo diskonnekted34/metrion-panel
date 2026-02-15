@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Users, Zap, Shield, Calendar, Star, Crown } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Users, Zap, Shield, Calendar, Brain, FileText, BarChart3 } from "lucide-react";
 import { allExperts } from "@/data/experts";
 import { useLanguage } from "@/i18n/LanguageContext";
 import Navbar from "@/components/Navbar";
@@ -36,7 +36,10 @@ const ExpertProfile = () => {
 
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ease: [0.2, 0.8, 0.2, 1] }} className="glass-bento p-8 mb-8">
             <div className="flex flex-col md:flex-row gap-8 items-start">
-              <img src={exec.avatar} alt={exec.name} className="h-28 w-28 rounded-2xl object-cover ring-4 ring-white/[0.06] shadow-lg" />
+              {/* Abstract icon instead of avatar */}
+              <div className="h-28 w-28 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 ring-4 ring-white/[0.06]">
+                <Brain className="h-12 w-12 text-primary" />
+              </div>
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3 mb-1">
                   <h1 className="text-3xl font-bold text-foreground">{exec.role}</h1>
@@ -44,7 +47,7 @@ const ExpertProfile = () => {
                     exec.badge === "C-Level" ? "bg-primary/15 text-primary" : exec.badge === "Agent" ? "bg-accent/15 text-accent" : "bg-white/[0.06] text-muted-foreground"
                   }`}>{exec.badge}</span>
                 </div>
-                <p className="text-lg text-muted-foreground mb-1">{exec.name}</p>
+                <p className="text-sm text-muted-foreground mb-1">{exec.intelligenceDomain || "İstihbarat Katmanı"}</p>
                 <p className="text-sm text-muted-foreground mb-4">{exec.tagline}</p>
 
                 <div className="flex flex-wrap gap-6 mb-6">
@@ -64,12 +67,12 @@ const ExpertProfile = () => {
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  <button className="btn-primary px-6 py-3 active:scale-[0.98]">
-                    {t.profile.hireTeam}
-                  </button>
-                  <Link to="/pricing" className="rounded-2xl glass px-6 py-3 text-sm font-medium text-foreground flex items-center gap-2 hover:border-white/[0.14] transition-all">
-                    <Crown className="h-3.5 w-3.5 text-primary" />
-                    {t.profile.getBundle}
+                  <Link to="/pricing" className="btn-primary px-6 py-3 active:scale-[0.98]">
+                    Planı İncele
+                  </Link>
+                  <Link to="/departments" className="rounded-2xl glass px-6 py-3 text-sm font-medium text-foreground flex items-center gap-2 hover:border-white/[0.14] transition-all">
+                    <BarChart3 className="h-3.5 w-3.5 text-primary" />
+                    Departmanları Gör
                   </Link>
                 </div>
 
@@ -85,11 +88,44 @@ const ExpertProfile = () => {
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card p-8">
-                <h2 className="text-xl font-semibold text-foreground mb-4">About</h2>
+                <h2 className="text-xl font-semibold text-foreground mb-4">İstihbarat Alanı</h2>
                 <p className="text-muted-foreground leading-relaxed">{exec.about}</p>
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-8">
+              {/* Generated Reports */}
+              {exec.reports && exec.reports.length > 0 && (
+                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="glass-bento p-8">
+                  <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-primary" />
+                    Üretilen Raporlar
+                  </h2>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {exec.reports.map((report) => (
+                      <div key={report} className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.03]">
+                        <FileText className="h-4 w-4 text-primary shrink-0" />
+                        <span className="text-sm text-foreground">{report}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Capabilities */}
+              {exec.capabilities && exec.capabilities.length > 0 && (
+                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-8">
+                  <h2 className="text-xl font-semibold text-foreground mb-4">Analitik Yetenekler</h2>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {exec.capabilities.map((cap) => (
+                      <div key={cap} className="flex items-center gap-2.5">
+                        <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                        <span className="text-sm text-muted-foreground">{cap}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-8">
                 <h2 className="text-xl font-semibold text-foreground mb-4">{t.profile.responsibilities}</h2>
                 <div className="grid sm:grid-cols-2 gap-3">
                   {exec.responsibilities.map((r) => (
@@ -101,17 +137,19 @@ const ExpertProfile = () => {
                 </div>
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-bento p-8">
-                <h2 className="text-xl font-semibold text-foreground mb-4">{t.profile.outputs}</h2>
-                <div className="space-y-2.5">
-                  {exec.outputs.map((o) => (
-                    <div key={o} className="flex items-start gap-2.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0" />
-                      <span className="text-sm text-muted-foreground">{o}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
+              {/* Decision Impact */}
+              {exec.decisionImpact && exec.decisionImpact.length > 0 && (
+                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="glass-card p-8">
+                  <h2 className="text-xl font-semibold text-foreground mb-4">Karar Etki Alanları</h2>
+                  <div className="flex flex-wrap gap-2">
+                    {exec.decisionImpact.map((area) => (
+                      <span key={area} className="text-xs font-medium px-3 py-1.5 rounded-2xl bg-primary/10 text-primary">
+                        {area}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
 
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass-card p-8">
                 <h2 className="text-xl font-semibold text-foreground mb-6">{t.profile.skills}</h2>
@@ -137,7 +175,7 @@ const ExpertProfile = () => {
               </motion.div>
 
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass-card p-8">
-                <h2 className="text-xl font-semibold text-foreground mb-6">{t.profile.reviews}</h2>
+                <h2 className="text-xl font-semibold text-foreground mb-6">Operasyonel Değerlendirmeler</h2>
                 <div className="space-y-4">
                   {exec.reviews.map((review, i) => (
                     <div key={i} className="p-4 rounded-2xl bg-white/[0.03]">
@@ -149,11 +187,6 @@ const ExpertProfile = () => {
                           <span className="text-sm font-medium text-foreground">{review.name}</span>
                         </div>
                         <span className="text-xs text-muted-foreground">{review.date}</span>
-                      </div>
-                      <div className="flex gap-0.5 mb-2">
-                        {Array.from({ length: review.rating }).map((_, j) => (
-                          <Star key={j} className="h-3 w-3 text-accent fill-accent" />
-                        ))}
                       </div>
                       <p className="text-sm text-muted-foreground">{review.comment}</p>
                     </div>
