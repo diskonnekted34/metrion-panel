@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, ListTodo, Bell, BarChart3, Store, Settings, Database, Zap, Lock } from "lucide-react";
+import { LayoutDashboard, Users, ListTodo, Bell, BarChart3, Store, Settings, Database, Zap, Lock, ChevronDown, Eye, FileText, Activity } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import ViewModeSwitcher from "./ViewModeSwitcher";
@@ -24,6 +24,14 @@ const bottomNavItems = [
   { label: "Ayarlar", icon: Settings, path: "/settings" },
 ];
 
+const deptSubItems = [
+  { label: "Genel Bakış", suffix: "", icon: Eye },
+  { label: "Raporlar", suffix: "/reports", icon: FileText },
+  { label: "Aksiyonlar", suffix: "/actions", icon: Zap },
+  { label: "Veri Kaynakları", suffix: "/data-sources", icon: Database },
+  { label: "Modüller", suffix: "/agents", icon: Activity },
+];
+
 const AppSidebar = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
@@ -31,10 +39,20 @@ const AppSidebar = () => {
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [upgradeDeptId, setUpgradeDeptId] = useState<DepartmentId | undefined>();
   const { isDepartmentUnlocked } = usePacks();
+  const [expandedDept, setExpandedDept] = useState<string | null>(() => {
+    const match = location.pathname.match(/^\/departments\/([^/]+)/);
+    return match ? match[1] : null;
+  });
 
   const criticalCount = alertsData.filter((a) => a.category === "critical" && !a.resolved).length;
 
   if (isMobile) return null;
+
+  const healthColor = (score: number) => {
+    if (score >= 85) return "text-success";
+    if (score >= 70) return "text-warning";
+    return "text-destructive";
+  };
 
   const renderNavLink = (item: { label: string; icon: any; path: string }) => {
     const isActive = location.pathname === item.path
@@ -93,50 +111,80 @@ const AppSidebar = () => {
           {/* Dashboard */}
           {topNavItems.map(renderNavLink)}
 
-          {/* Departments section */}
+          {/* Departments accordion section */}
           <div className="pt-3 pb-1">
             <p className="px-3 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Departmanlar</p>
           </div>
           {departments.map((dept) => {
             const unlocked = isDepartmentUnlocked(dept.id);
-            const isActive = location.pathname === `/departments/${dept.id}`;
-            const isLegal = dept.id === "legal";
+            const isExpanded = expandedDept === dept.id;
+            const isDeptActive = location.pathname.startsWith(`/departments/${dept.id}`);
 
             if (!unlocked) {
               return (
                 <button
                   key={dept.id}
                   onClick={() => {
-                    if (!isLegal) {
+                    if (dept.id !== "legal") {
                       setUpgradeDeptId(dept.id);
                       setUpgradeOpen(true);
                     }
                   }}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm w-full text-left opacity-40 hover:opacity-60 transition-opacity cursor-pointer"
+                  className="flex items-center gap-3 px-3 py-2 rounded-2xl text-sm w-full text-left opacity-40 hover:opacity-60 transition-opacity cursor-pointer"
                 >
                   <span className="text-sm shrink-0">{dept.icon}</span>
-                  <span className="font-medium text-muted-foreground flex-1">{dept.name}</span>
+                  <span className="font-medium text-muted-foreground flex-1 truncate">{dept.name}</span>
                   <Lock className="h-3 w-3 text-muted-foreground shrink-0" />
                 </button>
               );
             }
 
             return (
-              <Link
-                key={dept.id}
-                to={`/departments/${dept.id}`}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm transition-all duration-200 group relative ${
-                  isActive
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                }`}
-              >
-                <span className="text-sm shrink-0">{dept.icon}</span>
-                <span className="font-medium">{dept.name}</span>
-                {isActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 12px rgba(30,107,255,0.5)" }} />
+              <div key={dept.id}>
+                {/* Department accordion trigger */}
+                <button
+                  onClick={() => setExpandedDept(isExpanded ? null : dept.id)}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-2xl text-sm w-full text-left transition-all duration-200 relative group ${
+                    isDeptActive
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                  }`}
+                >
+                  {isDeptActive && (
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 12px rgba(30,107,255,0.5)" }} />
+                  )}
+                  <span className="text-sm shrink-0">{dept.icon}</span>
+                  <span className="font-medium flex-1 truncate">{dept.name}</span>
+                  <span className={`text-[9px] font-bold ${healthColor(dept.healthScore)} mr-1`}>{dept.healthScore}</span>
+                  <ChevronDown className={`h-3 w-3 shrink-0 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+                </button>
+
+                {/* Sub-items */}
+                {isExpanded && (
+                  <div className="ml-5 pl-3 border-l border-border/50 mt-0.5 mb-1 space-y-0.5">
+                    {deptSubItems.map((sub) => {
+                      const subPath = `/departments/${dept.id}${sub.suffix}`;
+                      const isSubActive = sub.suffix === ""
+                        ? location.pathname === `/departments/${dept.id}`
+                        : location.pathname === subPath;
+                      return (
+                        <Link
+                          key={sub.suffix}
+                          to={subPath}
+                          className={`flex items-center gap-2 px-2 py-1.5 rounded-xl text-[11px] transition-colors ${
+                            isSubActive
+                              ? "text-primary bg-primary/8 font-medium"
+                              : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
+                          }`}
+                        >
+                          <sub.icon className="h-3 w-3 shrink-0" />
+                          <span>{sub.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
                 )}
-              </Link>
+              </div>
             );
           })}
 
