@@ -44,7 +44,7 @@ const AppSidebar = () => {
 
   return (
     <TooltipProvider>
-      <aside className="fixed left-0 top-0 bottom-0 z-40 w-[220px] flex flex-col glass-strong border-r border-border">
+      <aside className="fixed left-0 top-0 bottom-0 z-40 w-[264px] flex flex-col glass-strong border-r border-border">
         {/* Logo */}
         <div className="flex items-center px-5 h-16 shrink-0">
           <Link to="/" className="flex items-center gap-2.5">
@@ -211,7 +211,7 @@ const AppSidebar = () => {
                 { label: "Uyarılar", icon: Bell, path: "/alerts" },
                 { label: "Raporlar", icon: BarChart3, path: "/reports" },
                 { label: "Veri Kaynakları", icon: Database, path: "/data-sources" },
-                { label: "Pazar Yeri", icon: BarChart3, path: "/marketplace" },
+                { label: "Ekibi Genişlet", icon: BarChart3, path: "/marketplace" },
                 { label: "Ayarlar", icon: SettingsIcon, path: "/settings" },
               ].map((item) => {
                 const isActive = location.pathname === item.path;

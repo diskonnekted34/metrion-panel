@@ -18,7 +18,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       <BottomNav />
       <main
         className={`min-h-screen relative z-10 ${
-          isMobile ? "pt-12 pb-20" : "pl-[220px]"
+          isMobile ? "pt-12 pb-20" : "pl-[264px]"
         }`}
       >
         {children}
