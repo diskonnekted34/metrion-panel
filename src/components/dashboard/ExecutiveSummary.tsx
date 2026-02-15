@@ -253,77 +253,9 @@ const ExecutiveSummary = () => {
           </div>
         </div>
 
-        {/* AI Insight Strip */}
-        <AIInsightStrip />
       </motion.div>
     </TooltipProvider>
   );
 };
-
-interface AIInsight {
-  risk: "critical" | "warning" | "info";
-  text: string;
-  impact: string;
-  action?: string;
-  agent: string;
-}
-
-const insights: AIInsight[] = [
-  {
-    risk: "warning",
-    text: "Meta Ads ROAS son 7 günde %18 düştü — kanal doygunluk eşiğine yaklaşıyor.",
-    impact: "Tahmini aylık etki: -$45K gelir kaybı",
-    action: "Bütçe yeniden dağıtım taslağı oluştur",
-    agent: "CMO Agent",
-  },
-  {
-    risk: "critical",
-    text: "3 SKU'da stok tükenme olasılığı %85'i aştı — 12 gün içinde stock-out riski.",
-    impact: "Tahmini etki: $120K gelir riski",
-    action: "Acil tedarik siparişi taslağı",
-    agent: "COO Agent",
-  },
-  {
-    risk: "info",
-    text: "Katkı marjı son 4 haftada istikrarlı artışta — maliyet optimizasyonu etkili.",
-    impact: "Kümülatif iyileştirme: +$67K",
-    agent: "CFO Agent",
-  },
-];
-
-const riskStyles: Record<string, { border: string; badge: string; dot: string }> = {
-  critical: { border: "border-l-destructive", badge: "bg-destructive/10 text-destructive", dot: "bg-destructive" },
-  warning: { border: "border-l-warning", badge: "bg-warning/10 text-warning", dot: "bg-warning" },
-  info: { border: "border-l-primary", badge: "bg-primary/10 text-primary", dot: "bg-primary" },
-};
-
-const riskLabel: Record<string, string> = { critical: "Kritik", warning: "Uyarı", info: "Bilgi" };
-
-const AIInsightStrip = () => (
-  <div>
-    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">AI Öncelikli İçgörüler</p>
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-      {insights.map((insight, i) => {
-        const style = riskStyles[insight.risk];
-        return (
-          <div key={i} className={`glass-card p-4 border-l-[3px] ${style.border}`}>
-            <div className="flex items-center gap-2 mb-2">
-              <div className={`h-2 w-2 rounded-full ${style.dot}`} />
-              <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${style.badge}`}>{riskLabel[insight.risk]}</span>
-              <span className="text-[10px] text-muted-foreground ml-auto">{insight.agent}</span>
-            </div>
-            <p className="text-xs font-medium text-foreground mb-1.5 leading-relaxed">{insight.text}</p>
-            <p className="text-[10px] text-muted-foreground mb-2">{insight.impact}</p>
-            {insight.action && (
-              <button className="text-[10px] font-medium px-3 py-1.5 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-                {insight.action}
-              </button>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  </div>
-);
 
 export default ExecutiveSummary;
