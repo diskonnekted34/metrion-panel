@@ -40,12 +40,15 @@ export const usePacks = (): PackContextType => {
   return ctx;
 };
 
+// Development mode — full access
+const DEV_MODE = true;
+
 export const PackProvider = ({ children }: { children: ReactNode }) => {
-  const [currentTierId, setCurrentTierId] = useState<string>("core");
-  const [activeAddons, setActiveAddons] = useState<string[]>([]);
-  const [trialDaysRemaining] = useState(30);
-  const isTrial = trialDaysRemaining > 0;
-  const [creditBalance, setCreditBalance] = useState(100);
+  const [currentTierId, setCurrentTierId] = useState<string>(DEV_MODE ? "workforce" : "core");
+  const [activeAddons, setActiveAddons] = useState<string[]>(DEV_MODE ? addonPacks.map(p => p.id) : []);
+  const [trialDaysRemaining] = useState(DEV_MODE ? 0 : 30);
+  const isTrial = !DEV_MODE && trialDaysRemaining > 0;
+  const [creditBalance, setCreditBalance] = useState(DEV_MODE ? 9999 : 100);
   const [autoTopUp, setAutoTopUpState] = useState(false);
 
   const activeTier = tiers.find(t => t.id === currentTierId) || tiers[0];
@@ -73,11 +76,9 @@ export const PackProvider = ({ children }: { children: ReactNode }) => {
   const isAddonActive = useCallback((packId: string) => activeAddons.includes(packId), [activeAddons]);
 
   const isDepartmentUnlocked = useCallback((deptId: DepartmentId) => {
-    // Legal is always locked (future)
+    if (DEV_MODE) return true;
     if (deptId === "legal") return false;
-    // Check if current tier unlocks this department
     if (activeTier.departmentIds.includes(deptId)) return true;
-    // Check if an active addon unlocks it
     const addon = addonPacks.find(p => p.department === deptId && activeAddons.includes(p.id));
     return !!addon;
   }, [activeTier, activeAddons]);
@@ -87,6 +88,7 @@ export const PackProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const isAgentUnlocked = useCallback((agentId: string) => {
+    if (DEV_MODE) return true;
     if (activeTier.cumulativeAgentIds.includes(agentId)) return true;
     return addonPacks.some(p => activeAddons.includes(p.id) && p.agents.some(a => a.id === agentId));
   }, [activeTier, activeAddons]);
