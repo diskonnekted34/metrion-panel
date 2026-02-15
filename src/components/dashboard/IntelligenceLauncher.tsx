@@ -38,17 +38,17 @@ const RecommendationCard = ({
   return (
     <button
       onClick={() => onLaunch(rec.clusterId)}
-      className="glass-card p-5 text-left group hover:border-primary/30 hover:shadow-[0_0_20px_rgba(30,107,255,0.1)] transition-all duration-150 cursor-pointer flex flex-col gap-3 min-h-[120px] w-full"
+      className="glass-card p-[14px] text-left group hover:border-primary/30 hover:shadow-[0_0_16px_rgba(30,107,255,0.08)] transition-all duration-150 cursor-pointer flex flex-col gap-1.5 min-h-[110px] w-full"
     >
-      <div className="flex items-center gap-3">
-        <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shrink-0">
-          <Icon className="h-4 w-4 text-primary" />
+      <div className="flex items-center gap-2">
+        <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shrink-0">
+          <Icon className="h-3.5 w-3.5 text-primary" />
         </div>
-        <h4 className="text-[18px] font-semibold text-foreground leading-[1.3] group-hover:text-white transition-colors truncate">
+        <h4 className="text-[16px] font-semibold text-foreground leading-[1.25] group-hover:text-white transition-colors truncate">
           {rec.title}
         </h4>
       </div>
-      <p className="text-[14px] text-muted-foreground/65 leading-[1.4] line-clamp-2">
+      <p className="text-[13px] text-muted-foreground/65 leading-[1.35] line-clamp-2">
         {rec.description}
       </p>
     </button>
@@ -236,11 +236,11 @@ const IntelligenceLauncher = () => {
 
           {/* Quick Analysis Section */}
           <div className="space-y-3">
-            <h3 className="text-[11px] font-semibold tracking-[0.08em] uppercase text-muted-foreground/60">
+            <h3 className="text-[12px] font-semibold tracking-[0.08em] uppercase text-muted-foreground/55">
               Hızlı Analiz Şablonları
             </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-hidden">
               {displayed.map((rec) => (
                 <RecommendationCard
                   key={rec.id}
