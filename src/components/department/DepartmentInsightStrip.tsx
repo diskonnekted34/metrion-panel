@@ -46,6 +46,11 @@ const insightsByDept: Record<DepartmentId, Insight[]> = {
     { priority: "info", text: "Sözleşme inceleme SLA'sı hedefte", impact: "Pozitif" },
     { priority: "info", text: "Denetim takvimi güncel", impact: "Pozitif" },
   ],
+  technology: [
+    { priority: "warning", text: "Teknik borç oranı son çeyrekte %18 arttı", impact: "Yüksek", action: "Teknik borç analizi başlat" },
+    { priority: "critical", text: "3 kritik güvenlik yaması bekliyor", impact: "Yüksek", action: "Güvenlik taraması tetikle" },
+    { priority: "info", text: "Bulut maliyet optimizasyonu %12 tasarruf potansiyeli", impact: "Orta" },
+  ],
 };
 
 const priorityStyles: Record<string, { bg: string; dot: string; border: string }> = {

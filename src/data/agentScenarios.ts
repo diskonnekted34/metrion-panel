@@ -27,6 +27,16 @@ export const agentScenarios: Record<string, AgentScenario[]> = {
     { title: "Depo Kapasite Krizi", trigger: "Sezon öncesi envanter seviyesi depo kapasitesinin %90'ına ulaştı", response: "Kapasite stres analizi ve envanter hız modelleme", outcome: "Ek depo ihtiyacı 3 hafta önceden planlandı" },
     { title: "Kargo Maliyet Anomalisi", trigger: "Kargo maliyetlerinde açıklanamayan %20 artış", response: "Lojistik maliyet trend modelleme ve anomali tespiti", outcome: "Fiyat hatası tespit edildi, ₺180K geri kazanıldı" },
   ],
+  cto: [
+    { title: "Kritik Sistem Kesintisi Riski", trigger: "Ana veritabanı sunucusunda performans degradasyonu tespit edildi", response: "Sistem güvenilirlik analizi ve failover senaryosu simülasyonu", outcome: "Proaktif geçiş ile kesinti süresi sıfırlandı, %99.99 uptime korundu" },
+    { title: "Siber Güvenlik Açığı Tespiti", trigger: "Üçüncü parti kütüphanede kritik güvenlik açığı yayınlandı", response: "Bağımlılık haritası çıkarılarak etki analizi ve yama önceliklendirmesi", outcome: "24 saat içinde tüm sistemler güncellendi, sıfır ihlal" },
+    { title: "Bulut Maliyet Patlaması", trigger: "AWS faturası son 3 ayda %40 arttı, neden belirsiz", response: "Kaynak kullanım analizi ve bulut maliyet optimizasyon modelleme", outcome: "Gereksiz kaynaklar tespit edildi, aylık $12K tasarruf sağlandı" },
+  ],
+  cio: [
+    { title: "Veri Kalitesi Krizi", trigger: "CRM ve ERP arasında müşteri verisi uyumsuzluğu %15'e çıktı", response: "Departmanlar arası veri akış haritalama ve kalite puanlama", outcome: "Veri tutarsızlığı 4 haftada %2'ye düşürüldü" },
+    { title: "SaaS Portföy Şişmesi", trigger: "Aktif SaaS araç sayısı 45'e ulaştı, örtüşen fonksiyonlar var", response: "SaaS portföy optimizasyon analizi ve konsolidasyon önerisi", outcome: "12 araç konsolide edildi, yıllık ₺380K tasarruf" },
+    { title: "Dijital Dönüşüm Darboğazı", trigger: "Manuel süreçler departman verimliliğini düşürüyor", response: "Otomasyon fırsat tespiti ve ROI bazlı önceliklendirme", outcome: "İlk 5 otomasyon projesi ile haftalık 120 adam-saat tasarruf" },
+  ],
   legal: [
     { title: "Riskli Sözleşme Tespiti", trigger: "Yeni tedarikçi sözleşmesinde sorumluluk maddesi belirsiz", response: "Sözleşme risk puanlama ve madde revizyon önerileri", outcome: "3 kritik madde revize edildi, hukuki risk minimize edildi" },
     { title: "KVKK Uyumluluk Kontrolü", trigger: "Yeni pazarlama kampanyası veri toplama içeriyor", response: "GDPR/KVKK uyumluluk kontrol listesi", outcome: "Uyumluluk boşlukları kampanya öncesi kapatıldı" },

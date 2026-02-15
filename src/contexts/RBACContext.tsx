@@ -2,7 +2,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 
 export type UserRole = "owner" | "admin" | "department_lead" | "operator" | "viewer";
 
-export type DepartmentId = "executive" | "marketing" | "finance" | "operations" | "creative" | "marketplace" | "legal";
+export type DepartmentId = "executive" | "marketing" | "finance" | "operations" | "creative" | "marketplace" | "legal" | "technology";
 
 export interface Department {
   id: DepartmentId;
@@ -36,6 +36,7 @@ export interface TeamMember {
 
 export const departments: Department[] = [
   { id: "executive", name: "Yönetim", icon: "👔", agentIds: ["ceo"], healthScore: 82, activeAlerts: 1, activeTasks: 4, trend: "up", description: "Stratejik önceliklendirme, karar yönetimi ve yönetici brifingleri." },
+  { id: "technology", name: "Teknoloji", icon: "💻", agentIds: ["cto", "cio"], healthScore: 88, activeAlerts: 2, activeTasks: 6, trend: "up", description: "Teknoloji altyapısı, bilgi sistemleri ve dijital dönüşüm yönetimi." },
   { id: "marketing", name: "Pazarlama", icon: "📢", agentIds: ["cmo", "growth-agent"], healthScore: 68, activeAlerts: 3, activeTasks: 8, trend: "down", description: "Kampanya stratejisi, performans izleme ve büyüme yönetimi." },
   { id: "finance", name: "Finans", icon: "💰", agentIds: ["cfo", "accounting-agent"], healthScore: 91, activeAlerts: 1, activeTasks: 3, trend: "up", description: "Kârlılık analizi, nakit akış tahmini ve bütçe kontrolü." },
   { id: "operations", name: "Operasyon", icon: "⚙️", agentIds: ["coo", "inventory-agent"], healthScore: 74, activeAlerts: 2, activeTasks: 5, trend: "stable", description: "Tedarik zinciri, envanter yönetimi ve süreç optimizasyonu." },
@@ -45,8 +46,8 @@ export const departments: Department[] = [
 ];
 
 const mockTeam: TeamMember[] = [
-  { id: "u1", name: "Ahmet Yılmaz", email: "ahmet@company.com", role: "owner", departments: ["executive", "marketing", "finance", "operations", "creative", "marketplace", "legal"], joinedAt: "2024-01-15" },
-  { id: "u2", name: "Zeynep Kaya", email: "zeynep@company.com", role: "admin", departments: ["executive", "marketing", "finance", "operations", "creative", "marketplace", "legal"], joinedAt: "2024-02-01" },
+  { id: "u1", name: "Ahmet Yılmaz", email: "ahmet@company.com", role: "owner", departments: ["executive", "technology", "marketing", "finance", "operations", "creative", "marketplace", "legal"], joinedAt: "2024-01-15" },
+  { id: "u2", name: "Zeynep Kaya", email: "zeynep@company.com", role: "admin", departments: ["executive", "technology", "marketing", "finance", "operations", "creative", "marketplace", "legal"], joinedAt: "2024-02-01" },
   { id: "u3", name: "Mehmet Demir", email: "mehmet@company.com", role: "department_lead", departments: ["marketing"], joinedAt: "2024-03-10" },
   { id: "u4", name: "Elif Öztürk", email: "elif@company.com", role: "department_lead", departments: ["finance"], joinedAt: "2024-03-15" },
   { id: "u5", name: "Can Arslan", email: "can@company.com", role: "operator", departments: ["operations"], joinedAt: "2024-04-01" },

@@ -194,6 +194,32 @@ const chartSets: Record<DepartmentId, ChartDef[]> = {
       render: () => <BarChartMock data={[{ label: "Oca", value: 3 }, { label: "Şub", value: 5 }, { label: "Mar", value: 2 }, { label: "Nis", value: 4 }, { label: "May", value: 6 }, { label: "Haz", value: 3 }, { label: "Tem", value: 2 }]} />,
     },
   ],
+  technology: [
+    {
+      title: "Sistem Uptime Trendi",
+      subtitle: "Aylık sistem erişilebilirlik yüzdesi",
+      agent: "CTO Agent",
+      render: () => <LineChartMock data={[99.9, 99.8, 99.95, 99.7, 99.99, 99.85, 99.92]} labels={["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem"]} showArea color="hsl(210, 76%, 52%)" />,
+    },
+    {
+      title: "Teknik Borç Dağılımı",
+      subtitle: "Kategorilere göre teknik borç oranları",
+      agent: "CTO Agent",
+      render: () => <DonutChartMock segments={[{ label: "Altyapı", value: 35, color: "hsl(210, 76%, 52%)" }, { label: "Kod", value: 40, color: "hsl(45, 93%, 58%)" }, { label: "Test", value: 25, color: "hsl(160, 76%, 44%)" }]} centerLabel="Borç" />,
+    },
+    {
+      title: "Veri Kalitesi Trendi",
+      subtitle: "Kurumsal veri kalitesi skoru evrimi",
+      agent: "CIO Agent",
+      render: () => <LineChartMock data={[72, 75, 78, 82, 85, 88, 91]} labels={["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem"]} color="hsl(280, 60%, 52%)" />,
+    },
+    {
+      title: "SaaS Kullanım Verimliliği",
+      subtitle: "Aktif araç kullanım oranları",
+      agent: "CIO Agent",
+      render: () => <BarChartMock data={[{ label: "CRM", value: 92 }, { label: "ERP", value: 78 }, { label: "PM", value: 85 }, { label: "BI", value: 65 }, { label: "HR", value: 71 }, { label: "Comms", value: 88 }]} />,
+    },
+  ],
 };
 
 /** Simple SVG Radar for executive multi-score */
