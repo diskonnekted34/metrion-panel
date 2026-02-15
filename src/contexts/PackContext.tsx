@@ -34,7 +34,7 @@ interface PackContextType {
 
 const PackContext = createContext<PackContextType | null>(null);
 
-export const usePacks = () => {
+export const usePacks = (): PackContextType => {
   const ctx = useContext(PackContext);
   if (!ctx) throw new Error("usePacks must be used within PackProvider");
   return ctx;
