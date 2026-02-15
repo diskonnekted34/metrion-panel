@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from "react";
-import { Pack, Tier, tiers, addonPacks, allPacks } from "@/data/packs";
+import { Pack, Tier, tiers, addonPacks, allPacks, CreditPack, creditPacks } from "@/data/packs";
 import { toast } from "sonner";
 
 interface PackContextType {
@@ -16,6 +16,11 @@ interface PackContextType {
   getActivePacks: () => Pack[];
   trialDaysRemaining: number;
   isTrial: boolean;
+  // Credits
+  creditBalance: number;
+  autoTopUp: boolean;
+  setAutoTopUp: (enabled: boolean) => void;
+  purchaseCredits: (packId: string) => void;
   // Legacy compat
   isCorActive: boolean;
   activePacks: string[];
@@ -33,10 +38,12 @@ export const usePacks = () => {
 };
 
 export const PackProvider = ({ children }: { children: ReactNode }) => {
-  const [currentTierId, setCurrentTierId] = useState<string>("executive-core");
+  const [currentTierId, setCurrentTierId] = useState<string>("core");
   const [activeAddons, setActiveAddons] = useState<string[]>([]);
   const [trialDaysRemaining] = useState(30);
   const isTrial = trialDaysRemaining > 0;
+  const [creditBalance, setCreditBalance] = useState(100);
+  const [autoTopUp, setAutoTopUpState] = useState(false);
 
   const activeTier = tiers.find(t => t.id === currentTierId) || tiers[0];
 
@@ -44,86 +51,70 @@ export const PackProvider = ({ children }: { children: ReactNode }) => {
     const tier = tiers.find(t => t.id === tierId);
     if (!tier) return;
     setCurrentTierId(tierId);
-    toast.success(`${tier.name} tier activated.`);
+    toast.success(`${tier.name} planı aktifleştirildi.`);
   }, []);
 
   const activateAddon = useCallback((packId: string) => {
     const pack = addonPacks.find(p => p.id === packId);
     if (!pack) return;
     setActiveAddons(prev => [...new Set([...prev, packId])]);
-    toast.success(`${pack.name} activated.`);
+    toast.success(`${pack.name} aktifleştirildi.`);
   }, []);
 
   const deactivateAddon = useCallback((packId: string) => {
     setActiveAddons(prev => prev.filter(id => id !== packId));
     const pack = addonPacks.find(p => p.id === packId);
-    if (pack) toast.info(`${pack.name} deactivated.`);
+    if (pack) toast.info(`${pack.name} devre dışı bırakıldı.`);
   }, []);
 
-  const isAddonActive = useCallback((packId: string) => {
-    return activeAddons.includes(packId);
-  }, [activeAddons]);
+  const isAddonActive = useCallback((packId: string) => activeAddons.includes(packId), [activeAddons]);
 
   const isAgentUnlocked = useCallback((agentId: string) => {
-    // Check tier
     if (activeTier.cumulativeAgentIds.includes(agentId)) return true;
-    // Check addons
     return addonPacks.some(p => activeAddons.includes(p.id) && p.agents.some(a => a.id === agentId));
   }, [activeTier, activeAddons]);
 
-  const getPackForAgent = useCallback((agentId: string) => {
-    return allPacks.find(p => p.agents.some(a => a.id === agentId));
-  }, []);
+  const getPackForAgent = useCallback((agentId: string) => allPacks.find(p => p.agents.some(a => a.id === agentId)), []);
 
   const getMonthlyTotal = useCallback(() => {
     const tierCost = activeTier.monthlyPrice;
-    const addonCost = addonPacks
-      .filter(p => activeAddons.includes(p.id))
-      .reduce((sum, p) => sum + p.monthlyPrice, 0);
+    const addonCost = addonPacks.filter(p => activeAddons.includes(p.id)).reduce((sum, p) => sum + p.monthlyPrice, 0);
     return tierCost + addonCost;
   }, [activeTier, activeAddons]);
 
-  const getActivePacks = useCallback(() => {
-    return addonPacks.filter(p => activeAddons.includes(p.id));
-  }, [activeAddons]);
+  const getActivePacks = useCallback(() => addonPacks.filter(p => activeAddons.includes(p.id)), [activeAddons]);
 
-  // Legacy compatibility
+  const setAutoTopUp = useCallback((enabled: boolean) => {
+    setAutoTopUpState(enabled);
+    toast.success(enabled ? "Otomatik yükleme aktifleştirildi." : "Otomatik yükleme kapatıldı.");
+  }, []);
+
+  const purchaseCredits = useCallback((packId: string) => {
+    const pack = creditPacks.find(p => p.id === packId);
+    if (!pack) return;
+    setCreditBalance(prev => prev + pack.price);
+    toast.success(`${pack.name} satın alındı — $${pack.price}`);
+  }, []);
+
+  // Legacy
   const isCorActive = true;
   const activePacks = [currentTierId, ...activeAddons];
-  const isPackActive = useCallback((packId: string) => {
-    return packId === currentTierId || activeAddons.includes(packId);
-  }, [currentTierId, activeAddons]);
-
+  const isPackActive = useCallback((packId: string) => packId === currentTierId || activeAddons.includes(packId), [currentTierId, activeAddons]);
   const activatePack = useCallback((packId: string) => {
     const tier = tiers.find(t => t.id === packId);
     if (tier) { activateTier(packId); return; }
     activateAddon(packId);
   }, [activateTier, activateAddon]);
-
-  const deactivatePack = useCallback((packId: string) => {
-    deactivateAddon(packId);
-  }, [deactivateAddon]);
+  const deactivatePack = useCallback((packId: string) => deactivateAddon(packId), [deactivateAddon]);
 
   return (
     <PackContext.Provider value={{
-      currentTierId,
-      activeTier,
-      activeAddons,
-      activateTier,
-      activateAddon,
-      deactivateAddon,
-      isAddonActive,
-      isAgentUnlocked,
-      getPackForAgent,
-      getMonthlyTotal,
-      getActivePacks,
-      trialDaysRemaining,
-      isTrial,
-      isCorActive,
-      activePacks,
-      isPackActive,
-      activatePack,
-      deactivatePack,
+      currentTierId, activeTier, activeAddons,
+      activateTier, activateAddon, deactivateAddon, isAddonActive,
+      isAgentUnlocked, getPackForAgent, getMonthlyTotal, getActivePacks,
+      trialDaysRemaining, isTrial,
+      creditBalance, autoTopUp, setAutoTopUp, purchaseCredits,
+      isCorActive, activePacks, isPackActive, activatePack, deactivatePack,
     }}>
       {children}
     </PackContext.Provider>
