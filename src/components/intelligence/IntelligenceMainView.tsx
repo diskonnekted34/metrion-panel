@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { AlertTriangle, TrendingUp, TrendingDown, BarChart3, Layers, Eye } from "lucide-react";
+import { AlertTriangle, TrendingUp, TrendingDown, BarChart3, Eye } from "lucide-react";
 import { MetricIntelligence } from "@/data/intelligenceMetrics";
 import { LineChartMock, BarChartMock, DonutChartMock, GaugeMock, HeatmapMock } from "@/components/dashboard/tabs/MockChart";
+import InsightBreakdown from "@/components/intelligence/InsightBreakdown";
 
 interface Props {
   metric: MetricIntelligence;
@@ -113,34 +114,8 @@ const IntelligenceMainView = ({ metric }: Props) => {
         )}
       </div>
 
-      {/* Segment Breakdown */}
-      <div className="glass-card p-5">
-        <div className="flex items-center gap-2 mb-3">
-          <Layers className="h-4 w-4 text-primary" />
-          <h2 className="text-sm font-semibold text-foreground">Segment Kırılımı</h2>
-        </div>
-        <div className="space-y-2">
-          {metric.segments.map(seg => (
-            <div key={seg.label} className="flex items-center justify-between p-2.5 rounded-xl bg-secondary/30">
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-medium text-foreground">{seg.label}</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-24 h-1.5 rounded-full bg-secondary/50 overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-primary transition-all"
-                    style={{ width: `${Math.min((seg.value / Math.max(...metric.segments.map(s => s.value))) * 100, 100)}%` }}
-                  />
-                </div>
-                <span className="text-xs font-semibold text-foreground w-12 text-right">{seg.value}</span>
-                <span className={`text-[10px] font-medium w-10 text-right ${seg.change >= 0 ? "text-success" : "text-destructive"}`}>
-                  {seg.change >= 0 ? "+" : ""}{seg.change}%
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Department-Specific Insight Breakdown */}
+      <InsightBreakdown metric={metric} />
 
       {/* Anomaly Highlights */}
       {metric.anomalies.length > 0 && (
