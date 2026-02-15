@@ -6,6 +6,7 @@ import StatsCounter from "@/components/StatsCounter";
 import FeatureTabs from "@/components/FeatureTabs";
 import PainPoints from "@/components/PainPoints";
 import FeaturedExperts from "@/components/FeaturedExperts";
+import ContinuousIntelligence from "@/components/ContinuousIntelligence";
 import LegalHighlight from "@/components/LegalHighlight";
 import Footer from "@/components/Footer";
 
@@ -19,6 +20,7 @@ const Index = () => {
       <StatsCounter />
       <FeatureTabs />
       <FeaturedExperts />
+      <ContinuousIntelligence />
       <LegalHighlight />
       <PainPoints />
       <Footer />

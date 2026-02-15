@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2, Star } from "lucide-react";
+import { ArrowRight, CheckCircle2, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { executives, agents } from "@/data/experts";
-import { useLanguage } from "@/i18n/LanguageContext";
 
 const FeaturedExperts = () => {
-  const { t } = useLanguage();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
@@ -19,8 +17,9 @@ const FeaturedExperts = () => {
           transition={{ ease: [0.2, 0.8, 0.2, 1] }}
           className="text-center mb-4"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{t.marketplace.title}</h2>
-          <p className="text-muted-foreground max-w-md mx-auto">{t.marketplace.subtitle}</p>
+          <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">Departman Bazlı AI İş Gücü</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Rol Eğitimli AI Ajanları</h2>
+          <p className="text-muted-foreground max-w-lg mx-auto">Her ajan belirli bir yönetici fonksiyonu için eğitilmiştir. Planınız departmanları açtıkça ajanlar otomatik aktifleşir.</p>
         </motion.div>
 
         <motion.div
@@ -29,17 +28,17 @@ const FeaturedExperts = () => {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <span className="inline-flex items-center gap-2 text-xs font-medium text-accent bg-accent/10 px-4 py-2 rounded-2xl">
-            <CheckCircle2 className="h-3.5 w-3.5" />
-            {t.marketplace.banner}
+          <span className="inline-flex items-center gap-2 text-xs font-medium text-primary/80 bg-primary/5 px-4 py-2 rounded-2xl border border-primary/10">
+            <Zap className="h-3.5 w-3.5" />
+            Sürekli güncellenen yönetici istihbaratı ile rafine edilen ajanlar
           </span>
         </motion.div>
 
         {/* C-Level Executives */}
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-            <span className="text-xs font-bold px-2 py-0.5 rounded-2xl bg-primary/10 text-primary">C-Level</span>
-            Executive Team
+            <span className="text-xs font-bold px-2 py-0.5 rounded-2xl bg-primary/10 text-primary">Departman Liderleri</span>
+            Yönetici Kadro
           </h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
@@ -59,52 +58,52 @@ const FeaturedExperts = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <h3 className="font-bold text-primary text-sm">{exec.role}</h3>
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-2xl bg-primary/10 text-primary">
-                        {exec.badge}
-                      </span>
                     </div>
                     <p className="text-sm text-muted-foreground font-medium">{exec.name}</p>
+                    <p className="text-[10px] text-muted-foreground/50 mt-0.5">Rol Eğitimli · Sürekli Güncellenen</p>
                   </div>
                 </div>
 
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{exec.tagline}</p>
 
-                <div className="space-y-1.5 mb-4">
-                  {exec.outputs.slice(0, 2).map((output) => (
-                    <div key={output} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
-                      <span className="text-xs text-muted-foreground">{output}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <motion.div
-                  initial={false}
-                  animate={{ height: hoveredId === exec.id ? "auto" : 0, opacity: hoveredId === exec.id ? 1 : 0 }}
-                  transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
-                  className="overflow-hidden"
-                >
-                  <div className="p-3 rounded-2xl bg-secondary mb-4">
-                    <p className="text-[11px] text-muted-foreground italic">"{exec.outputs[2] || exec.tagline}"</p>
+                {exec.capabilities && (
+                  <div className="space-y-1.5 mb-4">
+                    {exec.capabilities.slice(0, 3).map((cap) => (
+                      <div key={cap} className="flex items-start gap-2">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
+                        <span className="text-xs text-muted-foreground">{cap}</span>
+                      </div>
+                    ))}
                   </div>
-                </motion.div>
+                )}
+
+                {!exec.capabilities && (
+                  <div className="space-y-1.5 mb-4">
+                    {exec.outputs.slice(0, 2).map((output) => (
+                      <div key={output} className="flex items-start gap-2">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
+                        <span className="text-xs text-muted-foreground">{output}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 <div className="flex items-center justify-between pt-4 border-t border-border">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-medium text-foreground">{exec.performanceScore}%</span>
-                    <span className="text-xs text-muted-foreground">performance</span>
+                    <span className="text-xs text-muted-foreground">performans</span>
                   </div>
                   <span className="text-[10px] font-medium px-2 py-0.5 rounded-2xl bg-accent/10 text-accent">
-                    KPI: {exec.kpis[0]}
+                    {exec.kpis[0]}
                   </span>
                 </div>
 
                 <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                  {t.marketplace.viewRole} <ArrowRight className="h-3.5 w-3.5" />
+                  Konsolu Aç <ArrowRight className="h-3.5 w-3.5" />
                 </div>
 
                 {exec.id === "legal" && (
-                  <p className="mt-3 text-[10px] text-muted-foreground italic">{t.marketplace.legalDisclaimer}</p>
+                  <p className="mt-3 text-[10px] text-muted-foreground italic">Yalnızca karar destek analizi. Resmi hukuki temsil değildir.</p>
                 )}
               </Link>
             </motion.div>
@@ -114,8 +113,8 @@ const FeaturedExperts = () => {
         {/* Standard-tier Agents */}
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-            <span className="text-xs font-bold px-2 py-0.5 rounded-2xl bg-accent/10 text-accent">Standard</span>
-            AI Agents
+            <span className="text-xs font-bold px-2 py-0.5 rounded-2xl bg-accent/10 text-accent">Uzman Ajanlar</span>
+            Departman İş Gücü
           </h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -135,13 +134,9 @@ const FeaturedExperts = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <h3 className="font-bold text-foreground text-sm">{agent.name}</h3>
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-2xl ${
-                        agent.badge === "Agent" ? "bg-accent/10 text-accent" : "bg-secondary text-muted-foreground"
-                      }`}>
-                        {agent.pricingModel === "Subscription" ? "Pro" : "Elite"}
-                      </span>
                     </div>
                     <p className="text-sm text-muted-foreground font-medium">{agent.role}</p>
+                    <p className="text-[10px] text-muted-foreground/50 mt-0.5">Rol Eğitimli · Sürekli Güncellenen</p>
                   </div>
                 </div>
 
@@ -155,28 +150,34 @@ const FeaturedExperts = () => {
                   ))}
                 </div>
 
-                <motion.div
-                  initial={false}
-                  animate={{ height: hoveredId === agent.id ? "auto" : 0, opacity: hoveredId === agent.id ? 1 : 0 }}
-                  transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
-                  className="overflow-hidden"
-                >
-                  <div className="p-3 rounded-2xl bg-secondary mb-4">
-                    <p className="text-[11px] text-muted-foreground italic">"{agent.outputs[0]}"</p>
-                  </div>
-                </motion.div>
+                {agent.capabilities && (
+                  <motion.div
+                    initial={false}
+                    animate={{ height: hoveredId === agent.id ? "auto" : 0, opacity: hoveredId === agent.id ? 1 : 0 }}
+                    transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="space-y-1 mb-4">
+                      {agent.capabilities.slice(0, 3).map(cap => (
+                        <div key={cap} className="flex items-start gap-2">
+                          <CheckCircle2 className="h-3 w-3 text-accent shrink-0 mt-0.5" />
+                          <span className="text-[11px] text-muted-foreground">{cap}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
 
                 <div className="flex items-center justify-between pt-4 border-t border-border">
                   <div className="flex items-center gap-2">
-                    <Star className="h-3.5 w-3.5 text-warning fill-warning" />
-                    <span className="text-xs font-medium text-foreground">{agent.rating}</span>
-                    <span className="text-xs text-muted-foreground">({agent.ratingCount})</span>
+                    <span className="text-xs font-medium text-foreground">{agent.performanceScore}%</span>
+                    <span className="text-xs text-muted-foreground">performans</span>
                   </div>
-                  <span className="text-xs text-muted-foreground">{agent.pricingModel}</span>
+                  <span className="text-[10px] text-muted-foreground">{agent.kpis?.[0]}</span>
                 </div>
 
                 <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                  {t.marketplace.viewRole} <ArrowRight className="h-3.5 w-3.5" />
+                  Konsolu Aç <ArrowRight className="h-3.5 w-3.5" />
                 </div>
               </Link>
             </motion.div>

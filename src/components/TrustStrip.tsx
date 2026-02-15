@@ -1,16 +1,14 @@
 import { motion } from "framer-motion";
-import { Calendar, Bell, BarChart3, Zap, Shield } from "lucide-react";
-import { useLanguage } from "@/i18n/LanguageContext";
+import { Shield, Brain, Layers, Zap, BarChart3, Lock } from "lucide-react";
 
 const TrustStrip = () => {
-  const { t } = useLanguage();
-
   const items = [
-    { icon: Calendar, label: t.trustStrip.item1 },
-    { icon: Bell, label: t.trustStrip.item2 },
-    { icon: BarChart3, label: t.trustStrip.item3 },
-    { icon: Zap, label: t.trustStrip.item4 },
-    { icon: Shield, label: t.trustStrip.item5 },
+    { icon: Brain, label: "Rol Eğitimli AI Ajanlar" },
+    { icon: Shield, label: "Risk Motoru Koruması" },
+    { icon: Layers, label: "Departman Bazlı İstihbarat" },
+    { icon: Zap, label: "Sürekli Güncellenen Zekâ" },
+    { icon: BarChart3, label: "Yapılandırılmış Karar Altyapısı" },
+    { icon: Lock, label: "Kontrollü Otomasyon" },
   ];
 
   const doubled = [...items, ...items];

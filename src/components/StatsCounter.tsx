@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { useLanguage } from "@/i18n/LanguageContext";
 
 const useCountUp = (target: number, duration: number = 2000, trigger: boolean = false) => {
   const [count, setCount] = useState(0);
@@ -38,14 +37,14 @@ const StatsCounter = () => {
   }, []);
 
   const stats = [
-    { value: 24800, suffix: "+", label: "Completed Tasks" },
-    { value: 6, suffix: "", label: "Active AI Executives" },
-    { value: 2400000, suffix: "", label: "Revenue Impact ($)", prefix: "$", format: true },
-    { value: 186, suffix: "h", label: "Hours Saved / Month" },
+    { label: "Tamamlanan Karar Döngüsü" },
+    { label: "Aktif AI Departmanı" },
+    { label: "Korunan Gelir Etkisi" },
+    { label: "Tasarruf Edilen Saat / Ay" },
   ];
 
   const count1 = useCountUp(24800, 2000, visible);
-  const count2 = useCountUp(6, 800, visible);
+  const count2 = useCountUp(7, 800, visible);
   const count3 = useCountUp(2.4, 1500, visible);
   const count4 = useCountUp(186, 1500, visible);
 
