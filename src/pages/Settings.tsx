@@ -29,7 +29,7 @@ const Settings = () => {
   ];
 
   const allRoles: UserRole[] = ["owner", "admin", "department_lead", "operator", "viewer"];
-  const allDepts: DepartmentId[] = ["executive", "marketing", "finance", "operations", "technology", "legal"];
+  const allDepts: DepartmentId[] = ["executive", "marketing", "finance", "operations", "creative", "marketplace", "legal"];
   const permissionMatrix = [
     { label: "All Departments", roles: { owner: true, admin: true, department_lead: false, operator: false, viewer: false } },
     { label: "Create Tasks", roles: { owner: true, admin: true, department_lead: true, operator: false, viewer: false } },
@@ -45,7 +45,7 @@ const Settings = () => {
       owner: allDepts,
       admin: allDepts,
       department_lead: ["marketing"],
-      operator: ["operations", "technology"],
+      operator: ["operations"],
       viewer: ["marketing", "finance"],
     };
     setCurrentUser({ ...currentUser, role, departments: deptMap[role] });

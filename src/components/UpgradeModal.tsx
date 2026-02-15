@@ -1,28 +1,37 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Check, Package, Zap, Users } from "lucide-react";
-import { Pack } from "@/data/packs";
+import { X, Check, Lock, Layers, Users, Zap, Database, ArrowRight } from "lucide-react";
 import { usePacks } from "@/contexts/PackContext";
+import { tiers } from "@/data/packs";
+import { departments, type DepartmentId } from "@/contexts/RBACContext";
+import { departmentIntegrationMap } from "@/data/packs";
 
 interface UpgradeModalProps {
-  pack: Pack | null;
+  departmentId?: DepartmentId;
   open: boolean;
   onClose: () => void;
 }
 
-const UpgradeModal = ({ pack, open, onClose }: UpgradeModalProps) => {
-  const { activatePack, isCorActive, getMonthlyTotal } = usePacks();
+const UpgradeModal = ({ departmentId, open, onClose }: UpgradeModalProps) => {
+  const { activateTier, currentTierId, getRequiredTierForDepartment } = usePacks();
   const [confirming, setConfirming] = useState(false);
 
-  if (!pack) return null;
+  const dept = departmentId ? departments.find(d => d.id === departmentId) : null;
+  const requiredTier = departmentId ? getRequiredTierForDepartment(departmentId) : null;
 
-  const canActivate = pack.type === "core" || isCorActive;
-  const newTotal = getMonthlyTotal() + pack.monthlyPrice;
+  // Find the minimum tier that unlocks this department
+  const targetTier = requiredTier || tiers[tiers.length - 1];
+  const currentTierIndex = tiers.findIndex(t => t.id === currentTierId);
+  const targetTierIndex = tiers.findIndex(t => t.id === targetTier.id);
+  const isUpgrade = targetTierIndex > currentTierIndex;
 
-  const handleConfirm = () => {
+  const deptAgents = dept ? targetTier.agents.filter(() => true) : [];
+  const integrationIds = departmentId ? (departmentIntegrationMap[departmentId] || []) : [];
+
+  const handleUpgrade = () => {
     setConfirming(true);
     setTimeout(() => {
-      activatePack(pack.id);
+      activateTier(targetTier.id);
       setConfirming(false);
       onClose();
     }, 600);
@@ -48,78 +57,107 @@ const UpgradeModal = ({ pack, open, onClose }: UpgradeModalProps) => {
               <X className="h-4 w-4 text-muted-foreground" />
             </button>
 
-            <div className="flex items-center gap-3 mb-6">
-              <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-                <Package className="h-5 w-5 text-primary" />
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-6">
+              <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+                {dept ? (
+                  <span className="text-2xl">{dept.icon}</span>
+                ) : (
+                  <Lock className="h-6 w-6 text-primary" />
+                )}
               </div>
               <div>
-                <h2 className="text-lg font-bold text-foreground">{pack.name}</h2>
-                <p className="text-xs text-muted-foreground">{pack.tagline}</p>
+                <h2 className="text-lg font-bold text-foreground">
+                  {dept ? `${dept.name} Departmanını Aç` : "Planınızı Yükseltin"}
+                </h2>
+                <p className="text-xs text-muted-foreground">
+                  {targetTier.name} planına yükselterek erişim sağlayın
+                </p>
               </div>
             </div>
 
-            {/* Agents */}
-            <div className="mb-6">
-              <p className="text-xs font-semibold text-foreground mb-3 flex items-center gap-2">
-                <Users className="h-3.5 w-3.5 text-primary" />
-                Dahil Ajanlar
-              </p>
-              <div className="space-y-2">
-                {pack.agents.map(agent => (
-                  <div key={agent.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary/40">
-                    <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
-                      {agent.name[0]}
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{agent.role}</p>
-                      <p className="text-[10px] text-muted-foreground">{agent.name}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Capabilities */}
-            <div className="mb-6">
-              <p className="text-xs font-semibold text-foreground mb-3 flex items-center gap-2">
-                <Zap className="h-3.5 w-3.5 text-accent" />
-                Yetenekler
-              </p>
-              <div className="grid grid-cols-1 gap-1.5">
-                {pack.capabilities.slice(0, 5).map(cap => (
-                  <div key={cap} className="flex items-center gap-2">
-                    <Check className="h-3 w-3 text-accent shrink-0" />
-                    <span className="text-xs text-muted-foreground">{cap}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Pricing Summary */}
-            <div className="glass-card p-4 mb-6 !bg-secondary/30">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-muted-foreground">{pack.name}</span>
-                <span className="text-sm font-bold text-foreground">${pack.monthlyPrice}/ay</span>
-              </div>
-              <div className="border-t border-border pt-2 flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">Yeni Aylık Toplam</span>
-                <span className="text-sm font-bold text-primary">${newTotal}/ay</span>
-              </div>
-              <p className="text-[10px] text-muted-foreground mt-2">Anında aktifleştirilir. Aylık faturalandırılır.</p>
-            </div>
-
-            {!canActivate && (
-              <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/20 mb-4">
-                <p className="text-xs text-destructive">Bu paketi eklemeden önce Yönetici Paketi aktif olmalıdır.</p>
+            {/* Department description */}
+            {dept && (
+              <div className="glass-card !bg-secondary/30 p-4 mb-6">
+                <p className="text-sm text-muted-foreground">{dept.description}</p>
               </div>
             )}
 
+            {/* Included agents */}
+            {dept && (
+              <div className="mb-5">
+                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                  <Users className="h-3 w-3" /> Dahil Ajanlar
+                </p>
+                <div className="space-y-2">
+                  {dept.agentIds.map(agentId => {
+                    const agentInfo = targetTier.cumulativeAgentIds.includes(agentId);
+                    return (
+                      <div key={agentId} className="flex items-center gap-2.5 p-2 rounded-xl bg-secondary/40">
+                        <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
+                          AI
+                        </div>
+                        <span className="text-xs text-foreground capitalize">{agentId.replace(/-/g, " ")}</span>
+                        <Check className="h-3 w-3 text-success ml-auto" />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Data sources */}
+            {integrationIds.length > 0 && (
+              <div className="mb-5">
+                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <Database className="h-3 w-3" /> Veri & Aksiyon Kaynakları
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {integrationIds.length} entegrasyon bu departmanla birlikte aktifleşir
+                </p>
+              </div>
+            )}
+
+            {/* Plan details */}
+            <div className="mb-6">
+              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <Layers className="h-3 w-3" /> Plan Detayları
+              </p>
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-secondary/40 rounded-xl p-3 text-center">
+                  <p className="text-lg font-bold text-foreground">{targetTier.teamMembers}</p>
+                  <p className="text-[10px] text-muted-foreground">Ekip Üyesi</p>
+                </div>
+                <div className="bg-secondary/40 rounded-xl p-3 text-center">
+                  <p className="text-xs font-bold text-foreground">{targetTier.approvalModel}</p>
+                  <p className="text-[10px] text-muted-foreground">Onay Modeli</p>
+                </div>
+                <div className="bg-secondary/40 rounded-xl p-3 text-center">
+                  <p className="text-xs font-bold text-foreground">{targetTier.aiProcessing}</p>
+                  <p className="text-[10px] text-muted-foreground">AI İşlem</p>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="glass-card !bg-secondary/30 p-4 mb-5">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-sm text-muted-foreground">{targetTier.name} Plan</span>
+                <span className="text-sm font-bold text-foreground">${targetTier.monthlyPrice}/ay</span>
+              </div>
+              <p className="text-[10px] text-muted-foreground">Anında aktifleştirilir. Aylık faturalandırılır.</p>
+            </div>
+
             <button
-              onClick={handleConfirm}
-              disabled={!canActivate || confirming}
-              className="w-full btn-primary px-6 py-3.5 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleUpgrade}
+              disabled={!isUpgrade || confirming}
+              className="w-full btn-primary px-6 py-3.5 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {confirming ? "Aktifleştiriliyor..." : `Aktifleştir — $${pack.monthlyPrice}/ay`}
+              {confirming ? "Yükseltiliyor..." : (
+                <>
+                  {targetTier.name} Planına Yükselt <ArrowRight className="h-4 w-4" />
+                </>
+              )}
             </button>
           </motion.div>
         </motion.div>

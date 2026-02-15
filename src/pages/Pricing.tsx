@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Check, X, Crown, Zap, Rocket, ArrowRight, Package, ChevronDown, ChevronUp, Cpu, Shield, Users, BarChart3, Layers } from "lucide-react";
+import { Check, X, Crown, Zap, Rocket, ArrowRight, Package, ChevronDown, ChevronUp, Cpu, Shield, Users, Layers, Database } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -9,12 +9,12 @@ import { tiers, addonPacks, creditPacks, comparisonData } from "@/data/packs";
 const tierIcons = [Crown, Zap, Rocket];
 
 const faqs = [
-  { q: "Ücretsiz plan var mı?", a: "Hayır. Tüm planlarda tam erişimli 30 günlük ücretsiz deneme mevcuttur. Süresiz ücretsiz plan yoktur." },
-  { q: "Fair use ne anlama geliyor?", a: "Tüm planlar sınırsız AI desteği içerir. Ağır hesaplama gerektiren işlemler AI İşlem Kredileri kullanır. Normal kullanımda ek ücret gerekmez." },
-  { q: "AI İşlem Kredileri nerelerde kullanılır?", a: "Yalnızca gelişmiş tahminleme, büyük veri analizi ve toplu işlem gibi yoğun hesaplama görevlerinde. Yazma otomasyonu, onay iş akışları ve standart özellikler kredi harcamaz." },
-  { q: "Demo randevusu almam gerekiyor mu?", a: "Hayır. Platform tamamen self-servis çalışır. İsterseniz kontrol panelinizden strateji görüşmesi ayarlayabilirsiniz." },
-  { q: "İstediğim zaman iptal edebilir miyim?", a: "Evet. Ayarlar > Abonelik bölümünden istediğiniz zaman iptal edebilirsiniz. Uzun vadeli sözleşme yoktur." },
+  { q: "Departmanlar özelleştirilebilir mi?", a: "Hayır. Departmanlar sabit bir yapıdır ve planınıza göre otomatik olarak açılır. Bu, kurumsal düzeyde tutarlılık ve güvenlik sağlar." },
+  { q: "Ücretsiz plan var mı?", a: "Hayır. Tüm planlarda tam erişimli 30 günlük ücretsiz deneme mevcuttur." },
+  { q: "Fair use ne anlama geliyor?", a: "Tüm planlar sınırsız AI desteği içerir. Ağır hesaplama gerektiren işlemler AI İşlem Kredileri kullanır." },
+  { q: "AI İşlem Kredileri nerelerde kullanılır?", a: "Yalnızca gelişmiş tahminleme, büyük veri analizi ve toplu işlem gibi yoğun hesaplama görevlerinde." },
   { q: "Planımın üzerine paket ekleyebilir miyim?", a: "Evet. İsteğe bağlı ek paketler (Kreatif, Pazaryeri, Gelişmiş Muhasebe) herhangi bir plana eklenebilir." },
+  { q: "İstediğim zaman iptal edebilir miyim?", a: "Evet. Uzun vadeli sözleşme yoktur." },
 ];
 
 const comparisonCategories = [...new Set(comparisonData.map(r => r.category))];
@@ -37,9 +37,9 @@ const Pricing = () => {
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
             <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">AI Workforce Operating System</p>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Planınızı Seçin</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Departmanlarınızı Açın</h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              1–10M USD D2C markaları için kurumsal düzey AI iş gücü. Tüm planlarda 30 günlük tam erişimli deneme.
+              Her plan, sabit departmanları ve bunlara ait AI ajanlarını, veri kaynaklarını ve onay modellerini açar.
             </p>
           </motion.div>
 
@@ -86,14 +86,14 @@ const Pricing = () => {
                     <span className="text-sm text-muted-foreground ml-1">/ay</span>
                   </div>
 
-                  {/* Departments */}
+                  {/* Departments Unlocked */}
                   <div className="mb-5">
                     <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                      <Layers className="h-3 w-3" /> Departmanlar
+                      <Layers className="h-3 w-3" /> Açılan Departmanlar
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {tier.departments.map(d => (
-                        <span key={d} className="text-[10px] px-2 py-0.5 rounded-lg bg-secondary text-foreground">{d}</span>
+                        <span key={d} className="text-[10px] px-2 py-0.5 rounded-lg bg-primary/10 text-primary font-medium">{d}</span>
                       ))}
                     </div>
                   </div>
@@ -101,10 +101,13 @@ const Pricing = () => {
                   {/* Agents */}
                   <div className="mb-5">
                     <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                      <Users className="h-3 w-3" /> {i === 0 ? "Dahil Ajanlar" : i === 1 ? "Core + Ek Ajanlar" : "Performance + Ek Ajanlar"}
+                      <Users className="h-3 w-3" /> {i === 0 ? "Dahil Ajanlar" : "Kümülatif Ajanlar"}
                     </p>
                     <div className="space-y-1.5">
-                      {tier.agents.map(agent => (
+                      {(i === 0 ? tier.agents : tier.cumulativeAgentIds.map(id => {
+                        const allTierAgents = tiers.flatMap(t => t.agents);
+                        return allTierAgents.find(a => a.id === id) || { id, role: id, name: id };
+                      })).map(agent => (
                         <div key={agent.id} className="flex items-center gap-2">
                           <div className="h-5 w-5 rounded-md bg-primary/10 flex items-center justify-center text-[9px] font-bold text-primary shrink-0">
                             {agent.name[0]}
@@ -115,20 +118,10 @@ const Pricing = () => {
                     </div>
                   </div>
 
-                  {/* Features */}
-                  <ul className="space-y-2 mb-6 flex-1">
-                    {tier.features.map(f => (
-                      <li key={f} className="flex items-start gap-2">
-                        <Check className="h-3.5 w-3.5 text-success shrink-0 mt-0.5" />
-                        <span className="text-xs text-muted-foreground">{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* Integrations */}
-                  <div className="mb-8">
+                  {/* Data & Action Sources */}
+                  <div className="mb-5">
                     <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                      <BarChart3 className="h-3 w-3" /> Entegrasyonlar
+                      <Database className="h-3 w-3" /> Veri & Aksiyon Kaynakları
                     </p>
                     <div className="space-y-1">
                       {tier.integrations.map(int => (
@@ -136,6 +129,32 @@ const Pricing = () => {
                           • {int.name}{int.note ? ` (${int.note})` : ""}
                         </p>
                       ))}
+                    </div>
+                  </div>
+
+                  {/* Key features */}
+                  <ul className="space-y-2 mb-6 flex-1">
+                    {tier.features.slice(0, 6).map(f => (
+                      <li key={f} className="flex items-start gap-2">
+                        <Check className="h-3.5 w-3.5 text-success shrink-0 mt-0.5" />
+                        <span className="text-xs text-muted-foreground">{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Summary row */}
+                  <div className="grid grid-cols-3 gap-2 mb-6 text-center">
+                    <div className="bg-secondary/40 rounded-xl p-2">
+                      <p className="text-xs font-bold text-foreground">{tier.teamMembers}</p>
+                      <p className="text-[9px] text-muted-foreground">Ekip</p>
+                    </div>
+                    <div className="bg-secondary/40 rounded-xl p-2">
+                      <p className="text-[10px] font-bold text-foreground">{tier.aiProcessing}</p>
+                      <p className="text-[9px] text-muted-foreground">AI İşlem</p>
+                    </div>
+                    <div className="bg-secondary/40 rounded-xl p-2">
+                      <p className="text-[10px] font-bold text-foreground">{tier.approvalModel.split(" ")[0]}</p>
+                      <p className="text-[9px] text-muted-foreground">Onay</p>
                     </div>
                   </div>
 
@@ -156,7 +175,7 @@ const Pricing = () => {
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-24">
             <div className="text-center mb-10">
               <h2 className="text-2xl font-bold text-foreground mb-2">Detaylı Plan Karşılaştırması</h2>
-              <p className="text-sm text-muted-foreground">Departmanlar, ajanlar, özellikler ve entegrasyonlar arası tam karşılaştırma.</p>
+              <p className="text-sm text-muted-foreground">Departmanlar, ajanlar, veri kaynakları ve özellikler arası tam karşılaştırma.</p>
             </div>
 
             <div className="glass-card overflow-hidden">
@@ -201,7 +220,7 @@ const Pricing = () => {
                 <Package className="h-4 w-4 text-primary" />
                 <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">İsteğe Bağlı Ek Paketler</h2>
               </div>
-              <p className="text-sm text-muted-foreground">Herhangi bir plana ek yetenekler ve ajanlar ekleyin.</p>
+              <p className="text-sm text-muted-foreground">Herhangi bir plana departman ve ajan kapasitesi ekleyin.</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-5">
@@ -289,7 +308,7 @@ const Pricing = () => {
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary/40 border border-border">
                 <Shield className="h-3.5 w-3.5 text-primary" />
                 <span className="text-[11px] text-muted-foreground">
-                  Otomatik İşlem Yüklemesi (Auto Top-Up) — Ayarlar'dan yalnızca Sahip rolü aktifleştirebilir. Onay gerektirir.
+                  Otomatik İşlem Yüklemesi (Auto Top-Up) — Ayarlar'dan yalnızca Sahip rolü aktifleştirebilir.
                 </span>
               </div>
             </div>
