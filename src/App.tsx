@@ -27,6 +27,7 @@ import ActionCenter from "./pages/ActionCenter";
 import CreativeWorkspace from "./pages/CreativeWorkspace";
 import IntelligenceView from "./pages/IntelligenceView";
 import DecisionLab from "./pages/DecisionLab";
+import TechDataSources from "./pages/TechDataSources";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ const App = () => (
               <Route path="/marketplace" element={<Marketplace />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/data-sources" element={<DataSources />} />
+              <Route path="/tech-data-sources" element={<TechDataSources />} />
               <Route path="/action-center" element={<ActionCenter />} />
               <Route path="/decision-lab" element={<DecisionLab />} />
               <Route path="/creative-workspace" element={<CreativeWorkspace />} />

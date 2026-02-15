@@ -232,6 +232,7 @@ const AppSidebar = () => {
                 { label: "Uyarılar", icon: Bell, path: "/alerts" },
                 { label: "Raporlar", icon: BarChart3, path: "/reports" },
                 { label: "Veri Kaynakları", icon: Database, path: "/data-sources" },
+                { label: "Teknoloji Veri Kaynakları", icon: Database, path: "/tech-data-sources" },
                 { label: "Ekibi Genişlet", icon: BarChart3, path: "/marketplace" },
                 { label: "Ayarlar", icon: SettingsIcon, path: "/settings" },
               ].map((item) => {
