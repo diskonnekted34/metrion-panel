@@ -4,6 +4,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import IntegrationBanner from "@/components/dashboard/IntegrationBanner";
 import ExecutiveSummary from "@/components/dashboard/ExecutiveSummary";
+import IntelligenceLauncher from "@/components/dashboard/IntelligenceLauncher";
 import IntelligenceTabs from "@/components/dashboard/IntelligenceTabs";
 import TeamMatrix from "@/components/dashboard/TeamMatrix";
 import WeeklyRhythm from "@/components/dashboard/WeeklyRhythm";
@@ -19,6 +20,7 @@ const Dashboard = () => {
             <DashboardHeader />
           </motion.div>
           <ExecutiveSummary />
+          <IntelligenceLauncher />
           <IntelligenceTabs />
           <TeamMatrix />
         </div>
@@ -34,6 +36,7 @@ const Dashboard = () => {
         </motion.div>
         <IntegrationBanner />
         <ExecutiveSummary />
+        <IntelligenceLauncher />
         <IntelligenceTabs />
         <TeamMatrix />
         <WeeklyRhythm />
