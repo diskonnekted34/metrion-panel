@@ -39,6 +39,9 @@ const IntelligenceContextBar = ({ metric, dept }: Props) => {
               <span className="px-1.5 py-0.5 rounded bg-success/10 text-success text-[9px]">
                 %{metric.dataCompleteness} veri kapsamı
               </span>
+              <span className={`px-1.5 py-0.5 rounded text-[9px] ${metric.confidenceScore >= 80 ? "bg-success/10 text-success" : metric.confidenceScore >= 60 ? "bg-warning/10 text-warning" : "bg-destructive/10 text-destructive"}`}>
+                %{metric.confidenceScore} güven
+              </span>
             </div>
           </div>
         </div>
