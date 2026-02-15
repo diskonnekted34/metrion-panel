@@ -5,7 +5,7 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import IntegrationBanner from "@/components/dashboard/IntegrationBanner";
 import ExecutiveSummary from "@/components/dashboard/ExecutiveSummary";
 import IntelligenceLauncher from "@/components/dashboard/IntelligenceLauncher";
-import IntelligenceTabs from "@/components/dashboard/IntelligenceTabs";
+import IntelligenceClusters from "@/components/dashboard/IntelligenceClusters";
 import TeamMatrix from "@/components/dashboard/TeamMatrix";
 import WeeklyRhythm from "@/components/dashboard/WeeklyRhythm";
 
@@ -21,7 +21,7 @@ const Dashboard = () => {
           </motion.div>
           <ExecutiveSummary />
           <IntelligenceLauncher />
-          <IntelligenceTabs />
+          <IntelligenceClusters />
           <TeamMatrix />
         </div>
       </AppLayout>
@@ -37,7 +37,7 @@ const Dashboard = () => {
         <IntegrationBanner />
         <ExecutiveSummary />
         <IntelligenceLauncher />
-        <IntelligenceTabs />
+        <IntelligenceClusters />
         <TeamMatrix />
         <WeeklyRhythm />
       </div>

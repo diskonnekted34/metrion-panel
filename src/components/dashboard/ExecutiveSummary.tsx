@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { TrendingUp, TrendingDown, Minus, Info, DollarSign, BarChart3, Activity, Shield, Zap, Users } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, DollarSign, Activity, Shield, Zap, Users, Droplets, Target } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { LineChartMock, BarChartMock, DonutChartMock } from "./tabs/MockChart";
 
 interface ScoreCard {
   label: string;
@@ -59,6 +60,25 @@ const scoreCards: ScoreCard[] = [
     interpretation: "Sermaye tahsis getirisi iyileşme trendinde.",
     tooltip: "Yatırım getirisi, sermaye dağılımı ve birim ekonomi performansı.",
     icon: Zap,
+  },
+  {
+    label: "Likidite Gücü",
+    score: 77,
+    trend: "flat",
+    sparkline: [74, 75, 76, 76, 77, 77, 77],
+    interpretation: "Kısa vadeli borç karşılama kapasitesi güvenli bölgede.",
+    tooltip: "Cari oran, hızlı oran ve nakit dönüşüm süresi değerlendirmesi.",
+    icon: Droplets,
+  },
+  {
+    label: "Gelir Konsantrasyon Riski",
+    score: "Orta-Yüksek",
+    trend: "down",
+    sparkline: [35, 38, 42, 45, 48, 50, 52],
+    interpretation: "Ana kanal gelirin %58'ini oluşturuyor — çeşitlendirme gerekli.",
+    tooltip: "Tek kanal bağımlılığı, müşteri konsantrasyonu ve gelir çeşitliliği endeksi.",
+    icon: Target,
+    isText: true,
   },
   {
     label: "Organizasyonel Uyum",
@@ -120,13 +140,28 @@ const riskColor = (score: string | number) => {
   return "text-warning";
 };
 
+const costStructure = [
+  { label: "COGS", value: 42, color: "hsl(220, 100%, 56%)" },
+  { label: "Pazarlama", value: 22, color: "hsl(38, 92%, 50%)" },
+  { label: "Lojistik", value: 18, color: "hsl(160, 76%, 44%)" },
+  { label: "Genel Gider", value: 12, color: "hsl(280, 60%, 55%)" },
+  { label: "Diğer", value: 6, color: "hsl(var(--muted-foreground))" },
+];
+
+const channelProfit = [
+  { label: "DTC", value: 42 },
+  { label: "Amazon", value: 28 },
+  { label: "Trendyol", value: 18, color: "hsl(38, 92%, 50%)" },
+  { label: "Toptan", value: 12, color: "hsl(160, 76%, 44%)" },
+];
+
 const ExecutiveSummary = () => {
   return (
     <TooltipProvider>
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-8">
-        {/* Score Cards */}
+        {/* Score Cards — 8 cards */}
         <h2 className="text-lg font-semibold text-foreground mb-4">Yönetici İstihbarat Skoru</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 mb-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-3 mb-6">
           {scoreCards.map((card) => (
             <Tooltip key={card.label}>
               <TooltipTrigger asChild>
@@ -138,7 +173,7 @@ const ExecutiveSummary = () => {
                     <TrendArrow trend={card.trend} />
                   </div>
                   <p className={`text-2xl font-bold mb-1 ${riskColor(card.score)}`}>
-                    {card.isText ? card.score : card.score}
+                    {card.score}
                   </p>
                   <p className="text-[10px] text-muted-foreground mb-2 font-medium">{card.label}</p>
                   <MiniSparkline data={card.sparkline} />
@@ -170,6 +205,51 @@ const ExecutiveSummary = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Financial Core Snapshot — Layer 2 */}
+        <div className="mb-6">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Finansal Çekirdek Görünüm</p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <div className="glass-card p-4">
+              <p className="text-xs font-medium text-foreground mb-3">Gelir vs Net Kâr</p>
+              <LineChartMock
+                data={[180, 195, 210, 205, 225, 240, 250]}
+                data2={[28, 32, 35, 30, 38, 42, 45]}
+                labels={["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem"]}
+                showArea
+              />
+              <div className="flex gap-4 mt-2 text-[10px]">
+                <div className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-primary" /> Gelir</div>
+                <div className="flex items-center gap-1"><div className="h-2 w-2 rounded-full" style={{ background: "hsl(160,76%,44%)" }} /> Net Kâr</div>
+              </div>
+            </div>
+
+            <div className="glass-card p-4">
+              <p className="text-xs font-medium text-foreground mb-3">Katkı Marjı Trendi</p>
+              <LineChartMock
+                data={[38.2, 39.1, 39.8, 40.5, 41.0, 41.6, 42.1]}
+                labels={["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem"]}
+                showArea
+                color="hsl(160, 76%, 44%)"
+              />
+            </div>
+
+            <div className="glass-card p-4">
+              <p className="text-xs font-medium text-foreground mb-3">Nakit Akış Eğilimi</p>
+              <LineChartMock
+                data={[890, 860, 830, 810, 790, 780, 775, 800, 830]}
+                labels={["Bugün", "", "15g", "", "30g", "", "45g", "", "60g"]}
+                color="hsl(38, 92%, 50%)"
+                showArea
+              />
+            </div>
+
+            <div className="glass-card p-4">
+              <p className="text-xs font-medium text-foreground mb-3">Kanal Kârlılık</p>
+              <BarChartMock data={channelProfit} />
+            </div>
           </div>
         </div>
 
