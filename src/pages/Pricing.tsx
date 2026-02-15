@@ -1,20 +1,29 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Check, Crown, Zap, Rocket, ArrowRight, Package, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, X, Crown, Zap, Rocket, ArrowRight, Package, ChevronDown, ChevronUp, Cpu, Shield, Users, BarChart3, Layers } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { tiers, addonPacks } from "@/data/packs";
+import { tiers, addonPacks, creditPacks, comparisonData } from "@/data/packs";
 
 const tierIcons = [Crown, Zap, Rocket];
 
 const faqs = [
   { q: "Ücretsiz plan var mı?", a: "Hayır. Tüm planlarda tam erişimli 30 günlük ücretsiz deneme mevcuttur. Süresiz ücretsiz plan yoktur." },
+  { q: "Fair use ne anlama geliyor?", a: "Tüm planlar sınırsız AI desteği içerir. Ağır hesaplama gerektiren işlemler AI İşlem Kredileri kullanır. Normal kullanımda ek ücret gerekmez." },
+  { q: "AI İşlem Kredileri nerelerde kullanılır?", a: "Yalnızca gelişmiş tahminleme, büyük veri analizi ve toplu işlem gibi yoğun hesaplama görevlerinde. Yazma otomasyonu, onay iş akışları ve standart özellikler kredi harcamaz." },
   { q: "Demo randevusu almam gerekiyor mu?", a: "Hayır. Platform tamamen self-servis çalışır. İsterseniz kontrol panelinizden strateji görüşmesi ayarlayabilirsiniz." },
   { q: "İstediğim zaman iptal edebilir miyim?", a: "Evet. Ayarlar > Abonelik bölümünden istediğiniz zaman iptal edebilirsiniz. Uzun vadeli sözleşme yoktur." },
-  { q: "Verilerim güvende mi?", a: "Evet. Tüm veriler durağan halde ve aktarım sırasında şifrelenir. Kurumsal düzey güvenlik standartları." },
-  { q: "Planımın üzerine paket ekleyebilir miyim?", a: "Evet. İsteğe bağlı genişleme paketleri herhangi bir plana ek yetenekler için aktifleştirilebilir." },
+  { q: "Planımın üzerine paket ekleyebilir miyim?", a: "Evet. İsteğe bağlı ek paketler (Kreatif, Pazaryeri, Gelişmiş Muhasebe) herhangi bir plana eklenebilir." },
 ];
+
+const comparisonCategories = [...new Set(comparisonData.map(r => r.category))];
+
+const CellValue = ({ value }: { value: string | boolean }) => {
+  if (value === true) return <Check className="h-4 w-4 text-success mx-auto" />;
+  if (value === false) return <X className="h-3.5 w-3.5 text-muted-foreground/30 mx-auto" />;
+  return <span className="text-xs text-foreground">{value}</span>;
+};
 
 const Pricing = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -27,18 +36,18 @@ const Pricing = () => {
         <div className="container mx-auto max-w-6xl">
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
+            <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">AI Workforce Operating System</p>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Planınızı Seçin</h1>
-            <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              AI Yönetim İşletim Sistemi. Tüm planlarda 30 günlük ücretsiz deneme. Demo gerekmez.
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              1–10M USD D2C markaları için kurumsal düzey AI iş gücü. Tüm planlarda 30 günlük tam erişimli deneme.
             </p>
           </motion.div>
 
-          {/* Tier Cards */}
-          <div className="grid md:grid-cols-3 gap-6 mb-20">
+          {/* ── TIER CARDS ── */}
+          <div className="grid md:grid-cols-3 gap-6 mb-24">
             {tiers.map((tier, i) => {
               const Icon = tierIcons[i];
-              const isPopular = tier.badge === "En Popüler";
-              const isBest = tier.badge === "En İyi Değer";
+              const isRecommended = tier.badge === "Önerilen";
 
               return (
                 <motion.div
@@ -47,24 +56,24 @@ const Pricing = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + i * 0.08 }}
                   className={`relative overflow-hidden text-left flex flex-col ${
-                    isPopular ? "glass-bento p-8" : "glass-card p-8"
+                    isRecommended ? "glass-bento p-8 ring-1 ring-primary/25" : "glass-card p-8"
                   }`}
                 >
                   {tier.badge && (
                     <div className="absolute top-4 right-4">
                       <span className={`text-[10px] font-bold px-3 py-1.5 rounded-2xl uppercase tracking-wider ${
-                        isPopular ? "bg-primary/15 text-primary" : "bg-accent/15 text-accent"
+                        isRecommended ? "bg-primary/15 text-primary" : "bg-accent/15 text-accent-foreground"
                       }`}>
                         {tier.badge}
                       </span>
                     </div>
                   )}
 
-                  <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center gap-3 mb-5">
                     <div className={`h-11 w-11 rounded-2xl flex items-center justify-center ${
-                      isPopular ? "bg-primary/10" : isBest ? "bg-accent/10" : "bg-secondary"
+                      isRecommended ? "bg-primary/10" : "bg-secondary"
                     }`}>
-                      <Icon className={`h-5 w-5 ${isPopular ? "text-primary" : isBest ? "text-accent" : "text-muted-foreground"}`} />
+                      <Icon className={`h-5 w-5 ${isRecommended ? "text-primary" : "text-muted-foreground"}`} />
                     </div>
                     <div>
                       <h2 className="text-lg font-bold text-foreground">{tier.name}</h2>
@@ -77,10 +86,22 @@ const Pricing = () => {
                     <span className="text-sm text-muted-foreground ml-1">/ay</span>
                   </div>
 
-                  {/* Included agents */}
+                  {/* Departments */}
                   <div className="mb-5">
-                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                      {i === 0 ? "Dahil Ajanlar" : i === 1 ? "Çekirdek'teki Her Şey +" : "Performans'taki Her Şey +"}
+                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <Layers className="h-3 w-3" /> Departmanlar
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {tier.departments.map(d => (
+                        <span key={d} className="text-[10px] px-2 py-0.5 rounded-lg bg-secondary text-foreground">{d}</span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Agents */}
+                  <div className="mb-5">
+                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <Users className="h-3 w-3" /> {i === 0 ? "Dahil Ajanlar" : i === 1 ? "Core + Ek Ajanlar" : "Performance + Ek Ajanlar"}
                     </p>
                     <div className="space-y-1.5">
                       {tier.agents.map(agent => (
@@ -94,38 +115,93 @@ const Pricing = () => {
                     </div>
                   </div>
 
-                  {/* Capabilities */}
-                  <ul className="space-y-2 mb-8 flex-1">
-                    {tier.capabilities.map(cap => (
-                      <li key={cap} className="flex items-start gap-2">
-                        <Check className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
-                        <span className="text-xs text-muted-foreground">{cap}</span>
+                  {/* Features */}
+                  <ul className="space-y-2 mb-6 flex-1">
+                    {tier.features.map(f => (
+                      <li key={f} className="flex items-start gap-2">
+                        <Check className="h-3.5 w-3.5 text-success shrink-0 mt-0.5" />
+                        <span className="text-xs text-muted-foreground">{f}</span>
                       </li>
                     ))}
                   </ul>
 
+                  {/* Integrations */}
+                  <div className="mb-8">
+                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <BarChart3 className="h-3 w-3" /> Entegrasyonlar
+                    </p>
+                    <div className="space-y-1">
+                      {tier.integrations.map(int => (
+                        <p key={int.name} className="text-xs text-muted-foreground">
+                          • {int.name}{int.note ? ` (${int.note})` : ""}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+
                   <button className={`w-full py-3.5 rounded-2xl text-sm font-medium transition-all active:scale-[0.99] flex items-center justify-center gap-2 ${
-                    isPopular
+                    isRecommended
                       ? "btn-primary"
                       : "border border-border hover:bg-secondary text-foreground"
                   }`}>
                     30 Gün Ücretsiz Dene <ArrowRight className="h-4 w-4" />
                   </button>
-
                   <p className="text-[10px] text-muted-foreground text-center mt-3">Kart gerekli. İstediğiniz zaman iptal edin.</p>
                 </motion.div>
               );
             })}
           </div>
 
-          {/* Add-on Packs */}
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mb-20">
+          {/* ── COMPARISON GRID ── */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-24">
+            <div className="text-center mb-10">
+              <h2 className="text-2xl font-bold text-foreground mb-2">Detaylı Plan Karşılaştırması</h2>
+              <p className="text-sm text-muted-foreground">Departmanlar, ajanlar, özellikler ve entegrasyonlar arası tam karşılaştırma.</p>
+            </div>
+
+            <div className="glass-card overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="p-4 text-xs font-semibold text-muted-foreground w-[40%]">Özellik</th>
+                      <th className="p-4 text-xs font-semibold text-foreground text-center">Core<br/><span className="text-muted-foreground font-normal">$349/ay</span></th>
+                      <th className="p-4 text-xs font-semibold text-primary text-center">Performance<br/><span className="text-muted-foreground font-normal">$599/ay</span></th>
+                      <th className="p-4 text-xs font-semibold text-foreground text-center">Workforce<br/><span className="text-muted-foreground font-normal">$899/ay</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {comparisonCategories.map(cat => (
+                      <>
+                        <tr key={`cat-${cat}`}>
+                          <td colSpan={4} className="px-4 pt-5 pb-2">
+                            <span className="text-[10px] font-bold text-primary uppercase tracking-widest">{cat}</span>
+                          </td>
+                        </tr>
+                        {comparisonData.filter(r => r.category === cat).map((row, ri) => (
+                          <tr key={`${cat}-${ri}`} className="border-t border-border/50 hover:bg-secondary/20 transition-colors">
+                            <td className="px-4 py-3 text-xs text-muted-foreground">{row.label}</td>
+                            <td className="px-4 py-3 text-center"><CellValue value={row.core} /></td>
+                            <td className="px-4 py-3 text-center bg-primary/[0.02]"><CellValue value={row.performance} /></td>
+                            <td className="px-4 py-3 text-center"><CellValue value={row.workforce} /></td>
+                          </tr>
+                        ))}
+                      </>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ── ADD-ON PACKS ── */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="mb-24">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <Package className="h-4 w-4 text-accent" />
-                <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">İsteğe Bağlı Genişleme Paketleri</h2>
+                <Package className="h-4 w-4 text-primary" />
+                <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">İsteğe Bağlı Ek Paketler</h2>
               </div>
-              <p className="text-sm text-muted-foreground">Ek yetenekler için herhangi bir planın üzerine aktifleştirin.</p>
+              <p className="text-sm text-muted-foreground">Herhangi bir plana ek yetenekler ve ajanlar ekleyin.</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-5">
@@ -134,12 +210,12 @@ const Pricing = () => {
                   key={pack.id}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.45 + i * 0.05 }}
+                  transition={{ delay: 0.4 + i * 0.05 }}
                   className="glass-card p-6"
                 >
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="h-9 w-9 rounded-xl bg-accent/10 flex items-center justify-center">
-                      <Package className="h-4 w-4 text-accent" />
+                    <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <Package className="h-4 w-4 text-primary" />
                     </div>
                     <div>
                       <h3 className="text-sm font-bold text-foreground">{pack.name}</h3>
@@ -147,13 +223,24 @@ const Pricing = () => {
                     </div>
                   </div>
 
+                  <p className="text-xs text-muted-foreground mb-3">{pack.description}</p>
+
                   <div className="space-y-1 mb-4">
                     {pack.agents.map(a => (
                       <p key={a.id} className="text-xs text-muted-foreground">• {a.role}</p>
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between pt-3 border-t border-border">
+                  <div className="space-y-1 mb-4">
+                    {pack.capabilities.slice(0, 3).map(cap => (
+                      <div key={cap} className="flex items-center gap-2">
+                        <Check className="h-3 w-3 text-success shrink-0" />
+                        <span className="text-[11px] text-muted-foreground">{cap}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-between pt-4 border-t border-border">
                     <div>
                       <span className="text-lg font-bold text-foreground">${pack.monthlyPrice}</span>
                       <span className="text-xs text-muted-foreground">/ay</span>
@@ -167,8 +254,49 @@ const Pricing = () => {
             </div>
           </motion.div>
 
-          {/* FAQ */}
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="max-w-2xl mx-auto">
+          {/* ── AI PROCESSING CREDITS ── */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="mb-24">
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Cpu className="h-4 w-4 text-primary" />
+                <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">AI İşlem Kredileri</h2>
+              </div>
+              <p className="text-sm text-muted-foreground max-w-xl mx-auto">
+                Tüm planlar sınırsız AI desteği içerir (fair use). Yoğun hesaplama gerektiren görevler için ek kapasite.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-5 max-w-3xl mx-auto">
+              {creditPacks.map((cp, i) => (
+                <motion.div
+                  key={cp.id}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 + i * 0.05 }}
+                  className="glass-card p-6 text-center"
+                >
+                  <h3 className="text-sm font-bold text-foreground mb-1">{cp.name}</h3>
+                  <p className="text-[11px] text-muted-foreground mb-4">{cp.description}</p>
+                  <p className="text-2xl font-bold text-foreground mb-4">${cp.price}</p>
+                  <button className="w-full py-2.5 rounded-xl text-xs font-medium border border-border hover:bg-secondary text-foreground transition-all">
+                    Satın Al
+                  </button>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="mt-6 text-center">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary/40 border border-border">
+                <Shield className="h-3.5 w-3.5 text-primary" />
+                <span className="text-[11px] text-muted-foreground">
+                  Otomatik İşlem Yüklemesi (Auto Top-Up) — Ayarlar'dan yalnızca Sahip rolü aktifleştirebilir. Onay gerektirir.
+                </span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ── FAQ ── */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="max-w-2xl mx-auto">
             <h2 className="text-xl font-bold text-foreground text-center mb-8">Sıkça Sorulan Sorular</h2>
             <div className="space-y-2">
               {faqs.map((faq, i) => (

@@ -9,16 +9,15 @@ import UpgradeModal from "@/components/UpgradeModal";
 const tierIcons = [Crown, Zap, Rocket];
 
 const Marketplace = () => {
-  const { currentTierId, activeTier, isAddonActive, activateTier, activateAddon } = usePacks();
+  const { currentTierId, isAddonActive, activateTier } = usePacks();
   const [selectedPack, setSelectedPack] = useState<Pack | null>(null);
 
   return (
     <AppLayout>
       <div className="p-6 max-w-5xl mx-auto">
-        {/* Header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
           <h1 className="text-2xl font-bold text-foreground mb-1">AI İş Gücünüzü Genişletin</h1>
-          <p className="text-sm text-muted-foreground">Planınızı yükseltin veya özelleştirilmiş yetenekler için ek paketleri aktifleştirin.</p>
+          <p className="text-sm text-muted-foreground">Planınızı yükseltin veya ek paketleri aktifleştirin.</p>
         </motion.div>
 
         {/* TIERS */}
@@ -58,17 +57,20 @@ const Marketplace = () => {
                       <span className="text-[10px] font-bold px-2.5 py-1 rounded-2xl bg-primary/15 text-primary">Mevcut</span>
                     )}
                     {tier.badge && !isActive && (
-                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-2xl bg-accent/15 text-accent">{tier.badge}</span>
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-2xl bg-primary/15 text-primary">{tier.badge}</span>
                     )}
                   </div>
 
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {tier.departments.map(d => (
+                      <span key={d} className="text-[10px] px-2 py-0.5 rounded-lg bg-secondary text-foreground">{d}</span>
+                    ))}
+                  </div>
+
                   <div className="space-y-1 mb-4">
-                    {tier.agents.slice(0, 4).map(a => (
+                    {tier.agents.map(a => (
                       <p key={a.id} className="text-xs text-muted-foreground">• {a.role}</p>
                     ))}
-                    {tier.agents.length > 4 && (
-                      <p className="text-[10px] text-muted-foreground">+{tier.agents.length - 4} ajan daha</p>
-                    )}
                   </div>
 
                   <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
@@ -100,7 +102,7 @@ const Marketplace = () => {
         {/* ADD-ON PACKS */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <div className="flex items-center gap-2 mb-5">
-            <Zap className="h-4 w-4 text-accent" />
+            <Zap className="h-4 w-4 text-primary" />
             <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">İsteğe Bağlı Ek Paketler</h2>
           </div>
 
@@ -114,11 +116,11 @@ const Marketplace = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.25 + i * 0.05 }}
                 >
-                  <div className={`glass-card p-6 h-full flex flex-col ${active ? "ring-1 ring-accent/30" : ""}`}>
+                  <div className={`glass-card p-6 h-full flex flex-col ${active ? "ring-1 ring-primary/30" : ""}`}>
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-2xl bg-accent/10 flex items-center justify-center">
-                          <Package className="h-5 w-5 text-accent" />
+                        <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center">
+                          <Package className="h-5 w-5 text-primary" />
                         </div>
                         <div>
                           <h3 className="text-sm font-bold text-foreground">{pack.name}</h3>
@@ -126,7 +128,7 @@ const Marketplace = () => {
                         </div>
                       </div>
                       {active && (
-                        <span className="text-[10px] font-bold px-2.5 py-1 rounded-2xl bg-success/15 text-success">Aktif</span>
+                        <span className="text-[10px] font-bold px-2.5 py-1 rounded-2xl badge-success">Aktif</span>
                       )}
                     </div>
 
@@ -146,13 +148,10 @@ const Marketplace = () => {
                     <div className="space-y-1 mb-4 flex-1">
                       {pack.capabilities.slice(0, 3).map(cap => (
                         <div key={cap} className="flex items-center gap-2">
-                          <Check className="h-3 w-3 text-accent shrink-0" />
+                          <Check className="h-3 w-3 text-success shrink-0" />
                           <span className="text-[11px] text-muted-foreground">{cap}</span>
                         </div>
                       ))}
-                      {pack.capabilities.length > 3 && (
-                        <p className="text-[10px] text-muted-foreground ml-5">+{pack.capabilities.length - 3} daha</p>
-                      )}
                     </div>
 
                     <div className="flex items-center justify-between pt-4 border-t border-border">

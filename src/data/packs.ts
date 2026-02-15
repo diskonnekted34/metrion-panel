@@ -4,6 +4,11 @@ export interface PackAgent {
   name: string;
 }
 
+export interface TierIntegration {
+  name: string;
+  note?: string;
+}
+
 export interface Tier {
   id: string;
   name: string;
@@ -12,6 +17,12 @@ export interface Tier {
   monthlyPrice: number;
   badge?: string;
   agents: PackAgent[];
+  departments: string[];
+  features: string[];
+  integrations: TierIntegration[];
+  teamMembers: string;
+  approvalModel: string;
+  aiProcessing: string;
   capabilities: string[];
   /** IDs of agents included cumulatively (including lower tiers) */
   cumulativeAgentIds: string[];
@@ -30,81 +41,154 @@ export interface Pack {
   requiresCore: boolean;
 }
 
+export interface CreditPack {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+}
+
+// ── CREDIT BOOST PACKS ──
+
+export const creditPacks: CreditPack[] = [
+  { id: "small-boost", name: "Small Boost", price: 49, description: "Hafif işlem yükleri için ek AI işlem kapasitesi." },
+  { id: "growth-boost", name: "Growth Boost", price: 149, description: "Büyüyen ekipler için orta düzey AI işlem kapasitesi." },
+  { id: "scale-boost", name: "Scale Boost", price: 399, description: "Yoğun analiz ve tahminleme için maksimum AI işlem kapasitesi." },
+];
+
 // ── TIER DEFINITIONS ──
 
 export const tiers: Tier[] = [
   {
-    id: "executive-core",
-    name: "Yönetici Çekirdek",
+    id: "core",
+    name: "Core",
     tagline: "Temel yönetim istihbaratı.",
-    description: "Tüm departmanlarda çekirdek seviye AI yönetimi.",
-    monthlyPrice: 249,
+    description: "Yönetici, pazarlama ve finans departmanlarında çekirdek AI yönetimi.",
+    monthlyPrice: 349,
+    departments: ["Yönetici", "Pazarlama", "Finans"],
     agents: [
-      { id: "ceo", role: "AI CEO", name: "Yönetici Operatör" },
-      { id: "cfo", role: "AI CFO", name: "Kâr & Nakit Akışı Koruyucusu" },
-      { id: "cmo", role: "AI CMO", name: "Performans & Kreatif Direktör" },
-      { id: "product-manager", role: "AI Ürün Müdürü", name: "Forge" },
-      { id: "cto", role: "AI Operasyon Planlayıcı", name: "Sistem & Otomasyon Lideri" },
-      { id: "legal", role: "AI Hukuk Masası", name: "Hukuki Risk Analisti" },
+      { id: "ceo", role: "AI CEO", name: "CEO Agent" },
+      { id: "cmo", role: "AI CMO", name: "CMO Agent" },
+      { id: "cfo", role: "AI CFO", name: "CFO Agent" },
+      { id: "accounting", role: "AI Muhasebe", name: "Accounting Agent" },
     ],
+    features: [
+      "Draft-first yazma otomasyonu",
+      "Risk Engine (varsayılan eşikler)",
+      "Tek onay iş akışı",
+      "Aksiyon Merkezi",
+      "Denetim günlükleri",
+      "Dinamik RBAC",
+      "5 ekip üyesi",
+      "Sınırsız AI desteği (fair use)",
+      "Temel AI İşlem kapasitesi",
+    ],
+    integrations: [
+      { name: "Shopify" },
+      { name: "Meta Ads" },
+      { name: "Stripe" },
+      { name: "Muhasebe Sağlayıcı", note: "1 adet" },
+      { name: "GA4" },
+      { name: "Canva", note: "taslak seviye" },
+    ],
+    teamMembers: "5",
+    approvalModel: "Tek onay iş akışı",
+    aiProcessing: "Temel",
     capabilities: [
       "Şirket Sağlık Skoru",
       "Katkı marjı izleme",
       "Kampanya gözetimi",
-      "SKU analizi",
-      "Envanter risk tespiti",
-      "Haftalık yönetici ritmi",
-      "Departmanlar arası görev orkestrasyon",
+      "Draft-first otomasyon",
+      "Denetim günlükleri",
     ],
-    cumulativeAgentIds: ["ceo", "cfo", "cmo", "product-manager", "cto", "legal"],
+    cumulativeAgentIds: ["ceo", "cmo", "cfo", "accounting"],
   },
   {
     id: "performance",
-    name: "Performans",
-    tagline: "Büyüme ve finansal optimizasyon katmanı.",
-    description: "Çekirdek'teki her şey + gelişmiş büyüme ve finans yetenekleri.",
-    monthlyPrice: 449,
-    badge: "En Popüler",
+    name: "Performance",
+    tagline: "Büyüme ve operasyonel optimizasyon.",
+    description: "Core'daki her şey + Operasyon departmanı ve gelişmiş büyüme yetenekleri.",
+    monthlyPrice: 599,
+    badge: "Önerilen",
+    departments: ["Yönetici", "Pazarlama", "Finans", "Operasyon"],
     agents: [
-      { id: "nova", role: "AI Performans Pazarlamacı", name: "Nova" },
-      { id: "atlas", role: "AI Finans Analisti", name: "Atlas" },
-      { id: "cso", role: "Gelişmiş Huni Optimizörü", name: "Strateji & Büyüme Mimarı" },
+      { id: "coo", role: "AI COO", name: "COO Agent" },
+      { id: "inventory", role: "AI Envanter Yöneticisi", name: "Inventory Agent" },
     ],
+    features: [
+      "Core'daki tüm özellikler",
+      "Operasyon departmanı açık",
+      "Özel risk eşikleri",
+      "Eskalasyon bazlı onay",
+      "Opsiyonel ikinci onay",
+      "15 ekip üyesi",
+      "Daha hızlı senkronizasyon",
+      "Yüksek AI İşlem kapasitesi",
+    ],
+    integrations: [
+      { name: "Core entegrasyonlar" },
+      { name: "Google Ads" },
+      { name: "TikTok Ads" },
+      { name: "Shippo / ShipStation" },
+      { name: "HubSpot" },
+    ],
+    teamMembers: "15",
+    approvalModel: "Eskalasyon bazlı onay",
+    aiProcessing: "Yüksek",
     capabilities: [
-      "Kreatif yorulma tespiti",
-      "CPA anomali tespiti",
-      "Derinlemesine gider analizi",
+      "Core'daki tüm yetenekler",
+      "Özel risk eşikleri",
       "Huni terk noktası teşhisi",
+      "Envanter risk tespiti",
       "Bütçe yeniden dağıtım modellemesi",
     ],
-    cumulativeAgentIds: ["ceo", "cfo", "cmo", "product-manager", "cto", "legal", "nova", "atlas", "cso"],
+    cumulativeAgentIds: ["ceo", "cmo", "cfo", "accounting", "coo", "inventory"],
   },
   {
-    id: "ai-workforce",
-    name: "AI İş Gücü",
+    id: "workforce",
+    name: "Workforce",
     tagline: "Tam AI destekli dahili ekip.",
-    description: "Performans'taki her şey + tam kreatif, finans operasyonları ve otomasyon.",
-    monthlyPrice: 699,
-    badge: "En İyi Değer",
+    description: "Tüm departmanlar, tüm ajanlar, sınırsız ekip.",
+    monthlyPrice: 899,
+    badge: "En Kapsamlı",
+    departments: ["Yönetici", "Pazarlama", "Finans", "Operasyon", "Kreatif", "Hukuk"],
     agents: [
-      { id: "muse", role: "Kreatif Direktör", name: "Muse" },
-      { id: "art-director", role: "Sanat Yönetmeni", name: "Aura" },
-      { id: "graphic-designer", role: "Grafik Tasarımcı", name: "Pixel" },
-      { id: "brand-manager", role: "Marka Müdürü", name: "Prism" },
-      { id: "social-media-manager", role: "Sosyal Medya Yöneticisi", name: "Echo" },
-      { id: "vega", role: "Muhasebe Asistanı", name: "Vega" },
-      { id: "aria", role: "Otomasyon Mimarı", name: "Aria" },
+      { id: "creative-director", role: "AI Kreatif Direktör", name: "Creative Director" },
+      { id: "graphic-designer", role: "AI Grafik Tasarımcı", name: "Graphic Designer" },
+      { id: "art-director", role: "AI Sanat Yönetmeni", name: "Art Director" },
     ],
+    features: [
+      "Performance'daki tüm özellikler",
+      "Kreatif departmanı açık",
+      "Hukuk departmanı (placeholder)",
+      "Sınırsız ekip üyesi",
+      "Çok seviyeli onay zinciri",
+      "Öncelikli senkronizasyon",
+      "Gelişmiş tahminleme",
+      "Gelişmiş denetim dışa aktarımı",
+      "En yüksek AI İşlem kapasitesi",
+    ],
+    integrations: [
+      { name: "Tüm Performance entegrasyonları" },
+      { name: "Figma" },
+      { name: "Adobe Creative Cloud" },
+      { name: "Trendyol / Hepsiburada" },
+      { name: "Slack / Notion" },
+    ],
+    teamMembers: "Sınırsız",
+    approvalModel: "Çok seviyeli onay zinciri",
+    aiProcessing: "En Yüksek",
     capabilities: [
+      "Performance'daki tüm yetenekler",
       "Tam AI kreatif departman",
-      "Finansal operasyon istihbaratı",
-      "Otomasyon izleme",
-      "İçerik ve marka sistemleri",
+      "Gelişmiş tahminleme",
+      "Çok seviyeli onay zinciri",
+      "Gelişmiş denetim dışa aktarımı",
     ],
     cumulativeAgentIds: [
-      "ceo", "cfo", "cmo", "product-manager", "cto", "legal",
-      "nova", "atlas", "cso",
-      "muse", "art-director", "graphic-designer", "brand-manager", "social-media-manager", "vega", "aria",
+      "ceo", "cmo", "cfo", "accounting",
+      "coo", "inventory",
+      "creative-director", "graphic-designer", "art-director",
     ],
   },
 ];
@@ -113,20 +197,18 @@ export const tiers: Tier[] = [
 
 export const addonPacks: Pack[] = [
   {
-    id: "creative-expansion",
-    name: "Kreatif Genişleme Paketi",
+    id: "creative-pack",
+    name: "Kreatif Paketi",
     tagline: "AI Kreatif Departmanı",
     description: "Marka, içerik ve görsel üretim için tam dahili kreatif ekip.",
     monthlyPrice: 149,
     type: "addon",
-    department: "marketing",
+    department: "creative",
     requiresCore: true,
     agents: [
-      { id: "muse", role: "AI Kreatif Direktör", name: "Muse" },
+      { id: "creative-director", role: "AI Kreatif Direktör", name: "Muse" },
       { id: "art-director", role: "AI Sanat Yönetmeni", name: "Aura" },
       { id: "graphic-designer", role: "AI Grafik Tasarımcı", name: "Pixel" },
-      { id: "brand-manager", role: "AI Marka Müdürü", name: "Prism" },
-      { id: "social-media-manager", role: "AI Sosyal Medya Yöneticisi", name: "Echo" },
     ],
     capabilities: [
       "Kampanya konsept geliştirme",
@@ -134,60 +216,55 @@ export const addonPacks: Pack[] = [
       "Kreatif varyant üretimi",
       "Marka mesaj denetimi",
       "İçerik takvimi yönetimi",
-      "Hook & başlık üretimi",
-      "Etkileşim risk analizi",
     ],
   },
   {
-    id: "finance-operations",
-    name: "Finans Operasyon Paketi",
-    tagline: "Finansal Operasyon İstihbaratı",
-    description: "Detaylı finansal analiz, gider takibi ve uyumluluk izleme.",
+    id: "marketplace-pack",
+    name: "Pazaryeri Paketi",
+    tagline: "Çoklu Pazar Yeri Yönetimi",
+    description: "Trendyol, Hepsiburada, Amazon ve Etsy entegrasyonları.",
     monthlyPrice: 99,
+    type: "addon",
+    department: "operations",
+    requiresCore: true,
+    agents: [
+      { id: "marketplace-manager", role: "AI Pazaryeri Yöneticisi", name: "Nexus" },
+    ],
+    capabilities: [
+      "Çoklu pazaryeri listeleme",
+      "Fiyat senkronizasyonu",
+      "Sipariş birleştirme",
+      "Performans karşılaştırması",
+    ],
+  },
+  {
+    id: "advanced-accounting",
+    name: "Gelişmiş Muhasebe",
+    tagline: "Kapsamlı Finansal Operasyonlar",
+    description: "Çoklu muhasebe sağlayıcı desteği ve gelişmiş raporlama.",
+    monthlyPrice: 129,
     type: "addon",
     department: "finance",
     requiresCore: true,
     agents: [
-      { id: "atlas", role: "AI Finans Analisti", name: "Atlas" },
-      { id: "vega", role: "AI Muhasebe Asistanı", name: "Vega" },
+      { id: "senior-accountant", role: "AI Kıdemli Muhasebeci", name: "Ledger" },
     ],
     capabilities: [
-      "Detaylı gider dökümü",
-      "İade kalıbı tespiti",
-      "Maliyet anomali izleme",
-      "Fatura & KDV takibi",
-      "Aylık muhasebe özeti",
-      "Departman maliyet oranları",
-    ],
-  },
-  {
-    id: "technology-automation",
-    name: "Otomasyon Paketi",
-    tagline: "Otomasyon & Veri Bütünlüğü Katmanı",
-    description: "Sistem sağlığı izleme, otomasyon kapsamı ve veri bütünlüğü.",
-    monthlyPrice: 99,
-    type: "addon",
-    department: "technology",
-    requiresCore: true,
-    agents: [
-      { id: "aria", role: "AI Otomasyon Mimarı", name: "Aria" },
-    ],
-    capabilities: [
-      "Entegrasyon sağlığı izleme",
-      "Atıf bütünlüğü kontrolleri",
-      "Otomasyon kapsam haritası",
-      "Süreç darboğaz tespiti",
+      "Çoklu muhasebe entegrasyonu",
+      "Gelişmiş gider analizi",
+      "Otomatik mutabakat",
+      "KDV/vergi optimizasyonu",
     ],
   },
 ];
 
 // Legacy compat
 export const corePack: Pack = {
-  id: "executive-core",
-  name: "E-Ticaret Yönetici Paketi",
+  id: "core",
+  name: "Core Plan",
   tagline: "AI Yönetim İşletim Sistemi",
-  description: "Tüm çekirdek departmanlarda kapsamlı yönetici seviye AI yönetimi.",
-  monthlyPrice: 249,
+  description: "Çekirdek departmanlarda AI yönetimi.",
+  monthlyPrice: 349,
   type: "core",
   department: "executive",
   requiresCore: false,
@@ -196,3 +273,47 @@ export const corePack: Pack = {
 };
 
 export const allPacks: Pack[] = [corePack, ...addonPacks];
+
+// ── COMPARISON FEATURES ──
+
+export interface ComparisonRow {
+  label: string;
+  category: string;
+  core: string | boolean;
+  performance: string | boolean;
+  workforce: string | boolean;
+}
+
+export const comparisonData: ComparisonRow[] = [
+  // Departments
+  { label: "Yönetici Departmanı", category: "Departmanlar", core: true, performance: true, workforce: true },
+  { label: "Pazarlama Departmanı", category: "Departmanlar", core: true, performance: true, workforce: true },
+  { label: "Finans Departmanı", category: "Departmanlar", core: true, performance: true, workforce: true },
+  { label: "Operasyon Departmanı", category: "Departmanlar", core: false, performance: true, workforce: true },
+  { label: "Kreatif Departmanı", category: "Departmanlar", core: false, performance: false, workforce: true },
+  { label: "Hukuk Departmanı", category: "Departmanlar", core: false, performance: false, workforce: "Placeholder" },
+  // Agents
+  { label: "CEO Agent", category: "Ajanlar", core: true, performance: true, workforce: true },
+  { label: "CMO Agent", category: "Ajanlar", core: true, performance: true, workforce: true },
+  { label: "CFO Agent", category: "Ajanlar", core: true, performance: true, workforce: true },
+  { label: "Accounting Agent", category: "Ajanlar", core: true, performance: true, workforce: true },
+  { label: "COO Agent", category: "Ajanlar", core: false, performance: true, workforce: true },
+  { label: "Inventory Agent", category: "Ajanlar", core: false, performance: true, workforce: true },
+  { label: "Creative Director", category: "Ajanlar", core: false, performance: false, workforce: true },
+  { label: "Graphic Designer", category: "Ajanlar", core: false, performance: false, workforce: true },
+  { label: "Art Director", category: "Ajanlar", core: false, performance: false, workforce: true },
+  // Capabilities
+  { label: "Draft-first yazma otomasyonu", category: "Özellikler", core: true, performance: true, workforce: true },
+  { label: "Risk Engine", category: "Özellikler", core: "Varsayılan eşikler", performance: "Özel eşikler", workforce: "Özel eşikler" },
+  { label: "Onay iş akışı", category: "Özellikler", core: "Tek onay", performance: "Eskalasyon bazlı", workforce: "Çok seviyeli zincir" },
+  { label: "Aksiyon Merkezi", category: "Özellikler", core: true, performance: true, workforce: true },
+  { label: "Denetim günlükleri", category: "Özellikler", core: true, performance: true, workforce: "Gelişmiş dışa aktarım" },
+  { label: "Dinamik RBAC", category: "Özellikler", core: true, performance: true, workforce: true },
+  { label: "Gelişmiş tahminleme", category: "Özellikler", core: false, performance: false, workforce: true },
+  // Team
+  { label: "Ekip üyesi limiti", category: "Ekip", core: "5", performance: "15", workforce: "Sınırsız" },
+  // AI Processing
+  { label: "AI İşlem kapasitesi", category: "AI İşlem", core: "Temel", performance: "Yüksek", workforce: "En Yüksek" },
+  { label: "Senkronizasyon hızı", category: "AI İşlem", core: "Standart", performance: "Hızlı", workforce: "Öncelikli" },
+  { label: "Sınırsız AI desteği (fair use)", category: "AI İşlem", core: true, performance: true, workforce: true },
+];
