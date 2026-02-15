@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, Bell, BarChart3, Database, Settings as SettingsIcon } from "lucide-react";
+import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, Bell, BarChart3, Database, Settings as SettingsIcon, FlaskConical } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import UpgradeModal from "./UpgradeModal";
@@ -100,6 +100,27 @@ const AppSidebar = () => {
               <p className="text-xs">{pendingActionCount} Aksiyon Onay Bekliyor</p>
             </TooltipContent>
           </Tooltip>
+
+          {/* Karar Laboratuvarı */}
+          {(() => {
+            const isLabActive = location.pathname === "/decision-lab";
+            return (
+              <Link
+                to="/decision-lab"
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm transition-all duration-200 group relative ${
+                  isLabActive
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                }`}
+              >
+                <FlaskConical className={`h-[18px] w-[18px] shrink-0 ${isLabActive ? "text-primary" : ""}`} />
+                <span className="font-medium">Karar Laboratuvarı</span>
+                {isLabActive && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 12px rgba(30,107,255,0.5)" }} />
+                )}
+              </Link>
+            );
+          })()}
 
           {/* Departmanlar Accordion */}
           <div className="pt-4">
