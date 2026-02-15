@@ -13,9 +13,9 @@ const placeholders = [
 ];
 
 const quickTemplates = [
-  { title: "Finans Derin Analiz", icon: TrendingUp, agent: "cfo", clusterId: "finans" },
-  { title: "Performans Simülasyonu", icon: Brain, agent: "cmo", clusterId: "buyume" },
-  { title: "Operasyonel Risk Taraması", icon: Shield, agent: "coo", clusterId: "operasyon" },
+  { title: "Finans Derin Analiz", description: "Gelir, marj ve nakit akışı üzerinde çok katmanlı risk değerlendirmesi.", icon: TrendingUp, agent: "cfo", clusterId: "finans" },
+  { title: "Performans Simülasyonu", description: "Kanal bazlı büyüme senaryolarını modelleyerek optimal bütçe dağılımını hesapla.", icon: Brain, agent: "cmo", clusterId: "buyume" },
+  { title: "Operasyonel Risk Taraması", description: "Tedarik zinciri, stok ve süreç darboğazlarını proaktif olarak tespit et.", icon: Shield, agent: "coo", clusterId: "operasyon" },
 ];
 
 const IntelligenceLauncher = () => {
@@ -85,14 +85,14 @@ const IntelligenceLauncher = () => {
           </div>
 
           {/* Right — 3 horizontal templates */}
-          <div className="flex gap-2 shrink-0 overflow-x-auto">
+          <div className="flex gap-3 shrink-0 overflow-x-auto">
             {quickTemplates.map((t) => (
               <button
                 key={t.title}
                 onClick={() => handleLaunch(t.clusterId)}
-                className="glass-card px-3 py-2.5 text-left group hover:border-primary/30 transition-all cursor-pointer min-w-[140px]"
+                className="glass-card px-3.5 py-3 text-left group hover:border-primary/30 hover:shadow-[0_0_16px_rgba(30,107,255,0.08)] transition-all cursor-pointer min-w-[190px] max-w-[220px] flex flex-col"
               >
-                <div className="flex items-center gap-2 mb-1.5">
+                <div className="flex items-center gap-2 mb-2">
                   <div className="h-6 w-6 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     <t.icon className="h-3 w-3 text-primary" />
                   </div>
@@ -100,7 +100,8 @@ const IntelligenceLauncher = () => {
                     Advanced
                   </span>
                 </div>
-                <p className="text-[11px] font-medium text-foreground leading-tight">{t.title}</p>
+                <p className="text-[13px] font-medium text-foreground leading-[1.3] group-hover:text-white transition-colors">{t.title}</p>
+                <p className="text-[11px] text-muted-foreground/65 leading-[1.35] mt-1 line-clamp-2 group-hover:text-muted-foreground/80 transition-colors">{t.description}</p>
               </button>
             ))}
           </div>
