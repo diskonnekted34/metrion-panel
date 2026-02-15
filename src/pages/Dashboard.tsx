@@ -3,8 +3,9 @@ import AppLayout from "@/components/AppLayout";
 import { useIsMobile } from "@/hooks/use-mobile";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import IntegrationBanner from "@/components/dashboard/IntegrationBanner";
-import ExecutiveSummary from "@/components/dashboard/ExecutiveSummary";
+import PriorityInsights from "@/components/dashboard/PriorityInsights";
 import IntelligenceLauncher from "@/components/dashboard/IntelligenceLauncher";
+import ExecutiveSummary from "@/components/dashboard/ExecutiveSummary";
 import IntelligenceClusters from "@/components/dashboard/IntelligenceClusters";
 import TeamMatrix from "@/components/dashboard/TeamMatrix";
 import WeeklyRhythm from "@/components/dashboard/WeeklyRhythm";
@@ -19,8 +20,9 @@ const Dashboard = () => {
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
             <DashboardHeader />
           </motion.div>
-          <ExecutiveSummary />
+          <PriorityInsights />
           <IntelligenceLauncher />
+          <ExecutiveSummary />
           <IntelligenceClusters />
           <TeamMatrix />
         </div>
@@ -35,10 +37,17 @@ const Dashboard = () => {
           <DashboardHeader />
         </motion.div>
         <IntegrationBanner />
-        <ExecutiveSummary />
+        {/* Section 1: AI Priority Insights */}
+        <PriorityInsights />
+        {/* Section 2: Intelligence Launcher */}
         <IntelligenceLauncher />
+        {/* Section 3+4: Executive Scores + Financial View */}
+        <ExecutiveSummary />
+        {/* Section 5: Intelligence Clusters */}
         <IntelligenceClusters />
+        {/* Section 6: AI Team Status Matrix */}
         <TeamMatrix />
+        {/* Section 7: Weekly Executive Rhythm */}
         <WeeklyRhythm />
       </div>
     </AppLayout>
