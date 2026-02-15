@@ -12,7 +12,7 @@ const deptSubItems = [
   { label: "Genel Bakış", suffix: "", icon: Eye },
   { label: "Raporlar", suffix: "/reports", icon: FileText },
   { label: "Aksiyonlar", suffix: "/actions", icon: Zap },
-  { label: "Modüller", suffix: "/agents", icon: Activity },
+  { label: "Modüller", suffix: "/modules", icon: Activity },
 ];
 
 // Mock pending action count
