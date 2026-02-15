@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2 } from "lucide-react";
+import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, Bell, BarChart3, Database, Settings as SettingsIcon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import UpgradeModal from "./UpgradeModal";
@@ -199,6 +199,41 @@ const AppSidebar = () => {
                 })}
               </div>
             )}
+          </div>
+
+          {/* SİSTEM Section */}
+          <div className="pt-4">
+            <span className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">Sistem</span>
+            <div className="mt-2 space-y-0.5">
+              {[
+                { label: "AI Ekibim", icon: Users, path: "/team" },
+                { label: "Görevler", icon: ListTodo, path: "/tasks" },
+                { label: "Uyarılar", icon: Bell, path: "/alerts" },
+                { label: "Raporlar", icon: BarChart3, path: "/reports" },
+                { label: "Veri Kaynakları", icon: Database, path: "/data-sources" },
+                { label: "Pazar Yeri", icon: BarChart3, path: "/marketplace" },
+                { label: "Ayarlar", icon: SettingsIcon, path: "/settings" },
+              ].map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm transition-all duration-200 relative ${
+                      isActive
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    <item.icon className={`h-[18px] w-[18px] shrink-0 ${isActive ? "text-primary" : ""}`} />
+                    <span className="font-medium">{item.label}</span>
+                    {isActive && (
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 12px rgba(30,107,255,0.5)" }} />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </nav>
 
