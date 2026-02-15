@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 import { Brain, RefreshCw, TrendingUp, Shield, Zap } from "lucide-react";
 
 const features = [
-  { icon: RefreshCw, title: "Düzenli Güncelleme", desc: "Ajanlar düzenli olarak rafine edilir — yeni iş mantığı ve performans modelleri eklenir." },
+  { icon: RefreshCw, title: "Düzenli Güncelleme", desc: "İstihbarat modülleri düzenli olarak rafine edilir — yeni iş mantığı ve analiz modelleri eklenir." },
   { icon: TrendingUp, title: "Gelişen Risk Modelleri", desc: "Risk değerlendirme modelleri modern iş gerçekliklerini yansıtacak şekilde güçlendirilir." },
-  { icon: Shield, title: "İyileştirilen Performans", desc: "Karar altyapısı ve performans lojiği sürekli olarak optimize edilir." },
-  { icon: Zap, title: "Genişleyen Entegrasyonlar", desc: "Yeni veri ve aksiyon kaynakları eklenerek istihbarat kapsamı genişletilir." },
+  { icon: Shield, title: "İyileştirilen Raporlama", desc: "Raporlama lojiği ve analiz altyapısı sürekli olarak optimize edilir." },
+  { icon: Zap, title: "Genişleyen Veri Katmanları", desc: "Yeni veri ve aksiyon katmanları eklenerek istihbarat kapsamı genişletilir." },
 ];
 
 const ContinuousIntelligence = () => {
@@ -24,13 +24,13 @@ const ContinuousIntelligence = () => {
               <Brain className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-foreground">Sürekli Gelişen İstihbarat</h2>
-              <p className="text-sm text-muted-foreground">Gelişen iş zekâsıyla sürekli rafine edilen ajanlar</p>
+              <h2 className="text-2xl font-bold text-foreground">Sürekli Gelişen Zekâ</h2>
+              <p className="text-sm text-muted-foreground">Gelişen iş zekâsıyla sürekli rafine edilen istihbarat modülleri</p>
             </div>
           </div>
 
           <p className="text-sm text-muted-foreground leading-relaxed mb-8 max-w-2xl">
-            AI iş gücünüz statik bir araç değildir. Her ajan, modern iş gerçekliklerini yansıtacak şekilde sürekli olarak güncellenir, rafine edilir ve güçlendirilir. Risk modelleri, performans lojiği ve entegrasyon kapasiteleri düzenli olarak genişletilir.
+            Kurumsal istihbarat sisteminiz statik bir araç değildir. Her modül, modern iş gerçekliklerini yansıtacak şekilde sürekli olarak güncellenir, rafine edilir ve güçlendirilir. Analitik modeller, raporlama lojiği ve veri katmanı kapasiteleri düzenli olarak genişletilir.
           </p>
 
           <div className="grid sm:grid-cols-2 gap-4">

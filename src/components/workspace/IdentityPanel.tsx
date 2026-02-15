@@ -1,4 +1,4 @@
-import { Clock, History, Plus, Zap } from "lucide-react";
+import { Clock, History, Plus, Zap, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Executive } from "@/data/experts";
 
@@ -31,8 +31,8 @@ const statusStyle = (s: string) => {
 const taskTimeline = [
   { title: "ROAS düşüşü analizi", severity: "critical", status: "Aktif", eta: "2 saat", source: "İçgörü" },
   { title: "Q4 bütçe revizyonu", severity: "high", status: "Planlandı", eta: "4 saat", source: "Manuel" },
-  { title: "Haftalık performans raporu", severity: "medium", status: "Aktif", eta: "1 saat", source: "Ajan" },
-  { title: "Kreatif A/B test sonuçları", severity: "medium", status: "Tamamlandı", eta: "—", source: "Ajan" },
+  { title: "Haftalık performans raporu", severity: "medium", status: "Aktif", eta: "1 saat", source: "Sistem" },
+  { title: "Kreatif A/B test sonuçları", severity: "medium", status: "Tamamlandı", eta: "—", source: "Sistem" },
 ];
 
 interface IdentityPanelProps {
@@ -42,11 +42,13 @@ interface IdentityPanelProps {
 
 const IdentityPanel = ({ agent, onNewTask }: IdentityPanelProps) => (
   <div className="space-y-4">
-    {/* Agent Identity */}
+    {/* Agent Identity — Abstract */}
     <div className="glass-card p-4">
       <div className="flex items-center gap-3 mb-3">
         <div className="relative">
-          <img src={agent.avatar} alt={agent.role} className="h-12 w-12 rounded-xl object-cover" />
+          <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+            <Brain className="h-6 w-6 text-primary" />
+          </div>
           {agent.status === "Alerting" && <div className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 bg-destructive rounded-full animate-pulse" />}
         </div>
         <div>
@@ -54,6 +56,7 @@ const IdentityPanel = ({ agent, onNewTask }: IdentityPanelProps) => (
           <span className={`text-[10px] font-medium ${statusStyle(agent.status)}`}>{statusLabel(agent.status)}</span>
         </div>
       </div>
+      <p className="text-[10px] text-muted-foreground mb-2">{agent.intelligenceDomain || "İstihbarat Katmanı"}</p>
       <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
         <span>Skor: {agent.performanceScore}</span>
         <span>•</span>
@@ -64,7 +67,7 @@ const IdentityPanel = ({ agent, onNewTask }: IdentityPanelProps) => (
     {/* Capabilities */}
     <div className="glass-card p-4 space-y-2">
       <h3 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-        <Zap className="h-3 w-3 text-primary" /> Yetenekler
+        <Zap className="h-3 w-3 text-primary" /> Analitik Yetenekler
       </h3>
       <div className="space-y-1.5">
         {agent.skills?.slice(0, 5).map((skill, i) => (

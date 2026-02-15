@@ -437,7 +437,7 @@ const AgentWorkspace = () => {
         <div className="p-4 space-y-4">
           {/* Agent header compact */}
           <div className="glass-card p-3 flex items-center gap-3">
-            <img src={agent.avatar} alt={agent.role} className="h-10 w-10 rounded-xl object-cover" />
+            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center"><span className="text-xs font-bold text-primary">{agent.role.slice(0,3)}</span></div>
             <div className="flex-1">
               <h2 className="text-sm font-bold text-foreground">{agent.role}</h2>
               <span className={`text-[10px] font-medium ${agent.status === "Alerting" ? "text-destructive" : agent.status === "Running Task" ? "text-accent" : agent.status === "Monitoring" ? "text-primary" : "text-muted-foreground"}`}>

@@ -102,7 +102,7 @@ const TaskCreationModal = ({ open, onOpenChange, prefillObjective = "", prefillA
                         : "border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.04]"
                     }`}
                   >
-                    <img src={ex.avatar} alt={ex.role} className="h-7 w-7 rounded-lg object-cover" />
+                    <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0"><span className="text-[9px] font-bold text-primary">{ex.role.charAt(0)}</span></div>
                     <div>
                       <p className="text-xs font-medium text-foreground">{ex.role}</p>
                       <p className="text-[10px] text-muted-foreground">{ex.name}</p>

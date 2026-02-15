@@ -1,6 +1,6 @@
 import { useParams, Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Lock, AlertTriangle, TrendingUp, TrendingDown, Minus, Package, Database } from "lucide-react";
+import { ArrowLeft, Lock, AlertTriangle, TrendingUp, TrendingDown, Minus, Database, Brain, FileText, BarChart3 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { useRBAC, DepartmentId } from "@/contexts/RBACContext";
 import { usePacks } from "@/contexts/PackContext";
@@ -14,7 +14,7 @@ const allAgents = [...executives, ...agents];
 const DepartmentDetail = () => {
   const { deptId } = useParams<{ deptId: string }>();
   const { departments, hasAccessToDepartment, hasAccessToAgent } = useRBAC();
-  const { isAgentUnlocked, isDepartmentUnlocked, getPackForAgent } = usePacks();
+  const { isAgentUnlocked, isDepartmentUnlocked } = usePacks();
   const { connectedIds } = useIntegrations();
 
   const dept = departments.find(d => d.id === deptId);
@@ -91,7 +91,7 @@ const DepartmentDetail = () => {
                 <span className="text-3xl">{dept.icon}</span>
                 <div>
                   <h1 className="text-2xl font-bold text-foreground">{dept.name}</h1>
-                  <p className="text-sm text-muted-foreground">{dept.agentIds.length} AI Ajan · {deptIntegrationIds.length} Veri Kaynağı</p>
+                  <p className="text-sm text-muted-foreground">{dept.agentIds.length} İstihbarat Modülü · {deptIntegrationIds.length} Veri Katmanı</p>
                 </div>
               </div>
               <div className="flex items-center gap-6">
@@ -118,9 +118,9 @@ const DepartmentDetail = () => {
           </div>
         </motion.div>
 
-        {/* Agent Grid */}
+        {/* Agent Grid — Abstract, no avatars */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <h2 className="text-lg font-semibold text-foreground mb-4">Departman Ajanları</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4">İstihbarat Modülleri</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             {deptAgents.map((agent, i) => {
               const canAccess = hasAccessToAgent(agent.id);
@@ -136,16 +136,31 @@ const DepartmentDetail = () => {
                   {canAccess && unlocked ? (
                     <div className="glass-card p-5">
                       <div className="flex items-center gap-3 mb-3">
-                        <img src={agent.avatar} alt={agent.name} className="h-11 w-11 rounded-2xl object-cover ring-1 ring-border" />
+                        <div className="h-11 w-11 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+                          <Brain className="h-5 w-5 text-primary" />
+                        </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="font-bold text-primary text-sm">{agent.role}</h3>
-                          <p className="text-xs text-muted-foreground truncate">{agent.name}</p>
+                          <p className="text-[10px] text-muted-foreground">{agent.intelligenceDomain || "İstihbarat Katmanı"}</p>
                         </div>
                         <span className={`text-[10px] font-medium px-2 py-0.5 rounded-2xl ${statusColor(agent.status)}`}>
                           {statusLabel(agent.status)}
                         </span>
                       </div>
                       <p className="text-xs text-muted-foreground mb-3 line-clamp-1">{agent.tagline}</p>
+                      
+                      {/* Reports preview */}
+                      {agent.reports && agent.reports.length > 0 && (
+                        <div className="space-y-1 mb-3">
+                          {agent.reports.slice(0, 2).map(r => (
+                            <div key={r} className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                              <FileText className="h-2.5 w-2.5 text-primary shrink-0" />
+                              <span>{r}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
                       <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
                         <span>{agent.performanceScore}% performans</span>
                         <span>{agent.tasksCompleted.toLocaleString()} görev</span>
@@ -179,12 +194,12 @@ const DepartmentDetail = () => {
           </div>
         </motion.div>
 
-        {/* Connected Data & Action Sources */}
+        {/* Connected Data & Action Layers */}
         {deptIntegrations.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
               <Database className="h-5 w-5 text-primary" />
-              Bağlı Veri & Aksiyon Kaynakları
+              Bağlı Veri & Aksiyon Katmanları
             </h2>
 
             {activeIntegrations.length > 0 && (

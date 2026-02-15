@@ -1,14 +1,19 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Shield, Zap } from "lucide-react";
+import { ArrowRight, Sparkles, Shield, Zap, Brain, BarChart3, TrendingUp, Layers } from "lucide-react";
 import { Link } from "react-router-dom";
-import { executives } from "@/data/experts";
+
+const moduleCards = [
+  { role: "CEO Agent", domain: "Stratejik İstihbarat", status: "Aktif", icon: Brain },
+  { role: "CMO Agent", domain: "Performans İstihbarat", status: "Uyarı", icon: TrendingUp },
+  { role: "CFO Agent", domain: "Finansal İstihbarat", status: "Aktif", icon: BarChart3 },
+  { role: "COO Agent", domain: "Operasyonel İstihbarat", status: "Çalışıyor", icon: Layers },
+];
 
 const cardPositions = [
-  { top: "5%", right: "5%", rotate: -2 },
-  { top: "22%", right: "42%", rotate: 1.5 },
-  { top: "48%", right: "3%", rotate: -1 },
-  { top: "10%", right: "62%", rotate: 2 },
-  { top: "62%", right: "38%", rotate: -1.5 },
+  { top: "8%", right: "5%", rotate: -2 },
+  { top: "30%", right: "45%", rotate: 1.5 },
+  { top: "52%", right: "3%", rotate: -1 },
+  { top: "15%", right: "65%", rotate: 2 },
 ];
 
 const Hero = () => {
@@ -38,8 +43,8 @@ const Hero = () => {
               transition={{ duration: 0.5, delay: 0.1, ease: [0.2, 0.8, 0.2, 1] }}
               className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-[1.08] mb-6"
             >
-              Rol Eğitimli{" "}
-              <span className="gradient-text">AI İş Gücünüz</span>
+              Departman Bazlı{" "}
+              <span className="gradient-text">AI İstihbarat Sistemi</span>
             </motion.h1>
 
             <motion.p
@@ -48,7 +53,7 @@ const Hero = () => {
               transition={{ duration: 0.5, delay: 0.2, ease: [0.2, 0.8, 0.2, 1] }}
               className="text-lg text-muted-foreground leading-relaxed mb-4"
             >
-              Her biri belirli bir yönetici fonksiyonu için eğitilmiş, gerçek iş verilerinizi anlayan ve risk kontrolleri içinde çalışan departman bazlı AI ajanları.
+              Her biri belirli bir yönetici fonksiyonu için yapılandırılmış, gerçek iş verilerinizi analiz eden ve risk kontrolleri içinde çalışan kurumsal istihbarat katmanları.
             </motion.p>
 
             <motion.p
@@ -58,7 +63,7 @@ const Hero = () => {
               className="text-sm text-muted-foreground/70 mb-8 flex items-center gap-2"
             >
               <Zap className="h-3.5 w-3.5 text-primary shrink-0" />
-              Sürekli güncellenen yönetici istihbaratı ile rafine edilen ajanlar.
+              Sürekli gelişen iş zekâsıyla rafine edilen kurumsal istihbarat modülleri.
             </motion.p>
 
             <motion.div
@@ -96,11 +101,10 @@ const Hero = () => {
             {/* Connection lines */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
               {[
-                { x1: "90%", y1: "12%", x2: "52%", y2: "29%" },
-                { x1: "52%", y1: "29%", x2: "92%", y2: "55%" },
-                { x1: "92%", y1: "55%", x2: "55%", y2: "69%" },
-                { x1: "55%", y1: "69%", x2: "32%", y2: "17%" },
-                { x1: "32%", y1: "17%", x2: "90%", y2: "12%" },
+                { x1: "90%", y1: "15%", x2: "55%", y2: "37%" },
+                { x1: "55%", y1: "37%", x2: "92%", y2: "59%" },
+                { x1: "92%", y1: "59%", x2: "30%", y2: "22%" },
+                { x1: "30%", y1: "22%", x2: "90%", y2: "15%" },
               ].map((line, i) => (
                 <motion.line
                   key={i}
@@ -116,42 +120,47 @@ const Hero = () => {
               ))}
             </svg>
 
-            {/* Floating OS-style cards */}
-            {executives.slice(0, 5).map((exec, i) => (
-              <motion.div
-                key={exec.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 + i * 0.1, ease: [0.2, 0.8, 0.2, 1] }}
-                whileHover={{ scale: 1.04 }}
-                className="absolute glass-card p-4 w-52 z-10"
-                style={{
-                  top: cardPositions[i].top,
-                  right: cardPositions[i].right,
-                  transform: `rotate(${cardPositions[i].rotate}deg)`,
-                  animation: `float 6s ease-in-out ${i * 1.2}s infinite`,
-                  boxShadow: "0 0 1px rgba(76,141,255,0.15), 0 4px 24px rgba(0,0,0,0.4)",
-                }}
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <img src={exec.avatar} alt={exec.name} className="h-9 w-9 rounded-2xl object-cover ring-1 ring-border" />
-                  <div>
-                    <p className="text-xs font-bold text-primary">{exec.role}</p>
-                    <p className="text-[11px] text-muted-foreground">{exec.name}</p>
+            {/* Floating OS-style module cards — no avatars */}
+            {moduleCards.map((mod, i) => {
+              const Icon = mod.icon;
+              return (
+                <motion.div
+                  key={mod.role}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.4 + i * 0.1, ease: [0.2, 0.8, 0.2, 1] }}
+                  whileHover={{ scale: 1.04 }}
+                  className="absolute glass-card p-4 w-52 z-10"
+                  style={{
+                    top: cardPositions[i].top,
+                    right: cardPositions[i].right,
+                    transform: `rotate(${cardPositions[i].rotate}deg)`,
+                    animation: `float 6s ease-in-out ${i * 1.2}s infinite`,
+                    boxShadow: "0 0 1px rgba(76,141,255,0.15), 0 4px 24px rgba(0,0,0,0.4)",
+                  }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="h-9 w-9 rounded-2xl bg-primary/10 flex items-center justify-center">
+                      <Icon className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-primary">{mod.role}</p>
+                      <p className="text-[10px] text-muted-foreground">{mod.domain}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded-2xl ${
-                    exec.status === "Monitoring" ? "bg-success/15 text-success" :
-                    exec.status === "Alerting" ? "bg-destructive/15 text-destructive" :
-                    "bg-secondary text-muted-foreground"
-                  }`}>
-                    {exec.status === "Monitoring" ? "İzleniyor" : exec.status === "Alerting" ? "Uyarı" : exec.status === "Running Task" ? "Çalışıyor" : "Boşta"}
-                  </span>
-                  <span className="text-[9px] text-muted-foreground/50">Rol Eğitimli</span>
-                </div>
-              </motion.div>
-            ))}
+                  <div className="flex items-center gap-2">
+                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-2xl ${
+                      mod.status === "Aktif" ? "bg-success/15 text-success" :
+                      mod.status === "Uyarı" ? "bg-destructive/15 text-destructive" :
+                      "bg-primary/15 text-primary"
+                    }`}>
+                      {mod.status}
+                    </span>
+                    <span className="text-[9px] text-muted-foreground/50">İstihbarat Modülü</span>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>

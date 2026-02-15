@@ -57,7 +57,7 @@ const TeamMatrix = () => {
         <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
           {filtered.map((exec) => (
             <div key={exec.id} className="glass-card p-4 min-w-[160px] shrink-0">
-              <img src={exec.avatar} alt={exec.name} className="h-10 w-10 rounded-2xl object-cover ring-1 ring-border mb-2" />
+              <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-border mb-2"><span className="text-xs font-bold text-primary">{exec.role.slice(0,3)}</span></div>
               <h3 className="text-xs font-bold text-primary">{exec.role}</h3>
               <span className="text-[10px] text-muted-foreground">{deptLabel[agentDeptMap[exec.id]]}</span>
               <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-2xl mt-1 inline-block ${statusColor(exec.status)}`}>
@@ -96,7 +96,7 @@ const TeamMatrix = () => {
                 className={`glass-card p-5 ${exec.status === "Alerting" ? "animate-[pulse_3s_ease-in-out_infinite]" : ""}`}
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <img src={exec.avatar} alt={exec.name} className="h-11 w-11 rounded-2xl object-cover ring-1 ring-border" />
+                  <div className="h-11 w-11 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-border shrink-0"><span className="text-xs font-bold text-primary">{exec.role.slice(0,3)}</span></div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-primary text-sm">{exec.role}</h3>
                     <p className="text-xs text-muted-foreground truncate">{exec.name}</p>

@@ -1,8 +1,26 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2, Zap } from "lucide-react";
+import { ArrowRight, CheckCircle2, Zap, Brain, BarChart3, TrendingUp, Layers, Palette, ShoppingCart, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { executives, agents } from "@/data/experts";
+
+const domainIcons: Record<string, any> = {
+  "ceo": Brain,
+  "cmo": TrendingUp,
+  "cfo": BarChart3,
+  "coo": Layers,
+  "legal": FileText,
+};
+
+const agentIcons: Record<string, any> = {
+  "accounting-agent": BarChart3,
+  "growth-agent": TrendingUp,
+  "inventory-agent": Layers,
+  "creative-director": Palette,
+  "graphic-designer": Palette,
+  "art-director": Palette,
+  "marketplace-agent": ShoppingCart,
+};
 
 const FeaturedExperts = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -17,9 +35,9 @@ const FeaturedExperts = () => {
           transition={{ ease: [0.2, 0.8, 0.2, 1] }}
           className="text-center mb-4"
         >
-          <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">Departman Bazlı AI İş Gücü</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Rol Eğitimli AI Ajanları</h2>
-          <p className="text-muted-foreground max-w-lg mx-auto">Her ajan belirli bir yönetici fonksiyonu için eğitilmiştir. Planınız departmanları açtıkça ajanlar otomatik aktifleşir.</p>
+          <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">Departman Bazlı İstihbarat Katmanları</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Kurumsal İstihbarat Modülleri</h2>
+          <p className="text-muted-foreground max-w-lg mx-auto">Her modül belirli bir yönetici fonksiyonu için yapılandırılmıştır. Planınız departmanları açtıkça modüller otomatik aktifleşir.</p>
         </motion.div>
 
         <motion.div
@@ -30,158 +48,165 @@ const FeaturedExperts = () => {
         >
           <span className="inline-flex items-center gap-2 text-xs font-medium text-primary/80 bg-primary/5 px-4 py-2 rounded-2xl border border-primary/10">
             <Zap className="h-3.5 w-3.5" />
-            Sürekli güncellenen yönetici istihbaratı ile rafine edilen ajanlar
+            Sürekli gelişen iş zekâsıyla rafine edilen istihbarat modülleri
           </span>
         </motion.div>
 
-        {/* C-Level Executives */}
+        {/* C-Level Modules */}
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
             <span className="text-xs font-bold px-2 py-0.5 rounded-2xl bg-primary/10 text-primary">Departman Liderleri</span>
-            Yönetici Kadro
+            Yönetici İstihbarat Katmanları
           </h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-          {executives.map((exec, i) => (
-            <motion.div
-              key={exec.id}
-              initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0)" }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
-              onMouseEnter={() => setHoveredId(exec.id)}
-              onMouseLeave={() => setHoveredId(null)}
-            >
-              <Link to={`/expert/${exec.id}`} className="block glass-card p-6 h-full group">
-                <div className="flex items-start gap-4 mb-4">
-                  <img src={exec.avatar} alt={exec.name} className="h-14 w-14 rounded-2xl object-cover ring-1 ring-border" />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <h3 className="font-bold text-primary text-sm">{exec.role}</h3>
+          {executives.map((exec, i) => {
+            const Icon = domainIcons[exec.id] || Brain;
+            return (
+              <motion.div
+                key={exec.id}
+                initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0)" }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
+                onMouseEnter={() => setHoveredId(exec.id)}
+                onMouseLeave={() => setHoveredId(null)}
+              >
+                <Link to={`/expert/${exec.id}`} className="block glass-card p-6 h-full group">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+                      <Icon className="h-6 w-6 text-primary" />
                     </div>
-                    <p className="text-sm text-muted-foreground font-medium">{exec.name}</p>
-                    <p className="text-[10px] text-muted-foreground/50 mt-0.5">Rol Eğitimli · Sürekli Güncellenen</p>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-primary text-sm">{exec.role}</h3>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">{exec.intelligenceDomain || "İstihbarat Katmanı"}</p>
+                      <p className="text-[10px] text-muted-foreground/50 mt-0.5">Sürekli Güncellenen · Kurumsal Düzey</p>
+                    </div>
                   </div>
-                </div>
 
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{exec.tagline}</p>
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{exec.tagline}</p>
 
-                {exec.capabilities && (
-                  <div className="space-y-1.5 mb-4">
-                    {exec.capabilities.slice(0, 3).map((cap) => (
-                      <div key={cap} className="flex items-start gap-2">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
-                        <span className="text-xs text-muted-foreground">{cap}</span>
-                      </div>
-                    ))}
+                  {exec.capabilities && (
+                    <div className="space-y-1.5 mb-4">
+                      {exec.capabilities.slice(0, 3).map((cap) => (
+                        <div key={cap} className="flex items-start gap-2">
+                          <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
+                          <span className="text-xs text-muted-foreground">{cap}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {exec.reports && (
+                    <div className="space-y-1 mb-4 pt-3 border-t border-border">
+                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Üretilen Raporlar</p>
+                      {exec.reports.slice(0, 2).map((report) => (
+                        <div key={report} className="flex items-start gap-2">
+                          <FileText className="h-3 w-3 text-primary shrink-0 mt-0.5" />
+                          <span className="text-[11px] text-muted-foreground">{report}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-between pt-4 border-t border-border">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium text-foreground">{exec.performanceScore}%</span>
+                      <span className="text-xs text-muted-foreground">performans</span>
+                    </div>
+                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-2xl bg-accent/10 text-accent">
+                      {exec.kpis[0]}
+                    </span>
                   </div>
-                )}
 
-                {!exec.capabilities && (
-                  <div className="space-y-1.5 mb-4">
-                    {exec.outputs.slice(0, 2).map((output) => (
-                      <div key={output} className="flex items-start gap-2">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
-                        <span className="text-xs text-muted-foreground">{output}</span>
-                      </div>
-                    ))}
+                  <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                    Konsolu Aç <ArrowRight className="h-3.5 w-3.5" />
                   </div>
-                )}
 
-                <div className="flex items-center justify-between pt-4 border-t border-border">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-foreground">{exec.performanceScore}%</span>
-                    <span className="text-xs text-muted-foreground">performans</span>
-                  </div>
-                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-2xl bg-accent/10 text-accent">
-                    {exec.kpis[0]}
-                  </span>
-                </div>
-
-                <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                  Konsolu Aç <ArrowRight className="h-3.5 w-3.5" />
-                </div>
-
-                {exec.id === "legal" && (
-                  <p className="mt-3 text-[10px] text-muted-foreground italic">Yalnızca karar destek analizi. Resmi hukuki temsil değildir.</p>
-                )}
-              </Link>
-            </motion.div>
-          ))}
+                  {exec.id === "legal" && (
+                    <p className="mt-3 text-[10px] text-muted-foreground italic">Yalnızca karar destek analizi. Resmi hukuki temsil değildir.</p>
+                  )}
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Standard-tier Agents */}
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-            <span className="text-xs font-bold px-2 py-0.5 rounded-2xl bg-accent/10 text-accent">Uzman Ajanlar</span>
-            Departman İş Gücü
+            <span className="text-xs font-bold px-2 py-0.5 rounded-2xl bg-accent/10 text-accent">Uzman Modüller</span>
+            Departman İstihbarat Ajanları
           </h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {agents.map((agent, i) => (
-            <motion.div
-              key={agent.id}
-              initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0)" }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
-              onMouseEnter={() => setHoveredId(agent.id)}
-              onMouseLeave={() => setHoveredId(null)}
-            >
-              <Link to={`/expert/${agent.id}`} className="block glass-card p-6 h-full group">
-                <div className="flex items-start gap-4 mb-4">
-                  <img src={agent.avatar} alt={agent.name} className="h-14 w-14 rounded-2xl object-cover ring-1 ring-border" />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <h3 className="font-bold text-foreground text-sm">{agent.name}</h3>
+          {agents.map((agent, i) => {
+            const Icon = agentIcons[agent.id] || Brain;
+            return (
+              <motion.div
+                key={agent.id}
+                initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0)" }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
+                onMouseEnter={() => setHoveredId(agent.id)}
+                onMouseLeave={() => setHoveredId(null)}
+              >
+                <Link to={`/expert/${agent.id}`} className="block glass-card p-6 h-full group">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="h-14 w-14 rounded-2xl bg-accent/10 flex items-center justify-center shrink-0">
+                      <Icon className="h-6 w-6 text-accent" />
                     </div>
-                    <p className="text-sm text-muted-foreground font-medium">{agent.role}</p>
-                    <p className="text-[10px] text-muted-foreground/50 mt-0.5">Rol Eğitimli · Sürekli Güncellenen</p>
-                  </div>
-                </div>
-
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{agent.tagline}</p>
-
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {agent.tags?.map((tag) => (
-                    <span key={tag} className="text-[11px] px-2.5 py-1 rounded-2xl border border-border text-muted-foreground">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {agent.capabilities && (
-                  <motion.div
-                    initial={false}
-                    animate={{ height: hoveredId === agent.id ? "auto" : 0, opacity: hoveredId === agent.id ? 1 : 0 }}
-                    transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
-                    className="overflow-hidden"
-                  >
-                    <div className="space-y-1 mb-4">
-                      {agent.capabilities.slice(0, 3).map(cap => (
-                        <div key={cap} className="flex items-start gap-2">
-                          <CheckCircle2 className="h-3 w-3 text-accent shrink-0 mt-0.5" />
-                          <span className="text-[11px] text-muted-foreground">{cap}</span>
-                        </div>
-                      ))}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-foreground text-sm">{agent.role}</h3>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">{agent.intelligenceDomain || "İstihbarat Katmanı"}</p>
+                      <p className="text-[10px] text-muted-foreground/50 mt-0.5">Sürekli Güncellenen · Kurumsal Düzey</p>
                     </div>
-                  </motion.div>
-                )}
-
-                <div className="flex items-center justify-between pt-4 border-t border-border">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-foreground">{agent.performanceScore}%</span>
-                    <span className="text-xs text-muted-foreground">performans</span>
                   </div>
-                  <span className="text-[10px] text-muted-foreground">{agent.kpis?.[0]}</span>
-                </div>
 
-                <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                  Konsolu Aç <ArrowRight className="h-3.5 w-3.5" />
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{agent.tagline}</p>
+
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {agent.tags?.map((tag) => (
+                      <span key={tag} className="text-[11px] px-2.5 py-1 rounded-2xl border border-border text-muted-foreground">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {agent.capabilities && (
+                    <motion.div
+                      initial={false}
+                      animate={{ height: hoveredId === agent.id ? "auto" : 0, opacity: hoveredId === agent.id ? 1 : 0 }}
+                      transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="space-y-1 mb-4">
+                        {agent.capabilities.slice(0, 3).map(cap => (
+                          <div key={cap} className="flex items-start gap-2">
+                            <CheckCircle2 className="h-3 w-3 text-accent shrink-0 mt-0.5" />
+                            <span className="text-[11px] text-muted-foreground">{cap}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  <div className="flex items-center justify-between pt-4 border-t border-border">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium text-foreground">{agent.performanceScore}%</span>
+                      <span className="text-xs text-muted-foreground">performans</span>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground">{agent.kpis?.[0]}</span>
+                  </div>
+
+                  <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                    Konsolu Aç <ArrowRight className="h-3.5 w-3.5" />
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
