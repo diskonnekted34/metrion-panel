@@ -32,7 +32,7 @@ const severityColor = (s: string) => {
 };
 
 const deptLabel: Record<DepartmentId, string> = {
-  executive: "Yönetim", marketing: "Pazarlama", finance: "Finans",
+  executive: "Yönetim", technology: "Teknoloji", marketing: "Pazarlama", finance: "Finans",
   operations: "Operasyon", creative: "Kreatif", marketplace: "Pazaryeri", legal: "Hukuk",
 };
 

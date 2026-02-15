@@ -68,12 +68,14 @@ export const tiers: Tier[] = [
     tagline: "Temel yönetim istihbaratı.",
     description: "Yönetici, pazarlama ve finans departmanlarında çekirdek AI yönetimi.",
     monthlyPrice: 349,
-    departments: ["Yönetim", "Pazarlama", "Finans"],
-    departmentIds: ["executive", "marketing", "finance"],
+    departments: ["Yönetim", "Pazarlama", "Finans", "Teknoloji"],
+    departmentIds: ["executive", "marketing", "finance", "technology"],
     agents: [
       { id: "ceo", role: "AI CEO", name: "CEO Agent" },
       { id: "cmo", role: "AI CMO", name: "CMO Agent" },
       { id: "cfo", role: "AI CFO", name: "CFO Agent" },
+      { id: "cto", role: "AI CTO", name: "CTO Agent" },
+      { id: "cio", role: "AI CIO", name: "CIO Agent" },
       { id: "accounting-agent", role: "AI Muhasebe", name: "Accounting Agent" },
       { id: "growth-agent", role: "AI Büyüme", name: "Growth Agent" },
     ],
@@ -106,7 +108,7 @@ export const tiers: Tier[] = [
       "Draft-first otomasyon",
       "Denetim günlükleri",
     ],
-    cumulativeAgentIds: ["ceo", "cmo", "cfo", "accounting-agent", "growth-agent"],
+    cumulativeAgentIds: ["ceo", "cmo", "cfo", "cto", "cio", "accounting-agent", "growth-agent"],
   },
   {
     id: "performance",
@@ -115,8 +117,8 @@ export const tiers: Tier[] = [
     description: "Core'daki her şey + Operasyon departmanı ve gelişmiş büyüme yetenekleri.",
     monthlyPrice: 599,
     badge: "Önerilen",
-    departments: ["Yönetim", "Pazarlama", "Finans", "Operasyon"],
-    departmentIds: ["executive", "marketing", "finance", "operations"],
+    departments: ["Yönetim", "Pazarlama", "Finans", "Teknoloji", "Operasyon"],
+    departmentIds: ["executive", "marketing", "finance", "technology", "operations"],
     agents: [
       { id: "coo", role: "AI COO", name: "COO Agent" },
       { id: "inventory-agent", role: "AI Envanter Yöneticisi", name: "Inventory Agent" },
@@ -148,7 +150,7 @@ export const tiers: Tier[] = [
       "Envanter risk tespiti",
       "Bütçe yeniden dağıtım modellemesi",
     ],
-    cumulativeAgentIds: ["ceo", "cmo", "cfo", "accounting-agent", "growth-agent", "coo", "inventory-agent"],
+    cumulativeAgentIds: ["ceo", "cmo", "cfo", "cto", "cio", "accounting-agent", "growth-agent", "coo", "inventory-agent"],
   },
   {
     id: "workforce",
@@ -157,8 +159,8 @@ export const tiers: Tier[] = [
     description: "Tüm departmanlar, tüm ajanlar, sınırsız ekip.",
     monthlyPrice: 899,
     badge: "En Kapsamlı",
-    departments: ["Yönetim", "Pazarlama", "Finans", "Operasyon", "Kreatif", "Pazaryeri"],
-    departmentIds: ["executive", "marketing", "finance", "operations", "creative", "marketplace"],
+    departments: ["Yönetim", "Pazarlama", "Finans", "Teknoloji", "Operasyon", "Kreatif", "Pazaryeri"],
+    departmentIds: ["executive", "marketing", "finance", "technology", "operations", "creative", "marketplace"],
     agents: [
       { id: "creative-director", role: "AI Kreatif Direktör", name: "Creative Director" },
       { id: "graphic-designer", role: "AI Grafik Tasarımcı", name: "Graphic Designer" },
@@ -196,7 +198,7 @@ export const tiers: Tier[] = [
       "Gelişmiş denetim dışa aktarımı",
     ],
     cumulativeAgentIds: [
-      "ceo", "cmo", "cfo", "accounting-agent", "growth-agent",
+      "ceo", "cmo", "cfo", "cto", "cio", "accounting-agent", "growth-agent",
       "coo", "inventory-agent",
       "creative-director", "graphic-designer", "art-director",
       "marketplace-agent",
@@ -289,6 +291,7 @@ export const allPacks: Pack[] = [corePack, ...addonPacks];
 
 export const departmentIntegrationMap: Record<string, string[]> = {
   executive: [], // executive uses cross-department data
+  technology: ["aws", "gcp", "azure", "github", "gitlab", "jira", "datadog", "sentry", "cloudflare"],
   marketing: ["meta-ads", "google-ads", "tiktok-ads", "pinterest-ads", "snap-ads", "linkedin-ads", "ga4", "gsc", "mixpanel", "amplitude", "hotjar", "clarity", "klaviyo", "mailchimp", "hubspot", "activecampaign", "omnisend", "instagram-business", "facebook-pages", "tiktok-business", "youtube-studio"],
   finance: ["stripe", "shopify-payments", "paypal", "iyzico", "paytr", "parasut", "logo", "quickbooks", "xero", "mikro", "netsuite"],
   operations: ["shopify", "woocommerce", "bigcommerce", "magento", "shippo", "shipstation", "easyship", "dhl", "ups", "fedex", "yurtici", "mng", "hepsijet", "recharge", "bold-subscriptions"],
@@ -328,6 +331,8 @@ export const comparisonData: ComparisonRow[] = [
   { label: "CEO Agent", category: "Ajanlar", core: true, performance: true, workforce: true },
   { label: "CMO Agent", category: "Ajanlar", core: true, performance: true, workforce: true },
   { label: "CFO Agent", category: "Ajanlar", core: true, performance: true, workforce: true },
+  { label: "CTO Agent", category: "Ajanlar", core: true, performance: true, workforce: true },
+  { label: "CIO Agent", category: "Ajanlar", core: true, performance: true, workforce: true },
   { label: "Accounting Agent", category: "Ajanlar", core: true, performance: true, workforce: true },
   { label: "COO Agent", category: "Ajanlar", core: false, performance: true, workforce: true },
   { label: "Inventory Agent", category: "Ajanlar", core: false, performance: true, workforce: true },

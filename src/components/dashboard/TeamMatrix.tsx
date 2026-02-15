@@ -16,11 +16,11 @@ const agentDeptMap: Record<string, DepartmentId> = {
 };
 
 const deptLabel: Record<DepartmentId, string> = {
-  executive: "Yönetim", marketing: "Pazarlama", finance: "Finans",
+  executive: "Yönetim", technology: "Teknoloji", marketing: "Pazarlama", finance: "Finans",
   operations: "Operasyon", creative: "Kreatif", marketplace: "Pazaryeri", legal: "Hukuk",
 };
 
-const deptOrder: DepartmentId[] = ["executive", "marketing", "finance", "operations", "creative", "marketplace", "legal"];
+const deptOrder: DepartmentId[] = ["executive", "technology", "marketing", "finance", "operations", "creative", "marketplace", "legal"];
 
 const statusColor = (s: string) => {
   if (s === "Monitoring") return "bg-success/15 text-success";
