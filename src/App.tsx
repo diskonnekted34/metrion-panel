@@ -22,6 +22,9 @@ import Pricing from "./pages/Pricing";
 import AgentWorkspace from "./pages/AgentWorkspace";
 import Departments from "./pages/Departments";
 import DepartmentDetail from "./pages/DepartmentDetail";
+import DepartmentReports from "./pages/DepartmentReports";
+import DepartmentActions from "./pages/DepartmentActions";
+import DepartmentModules from "./pages/DepartmentModules";
 import DataSources from "./pages/DataSources";
 import ActionCenter from "./pages/ActionCenter";
 import CreativeWorkspace from "./pages/CreativeWorkspace";
@@ -52,6 +55,9 @@ const App = () => (
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/departments" element={<Departments />} />
               <Route path="/departments/:deptId" element={<DepartmentDetail />} />
+              <Route path="/departments/:deptId/reports" element={<DepartmentReports />} />
+              <Route path="/departments/:deptId/actions" element={<DepartmentActions />} />
+              <Route path="/departments/:deptId/modules" element={<DepartmentModules />} />
               <Route path="/team" element={<Team />} />
               <Route path="/tasks" element={<Tasks />} />
               <Route path="/alerts" element={<Alerts />} />
