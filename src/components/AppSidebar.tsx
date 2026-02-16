@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, Bell, BarChart3, Database, Settings as SettingsIcon, FlaskConical } from "lucide-react";
+import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, Bell, BarChart3, Database, Settings as SettingsIcon, Scale, Crown } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import UpgradeModal from "./UpgradeModal";
@@ -15,8 +15,22 @@ const deptSubItems = [
   { label: "Modüller", suffix: "/modules", icon: Activity },
 ];
 
-// Mock pending action count
-const pendingActionCount = 5;
+// Mock counters
+const pendingDecisionCount = 5;
+const pendingStrategicCount = 3;
+const pendingActionCount = 4;
+
+const CountBadge = ({ count }: { count: number }) => {
+  if (count <= 0) return null;
+  return (
+    <span
+      className="min-w-[20px] h-5 px-1.5 rounded-full bg-warning/20 text-warning text-[10px] font-bold flex items-center justify-center border border-warning/30 animate-pulse"
+      style={{ boxShadow: "0 0 8px rgba(245,158,11,0.25)" }}
+    >
+      {count}
+    </span>
+  );
+};
 
 const AppSidebar = () => {
   const location = useLocation();
@@ -39,8 +53,14 @@ const AppSidebar = () => {
     return "text-warning";
   };
 
-  const isKomutaActive = location.pathname === "/dashboard";
-  const isAksiyonActive = location.pathname === "/action-center";
+  const isActive = (path: string) => location.pathname === path;
+
+  const topNavItems = [
+    { label: "Karar", icon: Scale, path: "/decision-lab", count: pendingDecisionCount },
+    { label: "Komuta", icon: LayoutDashboard, path: "/dashboard", count: pendingStrategicCount },
+    { label: "Aksiyon", icon: Zap, path: "/action-center", count: pendingActionCount },
+    { label: "Kadro", icon: Crown, path: "/kadro", count: 0 },
+  ];
 
   return (
     <TooltipProvider>
@@ -57,70 +77,36 @@ const AppSidebar = () => {
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          {/* Komuta Merkezi */}
-          <Link
-            to="/dashboard"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm transition-all duration-200 group relative ${
-              isKomutaActive
-                ? "text-primary bg-primary/10"
-                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-            }`}
-          >
-            <LayoutDashboard className={`h-[18px] w-[18px] shrink-0 ${isKomutaActive ? "text-primary" : ""}`} />
-            <span className="font-medium">Komuta Merkezi</span>
-            {isKomutaActive && (
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 12px rgba(30,107,255,0.5)" }} />
-            )}
-          </Link>
-
-          {/* Aksiyon Merkezi */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                to="/action-center"
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm transition-all duration-200 group relative ${
-                  isAksiyonActive
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                }`}
-              >
-                <Zap className={`h-[18px] w-[18px] shrink-0 ${isAksiyonActive ? "text-primary" : ""}`} />
-                <span className="font-medium flex-1">Aksiyon Merkezi</span>
-                {pendingActionCount > 0 && (
-                  <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-warning/20 text-warning text-[10px] font-bold flex items-center justify-center border border-warning/30" style={{ boxShadow: "0 0 8px rgba(245,158,11,0.2)" }}>
-                    {pendingActionCount}
-                  </span>
-                )}
-                {isAksiyonActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 12px rgba(30,107,255,0.5)" }} />
-                )}
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              <p className="text-xs">{pendingActionCount} Aksiyon Onay Bekliyor</p>
-            </TooltipContent>
-          </Tooltip>
-
-          {/* Karar Laboratuvarı */}
-          {(() => {
-            const isLabActive = location.pathname === "/decision-lab";
+          {/* Top nav items: Karar, Komuta, Aksiyon, Kadro */}
+          {topNavItems.map(item => {
+            const active = isActive(item.path);
             return (
-              <Link
-                to="/decision-lab"
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm transition-all duration-200 group relative ${
-                  isLabActive
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                }`}
-              >
-                <FlaskConical className={`h-[18px] w-[18px] shrink-0 ${isLabActive ? "text-primary" : ""}`} />
-                <span className="font-medium">Karar Laboratuvarı</span>
-                {isLabActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 12px rgba(30,107,255,0.5)" }} />
+              <Tooltip key={item.path}>
+                <TooltipTrigger asChild>
+                  <Link
+                    to={item.path}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm transition-all duration-200 group relative ${
+                      active
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    <item.icon className={`h-[18px] w-[18px] shrink-0 ${active ? "text-primary" : ""}`} />
+                    <span className="font-medium flex-1">{item.label}</span>
+                    <CountBadge count={item.count} />
+                    {active && (
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 12px rgba(30,107,255,0.5)" }} />
+                    )}
+                  </Link>
+                </TooltipTrigger>
+                {item.count > 0 && (
+                  <TooltipContent side="right">
+                    <p className="text-xs">{item.count} bekleyen öğe</p>
+                  </TooltipContent>
                 )}
-              </Link>
+              </Tooltip>
             );
-          })()}
+          })}
 
           {/* Departmanlar Accordion */}
           <div className="pt-4">
@@ -165,7 +151,6 @@ const AppSidebar = () => {
 
                   return (
                     <div key={dept.id}>
-                      {/* Department row */}
                       <button
                         onClick={() => setExpandedDept(isExpanded ? null : dept.id)}
                         className={`flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-[12px] w-full text-left transition-all duration-200 relative group ${
@@ -190,7 +175,6 @@ const AppSidebar = () => {
                         <ChevronDown className={`h-3 w-3 shrink-0 transition-transform duration-200 ${isExpanded ? "rotate-0" : "-rotate-90"}`} />
                       </button>
 
-                      {/* Sub-items (Level 2) */}
                       {isExpanded && (
                         <div className="ml-4 pl-3 border-l border-border/30 mt-0.5 mb-1 space-y-0.5">
                           {deptSubItems.map((sub) => {
@@ -227,29 +211,28 @@ const AppSidebar = () => {
             <span className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">Sistem</span>
             <div className="mt-2 space-y-0.5">
               {[
-                { label: "AI Ekibim", icon: Users, path: "/team" },
                 { label: "Görevler", icon: ListTodo, path: "/tasks" },
                 { label: "Uyarılar", icon: Bell, path: "/alerts" },
                 { label: "Raporlar", icon: BarChart3, path: "/reports" },
                 { label: "Veri Kaynakları", icon: Database, path: "/data-sources" },
                 { label: "Teknoloji Veri Kaynakları", icon: Database, path: "/tech-data-sources" },
-                { label: "Ekibi Genişlet", icon: BarChart3, path: "/marketplace" },
+                { label: "Ekibi Genişlet", icon: Users, path: "/marketplace" },
                 { label: "Ayarlar", icon: SettingsIcon, path: "/settings" },
               ].map((item) => {
-                const isActive = location.pathname === item.path;
+                const active = isActive(item.path);
                 return (
                   <Link
                     key={item.path}
                     to={item.path}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm transition-all duration-200 relative ${
-                      isActive
+                      active
                         ? "text-primary bg-primary/10"
                         : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                     }`}
                   >
-                    <item.icon className={`h-[18px] w-[18px] shrink-0 ${isActive ? "text-primary" : ""}`} />
+                    <item.icon className={`h-[18px] w-[18px] shrink-0 ${active ? "text-primary" : ""}`} />
                     <span className="font-medium">{item.label}</span>
-                    {isActive && (
+                    {active && (
                       <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 12px rgba(30,107,255,0.5)" }} />
                     )}
                   </Link>

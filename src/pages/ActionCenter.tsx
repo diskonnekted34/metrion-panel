@@ -75,8 +75,8 @@ const ActionCenter = () => {
                 <Zap className="h-5 w-5 text-warning" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Action Control Center</h1>
-                <p className="text-sm text-muted-foreground">Tüm önerilen ve onay sürecindeki aksiyonları yönetin.</p>
+                <h1 className="text-2xl font-bold text-foreground">Aksiyon</h1>
+                <p className="text-sm text-muted-foreground">Taslak, onay ve yürütme sürecindeki aksiyonları yönetin.</p>
               </div>
             </div>
             <button
