@@ -16,6 +16,7 @@ import Tasks from "./pages/Tasks";
 import Alerts from "./pages/Alerts";
 import AlertDetail from "./pages/AlertDetail";
 import Reports from "./pages/Reports";
+import ReportViewer from "./pages/ReportViewer";
 import Marketplace from "./pages/Marketplace";
 import Settings from "./pages/Settings";
 import Pricing from "./pages/Pricing";
@@ -65,6 +66,7 @@ const App = () => (
               <Route path="/alerts" element={<Alerts />} />
               <Route path="/alerts/:alertId" element={<AlertDetail />} />
               <Route path="/reports" element={<Reports />} />
+              <Route path="/reports/:reportId" element={<ReportViewer />} />
               <Route path="/marketplace" element={<Marketplace />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/data-sources" element={<DataSources />} />
