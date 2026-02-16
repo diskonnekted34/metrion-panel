@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, Bell, BarChart3, Database, Settings as SettingsIcon, Scale, Crown } from "lucide-react";
+import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, Bell, BarChart3, Database, Settings as SettingsIcon, Scale, Crown, ArrowUpRight } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import UpgradeModal from "./UpgradeModal";
@@ -32,6 +32,13 @@ const CountBadge = ({ count }: { count: number }) => {
   );
 };
 
+// Command Layer items — strategic top-level
+const commandLayerItems = [
+  { label: "Karar", icon: Scale, path: "/decision-lab", count: pendingDecisionCount },
+  { label: "Komuta", icon: LayoutDashboard, path: "/dashboard", count: pendingStrategicCount },
+  { label: "Aksiyon", icon: Zap, path: "/action-center", count: pendingActionCount },
+];
+
 const AppSidebar = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
@@ -55,16 +62,8 @@ const AppSidebar = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  // Command items (above Departmanlar)
-  const commandItems = [
-    { label: "Komuta", icon: LayoutDashboard, path: "/dashboard", count: pendingStrategicCount },
-  ];
-
-  // SİSTEM section items
+  // SİSTEM section items (without Karar/Komuta/Aksiyon which moved to Command Layer)
   const sistemItems = [
-    { label: "Karar", icon: Scale, path: "/decision-lab", count: pendingDecisionCount },
-    { label: "Komuta", icon: LayoutDashboard, path: "/dashboard", count: pendingStrategicCount },
-    { label: "Aksiyon", icon: Zap, path: "/action-center", count: pendingActionCount },
     { label: "Kadro", icon: Crown, path: "/kadro", count: 0 },
     { label: "Görevler", icon: ListTodo, path: "/tasks", count: 0 },
     { label: "Uyarılar", icon: Bell, path: "/alerts", count: 0 },
@@ -90,6 +89,51 @@ const AppSidebar = () => {
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+
+          {/* ═══ COMMAND LAYER ═══ */}
+          <div className="relative rounded-2xl p-1 mb-1" style={{
+            background: "linear-gradient(135deg, rgba(30,107,255,0.06) 0%, rgba(30,107,255,0.02) 100%)",
+            boxShadow: "inset 0 0 20px rgba(30,107,255,0.04), 0 0 1px rgba(30,107,255,0.1)",
+          }}>
+            <div className="space-y-0.5">
+              {commandLayerItems.map((item) => {
+                const active = isActive(item.path);
+                return (
+                  <Tooltip key={item.path}>
+                    <TooltipTrigger asChild>
+                      <Link
+                        to={item.path}
+                        className={`flex items-center gap-3 px-3 py-3 rounded-xl text-[13px] transition-all duration-200 relative ${
+                          active
+                            ? "text-primary bg-primary/12"
+                            : "text-foreground/90 hover:text-foreground hover:bg-secondary/60"
+                        }`}
+                        style={active ? { boxShadow: "0 0 16px rgba(30,107,255,0.15)" } : {}}
+                      >
+                        <item.icon className={`h-[19px] w-[19px] shrink-0 ${active ? "text-primary" : "text-foreground/70"}`} />
+                        <span className="font-semibold flex-1">{item.label}</span>
+                        <CountBadge count={item.count} />
+                        {active && (
+                          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 rounded-r-full bg-primary" style={{ boxShadow: "0 0 14px rgba(30,107,255,0.6)" }} />
+                        )}
+                      </Link>
+                    </TooltipTrigger>
+                    {item.count > 0 && (
+                      <TooltipContent side="right">
+                        <p className="text-xs">{item.count} bekleyen öğe</p>
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Gradient divider */}
+          <div className="h-px mx-3 my-2" style={{
+            background: "linear-gradient(90deg, transparent 0%, rgba(30,107,255,0.2) 50%, transparent 100%)",
+          }} />
+
           {/* Departmanlar Accordion */}
           <div>
             <button

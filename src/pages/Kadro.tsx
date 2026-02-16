@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Users, UserPlus, UserMinus, Bot, User, Shield, Eye, Crown,
   CheckCircle2, Zap, Brain, ChevronDown, AlertTriangle, ArrowUpRight,
@@ -11,6 +12,7 @@ import {
   PositionMode, getPositionsByCategory, getCategoryLabel, SeatCategory
 } from "@/data/executivePositions";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 const scopeLabel = (scope: string) => {
   if (scope === "global") return "Şirket Geneli";
@@ -37,7 +39,6 @@ const Kadro = () => {
   const humanCount = positions.filter(p => p.assignedHuman).length;
   const autopilotCount = positions.filter(p => p.mode === "autopilot").length;
   const advisoryCount = positions.filter(p => p.mode === "advisory_dominant").length;
-  const assistedCount = positions.filter(p => p.mode === "assisted").length;
   const totalOverrides = positions.reduce((s, p) => s + p.overrideCount, 0);
 
   const cycleMode = (posId: string) => {
@@ -47,7 +48,7 @@ const Kadro = () => {
         const next: PositionMode = p.mode === "advisory_dominant" ? "assisted" : "advisory_dominant";
         return { ...p, mode: next };
       }
-      return p; // no human = stays autopilot
+      return p;
     }));
   };
 
@@ -220,83 +221,144 @@ const Kadro = () => {
                           </div>
 
                           {/* Expanded detail */}
-                          {isExpanded && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              className="border-t border-border px-5 py-5"
-                            >
-                              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                                {/* Decision Rights */}
-                                <div>
-                                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Karar Yetkileri</p>
-                                  <div className="space-y-2">
-                                    {pos.decisionRights.map((right, j) => (
-                                      <div key={j} className="flex items-center gap-2">
-                                        <CheckCircle2 className="h-3 w-3 text-success shrink-0" />
-                                        <span className="text-[11px] text-foreground">{right}</span>
+                          <AnimatePresence>
+                            {isExpanded && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="overflow-hidden"
+                              >
+                                <div className="border-t border-border px-5 py-5">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    {/* Assigned Human & AI Mode */}
+                                    <div>
+                                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Atama & Mod</p>
+                                      <div className="space-y-2 text-[11px]">
+                                        <div className="flex justify-between">
+                                          <span className="text-muted-foreground">Atanan İnsan</span>
+                                          <span className="text-foreground font-medium">{pos.assignedHuman?.name || "—"}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                          <span className="text-muted-foreground">AI Modu</span>
+                                          <span className={`font-bold ${modeClasses.split(" ").find(c => c.startsWith("text-")) || "text-foreground"}`}>{getModeLabel(pos.mode)}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                          <span className="text-muted-foreground">Onay Yetkisi</span>
+                                          <span className="text-foreground font-medium">{pos.approvalAuthority ? "Evet" : "Hayır"}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                          <span className="text-muted-foreground">Escalation</span>
+                                          <span className="text-foreground font-medium">{pos.escalationPower ? "Aktif" : "Pasif"}</span>
+                                        </div>
                                       </div>
-                                    ))}
-                                  </div>
-                                </div>
+                                    </div>
 
-                                {/* Auto-execution scope */}
-                                <div>
-                                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Oto-Yürütme Kapsamı</p>
-                                  <div className="space-y-2">
-                                    {pos.autoExecutionScope.map((scope, j) => (
-                                      <div key={j} className="flex items-center gap-2">
-                                        <Zap className="h-3 w-3 text-primary shrink-0" />
-                                        <span className="text-[11px] text-muted-foreground font-mono">{scope}</span>
+                                    {/* Authority Scope & Threshold */}
+                                    <div>
+                                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Yetki Kapsamı</p>
+                                      <div className="space-y-2 text-[11px]">
+                                        <div className="flex justify-between"><span className="text-muted-foreground">Okuma</span><span className="text-foreground font-medium">{scopeLabel(pos.readScope)}</span></div>
+                                        <div className="flex justify-between"><span className="text-muted-foreground">Yazma</span><span className="text-foreground font-medium">{scopeLabel(pos.writeScope)}</span></div>
+                                        <div className="flex justify-between"><span className="text-muted-foreground">Karar Eşiği</span><span className="text-foreground font-medium">{pos.decisionThreshold}</span></div>
+                                        <div className="flex justify-between"><span className="text-muted-foreground">Onay Limiti</span><span className="text-foreground font-medium">{pos.approvalLimit}</span></div>
                                       </div>
-                                    ))}
-                                  </div>
-                                </div>
+                                    </div>
 
-                                {/* Authority & Scope */}
-                                <div>
-                                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Yetki Kapsamı</p>
-                                  <div className="space-y-2 text-[11px]">
-                                    <div className="flex justify-between"><span className="text-muted-foreground">Okuma</span><span className="text-foreground font-medium">{scopeLabel(pos.readScope)}</span></div>
-                                    <div className="flex justify-between"><span className="text-muted-foreground">Yazma</span><span className="text-foreground font-medium">{scopeLabel(pos.writeScope)}</span></div>
-                                    <div className="flex justify-between"><span className="text-muted-foreground">Karar Eşiği</span><span className="text-foreground font-medium">{pos.decisionThreshold}</span></div>
-                                    <div className="flex justify-between"><span className="text-muted-foreground">Son Aktivite</span><span className="text-foreground font-medium">{formatDate(pos.lastStrategicActivity)}</span></div>
-                                  </div>
-                                </div>
+                                    {/* Governance Metrics */}
+                                    <div>
+                                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Yönetişim Metrikleri</p>
+                                      <div className="space-y-2 text-[11px]">
+                                        <div className="flex justify-between">
+                                          <span className="text-muted-foreground">Override Sayısı</span>
+                                          <span className={`font-bold ${pos.overrideCount > 0 ? "text-warning" : "text-foreground"}`}>{pos.overrideCount}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                          <span className="text-muted-foreground">AI Challenge</span>
+                                          <span className="text-violet-400 font-bold">{pos.aiChallengeFrequency}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                          <span className="text-muted-foreground">Son Aktivite</span>
+                                          <span className="text-foreground font-medium">{formatDate(pos.lastStrategicActivity)}</span>
+                                        </div>
+                                      </div>
+                                    </div>
 
-                                {/* Actions */}
-                                <div>
-                                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Pozisyon Yönetimi</p>
-                                  <div className="space-y-2">
-                                    {pos.assignedHuman ? (
-                                      <>
-                                        <button
-                                          onClick={(e) => { e.stopPropagation(); removeHuman(pos.id); }}
-                                          className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium border border-destructive/20 text-destructive hover:bg-destructive/10 transition-colors"
-                                        >
-                                          <UserMinus className="h-3.5 w-3.5" /> İnsan Atamasını Kaldır
-                                        </button>
-                                        <button
-                                          onClick={(e) => { e.stopPropagation(); cycleMode(pos.id); }}
-                                          className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-                                        >
-                                          <Brain className="h-3.5 w-3.5" />
-                                          {pos.mode === "advisory_dominant" ? "Asiste Moda Geç" : "Danışman Dominant Moda Geç"}
-                                        </button>
-                                      </>
-                                    ) : (
-                                      <button
-                                        onClick={(e) => { e.stopPropagation(); assignHuman(pos.id); }}
-                                        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium border border-primary/20 text-primary hover:bg-primary/10 transition-colors"
-                                      >
-                                        <UserPlus className="h-3.5 w-3.5" /> İnsan Ata
-                                      </button>
-                                    )}
+                                    {/* Actions */}
+                                    <div>
+                                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Pozisyon Yönetimi</p>
+                                      <div className="space-y-2">
+                                        {pos.assignedHuman ? (
+                                          <>
+                                            <button
+                                              onClick={(e) => { e.stopPropagation(); removeHuman(pos.id); }}
+                                              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium border border-destructive/20 text-destructive hover:bg-destructive/10 transition-colors"
+                                            >
+                                              <UserMinus className="h-3.5 w-3.5" /> İnsan Atamasını Kaldır
+                                            </button>
+                                            <button
+                                              onClick={(e) => { e.stopPropagation(); cycleMode(pos.id); }}
+                                              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                                            >
+                                              <Brain className="h-3.5 w-3.5" />
+                                              {pos.mode === "advisory_dominant" ? "Asiste Moda Geç" : "Danışman Dominant Moda Geç"}
+                                            </button>
+                                          </>
+                                        ) : (
+                                          <button
+                                            onClick={(e) => { e.stopPropagation(); assignHuman(pos.id); }}
+                                            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium border border-primary/20 text-primary hover:bg-primary/10 transition-colors"
+                                          >
+                                            <UserPlus className="h-3.5 w-3.5" /> İnsan Ata
+                                          </button>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Decision Rights */}
+                                  <div className="mt-5 pt-4 border-t border-border/40">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                      <div>
+                                        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Karar Yetkileri</p>
+                                        <div className="space-y-1.5">
+                                          {pos.decisionRights.map((right, j) => (
+                                            <div key={j} className="flex items-center gap-2">
+                                              <CheckCircle2 className="h-3 w-3 text-success shrink-0" />
+                                              <span className="text-[11px] text-foreground">{right}</span>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                      <div>
+                                        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Oto-Yürütme Kapsamı</p>
+                                        <div className="space-y-1.5">
+                                          {pos.autoExecutionScope.map((scope, j) => (
+                                            <div key={j} className="flex items-center gap-2">
+                                              <Zap className="h-3 w-3 text-primary shrink-0" />
+                                              <span className="text-[11px] text-muted-foreground font-mono">{scope}</span>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Console Navigation Button */}
+                                  <div className="mt-5 flex justify-end">
+                                    <Button asChild size="sm" className="gap-2">
+                                      <Link to={`/workspace/${pos.agentId}`}>
+                                        <Activity className="h-3.5 w-3.5" />
+                                        Ajan Konsoluna Git
+                                        <ArrowUpRight className="h-3 w-3" />
+                                      </Link>
+                                    </Button>
                                   </div>
                                 </div>
-                              </div>
-                            </motion.div>
-                          )}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </motion.div>
                       );
                     })}
