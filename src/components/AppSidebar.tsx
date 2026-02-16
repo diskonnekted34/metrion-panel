@@ -55,11 +55,24 @@ const AppSidebar = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const topNavItems = [
+  // Command items (above Departmanlar)
+  const commandItems = [
+    { label: "Komuta", icon: LayoutDashboard, path: "/dashboard", count: pendingStrategicCount },
+  ];
+
+  // SİSTEM section items
+  const sistemItems = [
     { label: "Karar", icon: Scale, path: "/decision-lab", count: pendingDecisionCount },
     { label: "Komuta", icon: LayoutDashboard, path: "/dashboard", count: pendingStrategicCount },
     { label: "Aksiyon", icon: Zap, path: "/action-center", count: pendingActionCount },
     { label: "Kadro", icon: Crown, path: "/kadro", count: 0 },
+    { label: "Görevler", icon: ListTodo, path: "/tasks", count: 0 },
+    { label: "Uyarılar", icon: Bell, path: "/alerts", count: 0 },
+    { label: "Raporlar", icon: BarChart3, path: "/reports", count: 0 },
+    { label: "Veri Kaynakları", icon: Database, path: "/data-sources", count: 0 },
+    { label: "Teknoloji Veri Kaynakları", icon: Database, path: "/tech-data-sources", count: 0 },
+    { label: "Ekibi Genişlet", icon: Users, path: "/marketplace", count: 0 },
+    { label: "Ayarlar", icon: SettingsIcon, path: "/settings", count: 0 },
   ];
 
   return (
@@ -77,39 +90,8 @@ const AppSidebar = () => {
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          {/* Top nav items: Karar, Komuta, Aksiyon, Kadro */}
-          {topNavItems.map(item => {
-            const active = isActive(item.path);
-            return (
-              <Tooltip key={item.path}>
-                <TooltipTrigger asChild>
-                  <Link
-                    to={item.path}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm transition-all duration-200 group relative ${
-                      active
-                        ? "text-primary bg-primary/10"
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                    }`}
-                  >
-                    <item.icon className={`h-[18px] w-[18px] shrink-0 ${active ? "text-primary" : ""}`} />
-                    <span className="font-medium flex-1">{item.label}</span>
-                    <CountBadge count={item.count} />
-                    {active && (
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 12px rgba(30,107,255,0.5)" }} />
-                    )}
-                  </Link>
-                </TooltipTrigger>
-                {item.count > 0 && (
-                  <TooltipContent side="right">
-                    <p className="text-xs">{item.count} bekleyen öğe</p>
-                  </TooltipContent>
-                )}
-              </Tooltip>
-            );
-          })}
-
           {/* Departmanlar Accordion */}
-          <div className="pt-4">
+          <div>
             <button
               onClick={() => setDeptsOpen(!deptsOpen)}
               className="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm w-full text-left text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200"
@@ -210,32 +192,33 @@ const AppSidebar = () => {
           <div className="pt-4">
             <span className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">Sistem</span>
             <div className="mt-2 space-y-0.5">
-              {[
-                { label: "Görevler", icon: ListTodo, path: "/tasks" },
-                { label: "Uyarılar", icon: Bell, path: "/alerts" },
-                { label: "Raporlar", icon: BarChart3, path: "/reports" },
-                { label: "Veri Kaynakları", icon: Database, path: "/data-sources" },
-                { label: "Teknoloji Veri Kaynakları", icon: Database, path: "/tech-data-sources" },
-                { label: "Ekibi Genişlet", icon: Users, path: "/marketplace" },
-                { label: "Ayarlar", icon: SettingsIcon, path: "/settings" },
-              ].map((item) => {
+              {sistemItems.map((item) => {
                 const active = isActive(item.path);
                 return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm transition-all duration-200 relative ${
-                      active
-                        ? "text-primary bg-primary/10"
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                    }`}
-                  >
-                    <item.icon className={`h-[18px] w-[18px] shrink-0 ${active ? "text-primary" : ""}`} />
-                    <span className="font-medium">{item.label}</span>
-                    {active && (
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 12px rgba(30,107,255,0.5)" }} />
+                  <Tooltip key={item.path}>
+                    <TooltipTrigger asChild>
+                      <Link
+                        to={item.path}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm transition-all duration-200 relative ${
+                          active
+                            ? "text-primary bg-primary/10"
+                            : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                        }`}
+                      >
+                        <item.icon className={`h-[18px] w-[18px] shrink-0 ${active ? "text-primary" : ""}`} />
+                        <span className="font-medium flex-1">{item.label}</span>
+                        <CountBadge count={item.count} />
+                        {active && (
+                          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 12px rgba(30,107,255,0.5)" }} />
+                        )}
+                      </Link>
+                    </TooltipTrigger>
+                    {item.count > 0 && (
+                      <TooltipContent side="right">
+                        <p className="text-xs">{item.count} bekleyen öğe</p>
+                      </TooltipContent>
                     )}
-                  </Link>
+                  </Tooltip>
                 );
               })}
             </div>

@@ -239,8 +239,10 @@ const DecisionLab = () => {
               {pendingDecisions.map((dec) => {
                 const pos = executivePositions.find(p => p.shortTitle === dec.requiredApprovers[0]);
                 const riskColor = dec.riskLevel === "high" ? "text-destructive bg-destructive/10" : dec.riskLevel === "medium" ? "text-warning bg-warning/10" : "text-success bg-success/10";
+                const overrideRiskColor = dec.humanOverrideRisk === "high" ? "text-destructive" : dec.humanOverrideRisk === "medium" ? "text-warning" : "text-success";
+                const confidenceColor = dec.aiConfidence >= 90 ? "text-success" : dec.aiConfidence >= 75 ? "text-primary" : "text-warning";
                 return (
-                  <div key={dec.id} className="bg-secondary/20 border border-white/[0.04] rounded-2xl p-4 flex items-center gap-4 hover:border-primary/15 transition-all">
+                  <div key={dec.id} className={`bg-secondary/20 border rounded-2xl p-4 flex items-center gap-4 hover:border-primary/15 transition-all ${dec.humanOverrideRisk === "high" ? "border-warning/20" : "border-white/[0.04]"}`}>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <p className="text-sm font-medium text-foreground">{dec.title}</p>
@@ -250,17 +252,32 @@ const DecisionLab = () => {
                         {dec.simulationBacked && (
                           <span className="text-[9px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">Simülasyon Destekli</span>
                         )}
+                        {dec.humanOverrideRisk === "high" && (
+                          <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-warning/15 text-warning border border-warning/30 animate-pulse">
+                            Override Riski Yüksek
+                          </span>
+                        )}
                       </div>
                       <p className="text-[11px] text-muted-foreground mb-1.5">{dec.description}</p>
-                      <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+                      <div className="flex items-center gap-3 text-[10px] text-muted-foreground flex-wrap">
                         <span>Öncelik: <strong className="text-foreground">{dec.priority}</strong></span>
                         <span>·</span>
                         <span>Etki: <strong className="text-foreground">{dec.impact}</strong></span>
                         <span>·</span>
                         <span>Kaynak: {dec.source}</span>
+                        <span>·</span>
+                        <span>AI Güven: <strong className={confidenceColor}>{dec.aiConfidence}%</strong></span>
+                        <span>·</span>
+                        <span>Override Risk: <strong className={overrideRiskColor}>{dec.humanOverrideRisk === "high" ? "Yüksek" : dec.humanOverrideRisk === "medium" ? "Orta" : "Düşük"}</strong></span>
                       </div>
                     </div>
                     <div className="shrink-0 flex flex-col items-end gap-2">
+                      {/* AI Confidence Badge */}
+                      <div className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${dec.aiConfidence >= 90 ? "bg-success/10 text-success border-success/20" : dec.aiConfidence >= 75 ? "bg-primary/10 text-primary border-primary/20" : "bg-warning/10 text-warning border-warning/20"}`}
+                        style={{ boxShadow: `0 0 8px ${dec.aiConfidence >= 90 ? "rgba(16,185,129,0.2)" : dec.aiConfidence >= 75 ? "rgba(30,107,255,0.2)" : "rgba(245,158,11,0.2)"}` }}
+                      >
+                        AI %{dec.aiConfidence}
+                      </div>
                       <div className="flex items-center gap-1.5">
                         {dec.requiredApprovers.map(approver => {
                           const approverPos = executivePositions.find(p => p.shortTitle === approver);
@@ -275,7 +292,7 @@ const DecisionLab = () => {
                       {pos?.assignedHuman ? (
                         <span className="text-[9px] text-primary">Final Yetki: {pos.assignedHuman.name}</span>
                       ) : (
-                        <span className="text-[9px] text-purple-400">AI Otopilot Aktif</span>
+                        <span className="text-[9px] text-purple-400">Tam Otopilot Aktif</span>
                       )}
                     </div>
                   </div>
