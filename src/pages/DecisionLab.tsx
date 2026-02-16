@@ -2,10 +2,11 @@ import { useState } from "react";
 import AppLayout from "@/components/AppLayout";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  FlaskConical, FileDown, ChevronRight, TrendingUp, TrendingDown,
+  Scale, FileDown, ChevronRight, TrendingUp, TrendingDown,
   ShieldAlert, Lightbulb, Target, AlertTriangle, Minus, Plus,
-  BarChart3, DollarSign, PieChart, Activity, Zap
+  BarChart3, DollarSign, PieChart, Activity, Zap, User, Bot, CheckCircle2
 } from "lucide-react";
+import { pendingDecisions, executivePositions, getModeLabel, getModeColor } from "@/data/executivePositions";
 import {
   LineChart, Line, AreaChart, Area, ResponsiveContainer,
   XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid,
@@ -174,11 +175,11 @@ const DecisionLab = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="h-10 w-10 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center" style={{ boxShadow: "0 0 20px rgba(30,107,255,0.15)" }}>
-                <FlaskConical className="h-5 w-5 text-primary" />
+                <Scale className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground tracking-tight">Karar Laboratuvarı</h1>
-                <p className="text-xs text-muted-foreground">Stratejik Simülasyon & Öngörü Motoru</p>
+                <h1 className="text-xl font-bold text-foreground tracking-tight">Karar</h1>
+                <p className="text-xs text-muted-foreground">Stratejik Karar Değerlendirme & Simülasyon Motoru</p>
               </div>
               <span className="ml-4 text-[10px] font-medium text-primary/80 px-3 py-1 rounded-full border border-primary/20 bg-primary/5">
                 Analiz Kapsamı: Şirket Geneli
@@ -226,6 +227,62 @@ const DecisionLab = () => {
               </AnimatePresence>
             </div>
           </div>
+
+          {/* SECTION 0 — PENDING DECISIONS */}
+          <section className="space-y-3">
+            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <Scale className="h-4 w-4 text-primary" />
+              Değerlendirme Bekleyen Kararlar
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-warning/15 text-warning">{pendingDecisions.filter(d => d.status === "pending").length}</span>
+            </h2>
+            <div className="space-y-2">
+              {pendingDecisions.map((dec) => {
+                const pos = executivePositions.find(p => p.shortTitle === dec.requiredApprovers[0]);
+                const riskColor = dec.riskLevel === "high" ? "text-destructive bg-destructive/10" : dec.riskLevel === "medium" ? "text-warning bg-warning/10" : "text-success bg-success/10";
+                return (
+                  <div key={dec.id} className="bg-secondary/20 border border-white/[0.04] rounded-2xl p-4 flex items-center gap-4 hover:border-primary/15 transition-all">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <p className="text-sm font-medium text-foreground">{dec.title}</p>
+                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${riskColor}`}>
+                          {dec.riskLevel === "high" ? "Yüksek Risk" : dec.riskLevel === "medium" ? "Orta Risk" : "Düşük Risk"}
+                        </span>
+                        {dec.simulationBacked && (
+                          <span className="text-[9px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">Simülasyon Destekli</span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-muted-foreground mb-1.5">{dec.description}</p>
+                      <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+                        <span>Öncelik: <strong className="text-foreground">{dec.priority}</strong></span>
+                        <span>·</span>
+                        <span>Etki: <strong className="text-foreground">{dec.impact}</strong></span>
+                        <span>·</span>
+                        <span>Kaynak: {dec.source}</span>
+                      </div>
+                    </div>
+                    <div className="shrink-0 flex flex-col items-end gap-2">
+                      <div className="flex items-center gap-1.5">
+                        {dec.requiredApprovers.map(approver => {
+                          const approverPos = executivePositions.find(p => p.shortTitle === approver);
+                          return (
+                            <span key={approver} className="text-[10px] font-medium px-2 py-1 rounded-lg bg-secondary border border-border flex items-center gap-1">
+                              {approverPos?.assignedHuman ? <User className="h-3 w-3 text-primary" /> : <Bot className="h-3 w-3 text-purple-400" />}
+                              {approver}
+                            </span>
+                          );
+                        })}
+                      </div>
+                      {pos?.assignedHuman ? (
+                        <span className="text-[9px] text-primary">Final Yetki: {pos.assignedHuman.name}</span>
+                      ) : (
+                        <span className="text-[9px] text-purple-400">AI Otopilot Aktif</span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
 
           {/* SECTION 1 — TIME HORIZON SWITCHER */}
           <div className="flex items-center gap-1 p-1 rounded-xl bg-secondary/30 border border-white/[0.04] w-fit">

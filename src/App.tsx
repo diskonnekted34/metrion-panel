@@ -12,6 +12,7 @@ import Index from "./pages/Index";
 import ExpertProfile from "./pages/ExpertProfile";
 import Dashboard from "./pages/Dashboard";
 import Team from "./pages/Team";
+import Kadro from "./pages/Kadro";
 import Tasks from "./pages/Tasks";
 import Alerts from "./pages/Alerts";
 import AlertDetail from "./pages/AlertDetail";
@@ -62,6 +63,7 @@ const App = () => (
               <Route path="/departments/:deptId/modules" element={<DepartmentModules />} />
               <Route path="/departments/:deptId/intelligence/:metricId" element={<DepartmentIntelligenceView />} />
               <Route path="/team" element={<Team />} />
+              <Route path="/kadro" element={<Kadro />} />
               <Route path="/tasks" element={<Tasks />} />
               <Route path="/alerts" element={<Alerts />} />
               <Route path="/alerts/:alertId" element={<AlertDetail />} />
