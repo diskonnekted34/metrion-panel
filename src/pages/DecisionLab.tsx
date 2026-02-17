@@ -2,22 +2,42 @@ import { useState } from "react";
 import AppLayout from "@/components/AppLayout";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Scale, FileDown, ChevronRight, TrendingUp, TrendingDown,
-  ShieldAlert, Lightbulb, Target, AlertTriangle, Minus, Plus,
-  BarChart3, DollarSign, PieChart, Activity, Zap, User, Bot, CheckCircle2
+  Scale, ChevronRight, TrendingUp, TrendingDown,
+  ShieldAlert, Target, AlertTriangle, Minus,
+  BarChart3, DollarSign, Activity, Zap, User, Bot, CheckCircle2,
+  XCircle, Clock, Eye, RotateCcw, ArrowRight, Brain, Timer,
+  Gauge, LineChart as LineChartIcon, Award, History, X, MessageSquare,
+  CalendarClock, Crosshair, Layers
 } from "lucide-react";
-import { pendingDecisions, executivePositions, getModeLabel, getModeColor } from "@/data/executivePositions";
+import { executivePositions } from "@/data/executivePositions";
+import {
+  decisions as allDecisions,
+  executiveDecisionRecords,
+  lifecycleConfig,
+  categoryLabels,
+  timeSensitivityLabels,
+  getDaysSinceAction,
+  getPressureLevel,
+  type Decision,
+  type DecisionLifecycle,
+} from "@/data/decisions";
 import {
   LineChart, Line, AreaChart, Area, ResponsiveContainer,
   XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid,
-  BarChart, Bar, ComposedChart
 } from "recharts";
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
 
-/* ── Mock Data ── */
-const timeHorizons = [
+/* ── Tab Definition ── */
+type TabId = "pending" | "monitoring" | "completed" | "rejected" | "performance";
+const tabs: { id: TabId; label: string; lifecycles: DecisionLifecycle[] }[] = [
+  { id: "pending", label: "Bekleyen Kararlar", lifecycles: ["proposed", "under_review", "approved", "in_execution"] },
+  { id: "monitoring", label: "İzlemede", lifecycles: ["monitoring"] },
+  { id: "completed", label: "Tamamlanan", lifecycles: ["completed"] },
+  { id: "rejected", label: "Reddedilen", lifecycles: ["rejected", "failed"] },
+  { id: "performance", label: "Performans Analizi", lifecycles: [] },
+];
+
+/* ── Time Filter ── */
+const timeFilters = [
   { key: "week", label: "Hafta" },
   { key: "month", label: "Ay" },
   { key: "quarter", label: "Çeyrek" },
@@ -25,152 +45,568 @@ const timeHorizons = [
   { key: "5year", label: "5 Yıl" },
 ];
 
-const generateTrendData = (horizon: string) => {
-  const points = horizon === "week" ? 7 : horizon === "month" ? 30 : horizon === "quarter" ? 12 : horizon === "year" ? 12 : 60;
-  return Array.from({ length: points }, (_, i) => ({
-    period: i + 1,
-    revenue: 2400 + Math.sin(i * 0.5) * 400 + i * (horizon === "5year" ? 30 : 15),
-    profit: 800 + Math.sin(i * 0.7) * 200 + i * (horizon === "5year" ? 12 : 8),
-    margin: 28 + Math.sin(i * 0.3) * 5 + i * 0.2,
-    efficiency: 72 + Math.sin(i * 0.4) * 8 + i * 0.3,
-    marketingROI: 3.2 + Math.sin(i * 0.6) * 0.8 + i * 0.05,
-    cashFlow: 1200 + Math.sin(i * 0.35) * 300 + i * 10,
-  }));
-};
-
-const generateForecastData = (preset: string) => {
-  const multiplier = preset === "aggressive" ? 1.4 : preset === "defensive" ? 0.7 : 1.0;
-  return Array.from({ length: 12 }, (_, i) => ({
-    period: i + 1,
-    revenue: (3000 + i * 50 * multiplier) + (Math.random() - 0.5) * 100,
-    revenueHigh: (3000 + i * 50 * multiplier) * 1.15,
-    revenueLow: (3000 + i * 50 * multiplier) * 0.85,
-    cashPosition: (5000 + i * 80 * multiplier) + (Math.random() - 0.5) * 200,
-    netMargin: 25 + i * 0.5 * multiplier + (Math.random() - 0.5) * 2,
-    riskProb: Math.max(5, 30 - i * multiplier * 2 + (Math.random() - 0.5) * 5),
-  }));
-};
-
-const scenarioPresets = [
-  { key: "aggressive", label: "Agresif Büyüme", color: "text-emerald-400" },
-  { key: "balanced", label: "Dengeli", color: "text-primary" },
-  { key: "defensive", label: "Defansif", color: "text-amber-400" },
-];
-
-const reportOptions = [
-  "Haftalık Yönetim Özeti",
-  "Aylık Stratejik Rapor",
-  "Çeyreklik Performans",
-  "Yıllık Plan",
-  "5 Yıllık Projeksiyon Dosyası",
-];
-
-const exportFormats = ["PDF", "Sunum Formatı", "Executive Summary"];
-
-/* ── Glow Chart Tooltip ── */
+/* ── Glow Tooltip ── */
 const GlowTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-[#0A0F1F]/95 border border-primary/20 rounded-xl px-4 py-3 backdrop-blur-xl shadow-[0_0_20px_rgba(30,107,255,0.15)]">
-      <p className="text-[10px] text-muted-foreground mb-1.5">Dönem {label}</p>
+      <p className="text-[10px] text-muted-foreground mb-1.5">{label}</p>
       {payload.map((p: any, i: number) => (
         <p key={i} className="text-xs font-medium" style={{ color: p.color }}>
-          {p.name}: {typeof p.value === "number" ? p.value.toFixed(1) : p.value}
+          {p.name}: {typeof p.value === "number" ? p.value.toFixed(2) : p.value}
         </p>
       ))}
     </div>
   );
 };
 
-/* ── Metric Mini Card ── */
-const MetricMini = ({ label, value, trend, icon: Icon }: { label: string; value: string; trend: "up" | "down" | "flat"; icon: any }) => (
-  <div className="flex items-center gap-3 bg-secondary/40 border border-white/[0.04] rounded-xl px-4 py-3">
-    <div className="h-9 w-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-      <Icon className="h-4 w-4 text-primary" />
+/* ── Pressure Badge ── */
+const PressureBadge = ({ lastActionDate }: { lastActionDate: string }) => {
+  const days = getDaysSinceAction(lastActionDate);
+  const level = getPressureLevel(days);
+  if (level === "none") return null;
+  const styles = {
+    low: "bg-amber-500/5 border-amber-500/15 text-amber-400/70",
+    medium: "bg-amber-500/10 border-amber-500/25 text-amber-400",
+    high: "bg-amber-500/15 border-amber-500/40 text-amber-300 animate-pulse",
+  };
+  return (
+    <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${styles[level]}`}>
+      <Timer className="h-2.5 w-2.5 inline mr-0.5" />{days} gün bekliyor
+    </span>
+  );
+};
+
+/* ── Decision Card ── */
+const DecisionCard = ({ decision, onSelect }: { decision: Decision; onSelect: () => void }) => {
+  const lc = lifecycleConfig[decision.lifecycle];
+  const riskColor = decision.riskLevel === "high" ? "text-destructive bg-destructive/10" : decision.riskLevel === "medium" ? "text-warning bg-warning/10" : "text-emerald-400 bg-emerald-400/10";
+  const confidenceColor = decision.aiConfidence >= 90 ? "text-emerald-400" : decision.aiConfidence >= 75 ? "text-primary" : "text-warning";
+  const ts = timeSensitivityLabels[decision.timeSensitivity];
+  const isHighRisk = decision.riskLevel === "high";
+  const days = getDaysSinceAction(decision.lastActionDate);
+  const pressureLevel = getPressureLevel(days);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      onClick={onSelect}
+      className={`glass-card p-5 cursor-pointer group relative overflow-hidden ${isHighRisk ? "border-destructive/15" : ""} ${pressureLevel === "high" ? "shadow-[0_0_20px_rgba(245,158,11,0.08)]" : ""}`}
+      style={isHighRisk ? { boxShadow: "0 0 15px rgba(239,68,68,0.06), inset 0 0 0 1px rgba(239,68,68,0.08)" } : undefined}
+    >
+      {/* Top edge glow for high risk */}
+      {isHighRisk && <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-destructive/40 to-transparent" />}
+
+      <div className="flex items-start gap-4">
+        <div className="flex-1 min-w-0 space-y-2.5">
+          {/* Row 1: Title + badges */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3 className="text-sm font-semibold text-foreground">{decision.title}</h3>
+            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${lc.bg} ${lc.color}`}>{lc.label}</span>
+            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${riskColor}`}>{decision.riskLevel === "high" ? "Yüksek Risk" : decision.riskLevel === "medium" ? "Orta Risk" : "Düşük Risk"}</span>
+            <span className="text-[9px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">{categoryLabels[decision.category]}</span>
+            <PressureBadge lastActionDate={decision.lastActionDate} />
+          </div>
+
+          {/* Row 2: Description */}
+          <p className="text-[11px] text-muted-foreground leading-relaxed">{decision.description}</p>
+
+          {/* Row 3: Metrics grid */}
+          <div className="flex items-center gap-3 text-[10px] text-muted-foreground flex-wrap">
+            <span className="flex items-center gap-1"><Crosshair className="h-3 w-3" />Öncelik: <strong className="text-foreground">{decision.priorityScore}</strong></span>
+            <span>·</span>
+            <span className="flex items-center gap-1"><Brain className="h-3 w-3" />AI Güven: <strong className={confidenceColor}>{decision.aiConfidence}%</strong></span>
+            <span>·</span>
+            <span className="flex items-center gap-1"><Gauge className="h-3 w-3" />Simülasyon: <strong className="text-foreground">{decision.simulationStrength}%</strong></span>
+            <span>·</span>
+            <span className="flex items-center gap-1"><CalendarClock className="h-3 w-3" />Zaman: <strong className={ts.color}>{ts.label}</strong></span>
+          </div>
+
+          {/* Row 4: Financial & KPI impact */}
+          <div className="flex items-center gap-3 text-[10px] flex-wrap">
+            <span className="flex items-center gap-1 text-emerald-400"><DollarSign className="h-3 w-3" />{decision.estimatedFinancialImpact}</span>
+            <span className="text-muted-foreground">·</span>
+            <span className="flex items-center gap-1 text-primary"><Activity className="h-3 w-3" />{decision.estimatedKPIImpact}</span>
+          </div>
+
+          {/* Row 5: Decision Delay Risk */}
+          <div className="flex items-center gap-2 p-2 rounded-lg bg-warning/5 border border-warning/10">
+            <AlertTriangle className="h-3 w-3 text-warning shrink-0" />
+            <span className="text-[10px] text-warning">
+              Karar alınmazsa tahmini kayıp ({decision.decisionDelayRisk.days} gün içinde): <strong>{decision.decisionDelayRisk.estimatedLoss}</strong>
+            </span>
+          </div>
+        </div>
+
+        {/* Right column */}
+        <div className="shrink-0 flex flex-col items-end gap-2 min-w-[140px]">
+          {/* AI Confidence */}
+          <div className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${decision.aiConfidence >= 90 ? "bg-emerald-400/10 text-emerald-400 border-emerald-400/20" : decision.aiConfidence >= 75 ? "bg-primary/10 text-primary border-primary/20" : "bg-warning/10 text-warning border-warning/20"}`}
+            style={{ boxShadow: `0 0 8px ${decision.aiConfidence >= 90 ? "rgba(52,211,153,0.15)" : decision.aiConfidence >= 75 ? "rgba(30,107,255,0.15)" : "rgba(245,158,11,0.15)"}` }}
+          >
+            AI %{decision.aiConfidence}
+          </div>
+
+          {/* Approvers */}
+          <div className="flex items-center gap-1 flex-wrap justify-end">
+            {decision.requiredApprovers.map(approver => {
+              const pos = executivePositions.find(p => p.shortTitle === approver);
+              return (
+                <span key={approver} className="text-[9px] font-medium px-2 py-1 rounded-lg bg-secondary border border-border flex items-center gap-1">
+                  {pos?.assignedHuman ? <User className="h-2.5 w-2.5 text-primary" /> : <Bot className="h-2.5 w-2.5 text-purple-400" />}
+                  {approver}
+                </span>
+              );
+            })}
+          </div>
+
+          {/* Final Authority */}
+          <span className="text-[9px] text-muted-foreground">
+            Final: <strong className="text-foreground">{decision.finalAuthority}</strong>
+          </span>
+
+          {/* Override Risk */}
+          {decision.humanOverrideRisk !== "low" && (
+            <span className={`text-[9px] px-2 py-0.5 rounded-full border ${decision.humanOverrideRisk === "high" ? "bg-warning/10 text-warning border-warning/20 animate-pulse" : "bg-warning/5 text-warning/70 border-warning/10"}`}>
+              Override Risk: {decision.humanOverrideRisk === "high" ? "Yüksek" : "Orta"}
+            </span>
+          )}
+
+          <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity mt-1" />
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+/* ── Decision Detail View ── */
+const DecisionDetailView = ({ decision, onBack }: { decision: Decision; onBack: () => void }) => {
+  const [activeSection, setActiveSection] = useState<"context" | "simulation" | "approval" | "monitoring" | "outcome">("context");
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const lc = lifecycleConfig[decision.lifecycle];
+  const ts = timeSensitivityLabels[decision.timeSensitivity];
+
+  const sections = [
+    { id: "context" as const, label: "Stratejik Bağlam", icon: Brain },
+    { id: "simulation" as const, label: "Etki Simülasyonu", icon: LineChartIcon },
+    { id: "approval" as const, label: "Onay Akışı", icon: CheckCircle2 },
+    { id: "monitoring" as const, label: "İzleme Zaman Çizelgesi", icon: Activity },
+    { id: "outcome" as const, label: "Sonuç Değerlendirme", icon: Award },
+  ];
+
+  return (
+    <div className="min-h-screen relative" style={{ background: "#05070D" }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(30,107,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(30,107,255,0.03) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+      <div className="relative z-10 px-6 py-6 max-w-[1200px] mx-auto space-y-6">
+        {/* Back */}
+        <button onClick={onBack} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowRight className="h-3 w-3 rotate-180" /> Kararlara Dön
+        </button>
+
+        {/* Header */}
+        <div className="flex items-start justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${lc.bg} ${lc.color}`}>{lc.label}</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">{categoryLabels[decision.category]}</span>
+              <span className={`text-[10px] font-medium ${ts.color}`}>{ts.label} Öncelik</span>
+            </div>
+            <h1 className="text-xl font-bold text-foreground">{decision.title}</h1>
+            <p className="text-sm text-muted-foreground">{decision.description}</p>
+          </div>
+
+          {/* Action buttons */}
+          {(decision.lifecycle === "proposed" || decision.lifecycle === "under_review") && (
+            <div className="flex gap-2 shrink-0">
+              <button className="btn-primary px-4 py-2 text-xs flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5" /> Onayla
+              </button>
+              <button className="px-4 py-2 rounded-xl border border-primary/30 text-xs text-primary hover:bg-primary/10 transition-colors flex items-center gap-1.5">
+                <RotateCcw className="h-3.5 w-3.5" /> Revize Et
+              </button>
+              <button className="px-4 py-2 rounded-xl border border-warning/30 text-xs text-warning hover:bg-warning/10 transition-colors flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5" /> Ertele
+              </button>
+              <button onClick={() => setShowRejectModal(true)} className="px-4 py-2 rounded-xl border border-destructive/30 text-xs text-destructive hover:bg-destructive/10 transition-colors flex items-center gap-1.5">
+                <XCircle className="h-3.5 w-3.5" /> Reddet
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Metrics strip */}
+        <div className="grid grid-cols-6 gap-3">
+          {[
+            { label: "Öncelik Skoru", value: `${decision.priorityScore}/100`, icon: Crosshair },
+            { label: "AI Güven", value: `%${decision.aiConfidence}`, icon: Brain },
+            { label: "Simülasyon Gücü", value: `%${decision.simulationStrength}`, icon: Gauge },
+            { label: "Finansal Etki", value: decision.estimatedFinancialImpact.split("·")[0].trim(), icon: DollarSign },
+            { label: "Zaman Hassasiyeti", value: ts.label, icon: CalendarClock },
+            { label: "Gecikme Riski", value: decision.decisionDelayRisk.estimatedLoss, icon: AlertTriangle },
+          ].map(m => (
+            <div key={m.label} className="glass-card p-3 flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg bg-primary/10 border border-primary/15 flex items-center justify-center shrink-0">
+                <m.icon className="h-3.5 w-3.5 text-primary" />
+              </div>
+              <div>
+                <p className="text-[9px] text-muted-foreground">{m.label}</p>
+                <p className="text-xs font-bold text-foreground">{m.value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* KPI Attachment */}
+        {decision.kpiAttachment && (
+          <div className="glass-card p-4">
+            <h3 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">KPI Bağlantısı</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <p className="text-xs text-foreground font-medium">Birincil: {decision.kpiAttachment.primary.name}</p>
+                <div className="flex items-center gap-3 text-[10px]">
+                  <span className="text-muted-foreground">Baz: <strong className="text-foreground">{decision.kpiAttachment.primary.baseline}{decision.kpiAttachment.primary.unit}</strong></span>
+                  <ArrowRight className="h-3 w-3 text-primary" />
+                  <span className="text-muted-foreground">Hedef: <strong className="text-emerald-400">{decision.kpiAttachment.primary.target}{decision.kpiAttachment.primary.unit}</strong></span>
+                  {decision.kpiAttachment.primary.current !== undefined && (
+                    <>
+                      <span className="text-muted-foreground">·</span>
+                      <span className="text-muted-foreground">Güncel: <strong className="text-primary">{decision.kpiAttachment.primary.current}{decision.kpiAttachment.primary.unit}</strong></span>
+                    </>
+                  )}
+                </div>
+              </div>
+              {decision.kpiAttachment.secondary && (
+                <div className="space-y-2">
+                  <p className="text-xs text-foreground font-medium">İkincil: {decision.kpiAttachment.secondary.name}</p>
+                  <div className="flex items-center gap-3 text-[10px]">
+                    <span className="text-muted-foreground">Baz: <strong className="text-foreground">{decision.kpiAttachment.secondary.baseline}{decision.kpiAttachment.secondary.unit}</strong></span>
+                    <ArrowRight className="h-3 w-3 text-primary" />
+                    <span className="text-muted-foreground">Hedef: <strong className="text-emerald-400">{decision.kpiAttachment.secondary.target}{decision.kpiAttachment.secondary.unit}</strong></span>
+                  </div>
+                </div>
+              )}
+              <div className="col-span-2 text-[10px] text-muted-foreground">
+                İzleme Süresi: <strong className="text-foreground">{decision.kpiAttachment.monitoringDuration}</strong>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Section tabs */}
+        <div className="flex gap-1 p-1 rounded-xl bg-secondary/30 border border-white/[0.04]">
+          {sections.map(s => (
+            <button
+              key={s.id}
+              onClick={() => setActiveSection(s.id)}
+              className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-medium transition-all ${activeSection === s.id ? "bg-primary/10 text-primary border border-primary/20" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              <s.icon className="h-3 w-3" />{s.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Section content */}
+        <AnimatePresence mode="wait">
+          <motion.div key={activeSection} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+            {activeSection === "context" && (
+              <div className="space-y-4">
+                <div className="glass-card p-5 space-y-3">
+                  <h3 className="text-xs font-semibold text-foreground flex items-center gap-2"><Brain className="h-4 w-4 text-primary" /> AI Gerekçesi</h3>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">{decision.aiReasoning}</p>
+                </div>
+                <div className="glass-card p-5 space-y-3">
+                  <h3 className="text-xs font-semibold text-foreground">Veri Kaynakları</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {decision.dataSources.map(ds => (
+                      <span key={ds} className="text-[10px] px-2.5 py-1 rounded-lg bg-primary/5 border border-primary/10 text-primary">{ds}</span>
+                    ))}
+                  </div>
+                </div>
+                <div className="glass-card p-5 space-y-3">
+                  <h3 className="text-xs font-semibold text-foreground">Model Gerekçesi</h3>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">{decision.modelReasoning}</p>
+                </div>
+              </div>
+            )}
+
+            {activeSection === "simulation" && (
+              <div className="space-y-4">
+                <div className="glass-card p-5">
+                  <h3 className="text-xs font-semibold text-foreground mb-4">Finansal Etki Projeksiyonu</h3>
+                  <div className="h-[200px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={Array.from({ length: 12 }, (_, i) => ({ month: `Ay ${i + 1}`, value: 100 + i * (decision.priorityScore / 10) + Math.sin(i) * 15, projected: 100 + i * (decision.priorityScore / 12) }))}>
+                        <defs>
+                          <linearGradient id="simGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#1E6BFF" stopOpacity={0.2} />
+                            <stop offset="100%" stopColor="#1E6BFF" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
+                        <XAxis dataKey="month" stroke="rgba(255,255,255,0.1)" tick={{ fontSize: 10 }} />
+                        <YAxis stroke="rgba(255,255,255,0.1)" tick={{ fontSize: 10 }} />
+                        <RechartsTooltip content={<GlowTooltip />} />
+                        <Area type="monotone" dataKey="value" stroke="#1E6BFF" strokeWidth={2} fill="url(#simGrad)" name="Beklenen" />
+                        <Area type="monotone" dataKey="projected" stroke="#8B5CF6" strokeWidth={1.5} fill="none" strokeDasharray="4 4" name="Baseline" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="glass-card p-5 space-y-2">
+                    <h3 className="text-xs font-semibold text-foreground">KPI Projeksiyon Eğrisi</h3>
+                    <p className="text-[10px] text-muted-foreground">{decision.estimatedKPIImpact}</p>
+                  </div>
+                  <div className="glass-card p-5 space-y-2">
+                    <h3 className="text-xs font-semibold text-foreground">Risk Senaryosu</h3>
+                    <p className="text-[10px] text-muted-foreground">
+                      En kötü senaryo: {decision.decisionDelayRisk.estimatedLoss} kayıp · Simülasyon Gücü: %{decision.simulationStrength}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeSection === "approval" && (
+              <div className="space-y-4">
+                <div className="glass-card p-5 space-y-3">
+                  <h3 className="text-xs font-semibold text-foreground">Gerekli Onaylar</h3>
+                  <div className="flex gap-3">
+                    {decision.requiredApprovers.map(approver => {
+                      const pos = executivePositions.find(p => p.shortTitle === approver);
+                      return (
+                        <div key={approver} className="glass-card p-3 flex items-center gap-3 flex-1">
+                          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                            {pos?.assignedHuman ? <User className="h-4 w-4 text-primary" /> : <Bot className="h-4 w-4 text-purple-400" />}
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium text-foreground">{approver}</p>
+                            <p className="text-[10px] text-muted-foreground">{pos?.assignedHuman ? pos.assignedHuman.name : "Otopilot"}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                {decision.overrideEvents.length > 0 && (
+                  <div className="glass-card p-5 space-y-3">
+                    <h3 className="text-xs font-semibold text-foreground flex items-center gap-2"><AlertTriangle className="h-3.5 w-3.5 text-warning" /> Override Olayları</h3>
+                    {decision.overrideEvents.map((ev, i) => (
+                      <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-warning/5 border border-warning/10">
+                        <Clock className="h-3.5 w-3.5 text-warning mt-0.5 shrink-0" />
+                        <div>
+                          <p className="text-[10px] text-warning font-medium">{ev.user}</p>
+                          <p className="text-[10px] text-muted-foreground">{ev.details}</p>
+                          <p className="text-[9px] text-muted-foreground/60 mt-1">{new Date(ev.date).toLocaleString("tr-TR")}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeSection === "monitoring" && (
+              <div className="space-y-4">
+                {decision.monitoringData && decision.monitoringData.length > 0 ? (
+                  <>
+                    <div className="glass-card p-5">
+                      <h3 className="text-xs font-semibold text-foreground mb-4">KPI Değişim Grafiği</h3>
+                      <div className="h-[200px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <LineChart data={decision.monitoringData}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
+                            <XAxis dataKey="date" stroke="rgba(255,255,255,0.1)" tick={{ fontSize: 10 }} />
+                            <YAxis stroke="rgba(255,255,255,0.1)" tick={{ fontSize: 10 }} />
+                            <RechartsTooltip content={<GlowTooltip />} />
+                            <Line type="monotone" dataKey="primaryKPIValue" stroke="#1E6BFF" strokeWidth={2} dot={{ fill: "#1E6BFF", r: 3 }} name="Gerçekleşen" />
+                            <Line type="monotone" dataKey="projectedValue" stroke="#8B5CF6" strokeWidth={1.5} strokeDasharray="4 4" dot={false} name="Projeksiyon" />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      {decision.monitoringData.filter(m => m.aiComment).map((m, i) => (
+                        <div key={i} className="glass-card p-3 flex items-start gap-2">
+                          <MessageSquare className="h-3 w-3 text-primary mt-0.5 shrink-0" />
+                          <div>
+                            <p className="text-[10px] text-foreground font-medium">{m.date} · Sapma: {m.deviation.toFixed(1)}%</p>
+                            <p className="text-[10px] text-muted-foreground">{m.aiComment}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-12">
+                    <Activity className="h-8 w-8 text-muted-foreground/30 mx-auto mb-3" />
+                    <p className="text-sm text-muted-foreground">İzleme verisi henüz mevcut değil.</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeSection === "outcome" && (
+              <div className="space-y-4">
+                {decision.performanceReport ? (
+                  <>
+                    <div className="glass-card p-5 space-y-4">
+                      <div className="flex items-center gap-3">
+                        <h3 className="text-xs font-semibold text-foreground">Karar Performans Raporu</h3>
+                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${decision.performanceReport.status === "successful" ? "bg-emerald-400/10 text-emerald-400" : decision.performanceReport.status === "partially_successful" ? "bg-warning/10 text-warning" : "bg-destructive/10 text-destructive"}`}>
+                          {decision.performanceReport.status === "successful" ? "Başarılı" : decision.performanceReport.status === "partially_successful" ? "Kısmen Başarılı" : "Başarısız"}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1"><p className="text-[9px] text-muted-foreground">Beklenen Etki</p><p className="text-xs text-foreground">{decision.performanceReport.expectedImpact}</p></div>
+                        <div className="space-y-1"><p className="text-[9px] text-muted-foreground">Gerçekleşen Etki</p><p className="text-xs text-foreground">{decision.performanceReport.actualImpact}</p></div>
+                        <div className="space-y-1"><p className="text-[9px] text-muted-foreground">Sapma</p><p className={`text-xs font-bold ${decision.performanceReport.variancePercent <= 0 ? "text-warning" : "text-emerald-400"}`}>{decision.performanceReport.variancePercent > 0 ? "+" : ""}{decision.performanceReport.variancePercent}%</p></div>
+                        <div className="space-y-1"><p className="text-[9px] text-muted-foreground">AI Tahmin Doğruluğu</p><p className="text-xs font-bold text-primary">%{decision.performanceReport.aiPredictionAccuracy}</p></div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="glass-card p-4 space-y-1"><p className="text-[9px] text-muted-foreground">Finansal Sonuç</p><p className="text-[11px] text-foreground">{decision.performanceReport.financialOutcome}</p></div>
+                      <div className="glass-card p-4 space-y-1"><p className="text-[9px] text-muted-foreground">Stratejik Sonuç</p><p className="text-[11px] text-foreground">{decision.performanceReport.strategicOutcome}</p></div>
+                      <div className="glass-card p-4 space-y-1"><p className="text-[9px] text-muted-foreground">Risk Sonucu</p><p className="text-[11px] text-foreground">{decision.performanceReport.riskOutcome}</p></div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-12">
+                    <Award className="h-8 w-8 text-muted-foreground/30 mx-auto mb-3" />
+                    <p className="text-sm text-muted-foreground">Performans raporu henüz oluşturulmadı.</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* AI Counter-Argument (for rejected with high risk) */}
+        {decision.aiCounterArgument && (
+          <div className="glass-card p-5 border-warning/20 space-y-2" style={{ boxShadow: "0 0 20px rgba(245,158,11,0.08)" }}>
+            <h3 className="text-xs font-semibold text-warning flex items-center gap-2">
+              <Brain className="h-4 w-4" /> AI Karşı Argüman
+            </h3>
+            <p className="text-[11px] text-foreground/80 leading-relaxed">{decision.aiCounterArgument}</p>
+          </div>
+        )}
+
+        {/* Reject reason */}
+        {decision.rejectionReason && (
+          <div className="glass-card p-5 border-destructive/20 space-y-2">
+            <h3 className="text-xs font-semibold text-destructive flex items-center gap-2"><XCircle className="h-4 w-4" /> Red Gerekçesi</h3>
+            <p className="text-[11px] text-muted-foreground">{decision.rejectionReason}</p>
+          </div>
+        )}
+
+        {/* Reject Modal */}
+        <AnimatePresence>
+          {showRejectModal && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+              <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-[#0A0F1F] border border-white/[0.08] rounded-2xl p-6 w-full max-w-md space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-foreground">Karar Reddi</h3>
+                  <button onClick={() => setShowRejectModal(false)} className="h-8 w-8 rounded-lg hover:bg-secondary flex items-center justify-center"><X className="h-4 w-4 text-muted-foreground" /></button>
+                </div>
+                {decision.riskLevel === "high" && (
+                  <div className="p-3 rounded-xl bg-warning/5 border border-warning/15">
+                    <p className="text-[10px] text-warning flex items-center gap-1.5"><AlertTriangle className="h-3 w-3" /> Yüksek riskli karar. AI karşı argüman oluşturulacak.</p>
+                  </div>
+                )}
+                <div>
+                  <label className="text-[10px] text-muted-foreground mb-1.5 block">Red Gerekçesi (Zorunlu)</label>
+                  <textarea value={rejectReason} onChange={e => setRejectReason(e.target.value)} className="w-full h-24 bg-secondary/50 border border-white/[0.06] rounded-xl px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground/50 resize-none focus:outline-none focus:border-primary/30" placeholder="Kararı neden reddettiğinizi açıklayın..." />
+                </div>
+                <div className="flex gap-2 justify-end">
+                  <button onClick={() => setShowRejectModal(false)} className="px-4 py-2 rounded-xl text-xs text-muted-foreground hover:text-foreground transition-colors">İptal</button>
+                  <button disabled={!rejectReason.trim()} className="btn-primary px-4 py-2 text-xs disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5" style={{ background: rejectReason.trim() ? undefined : "rgba(239,68,68,0.2)" }}>
+                    <XCircle className="h-3.5 w-3.5" /> Reddet
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
-    <div className="flex-1 min-w-0">
-      <p className="text-[10px] text-muted-foreground truncate">{label}</p>
-      <p className="text-sm font-bold text-foreground">{value}</p>
+  );
+};
+
+/* ── Karar Sicili (Executive Decision Records) ── */
+const KararSicili = () => (
+  <div className="space-y-4">
+    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+      <Award className="h-4 w-4 text-primary" /> Karar Sicili
+    </h3>
+    <div className="space-y-2">
+      {executiveDecisionRecords.map(rec => (
+        <div key={rec.seatId} className="glass-card p-4 flex items-center gap-4">
+          <div className="h-10 w-10 rounded-xl bg-primary/10 border border-primary/15 flex items-center justify-center shrink-0">
+            <User className="h-4 w-4 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium text-foreground">{rec.name}</p>
+            <p className="text-[10px] text-muted-foreground">{rec.totalDecisions} karar · Başarı: %{rec.successRate}</p>
+          </div>
+          <div className="flex items-center gap-4 text-[10px]">
+            <div className="text-center">
+              <p className="text-muted-foreground">Ort. Sapma</p>
+              <p className={`font-bold ${rec.avgVariance <= -5 ? "text-warning" : "text-foreground"}`}>{rec.avgVariance}%</p>
+            </div>
+            <div className="text-center">
+              <p className="text-muted-foreground">Override</p>
+              <p className={`font-bold ${rec.overrideFrequency > 10 ? "text-warning" : "text-foreground"}`}>{rec.overrideFrequency}%</p>
+            </div>
+            <div className="text-center">
+              <p className="text-muted-foreground">AI Uyum</p>
+              <p className={`font-bold ${rec.aiAlignmentScore >= 85 ? "text-emerald-400" : rec.aiAlignmentScore >= 70 ? "text-primary" : "text-warning"}`}>%{rec.aiAlignmentScore}</p>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
-    {trend === "up" && <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />}
-    {trend === "down" && <TrendingDown className="h-3.5 w-3.5 text-red-400" />}
-    {trend === "flat" && <Minus className="h-3.5 w-3.5 text-muted-foreground" />}
   </div>
 );
 
-/* ── Simulation Slider ── */
-const SimSlider = ({ label, value, onChange, unit, min, max, step }: any) => (
-  <div className="space-y-2">
-    <div className="flex items-center justify-between">
-      <span className="text-xs text-muted-foreground">{label}</span>
-      <span className="text-xs font-bold text-foreground">{value > 0 ? "+" : ""}{value}{unit}</span>
+/* ── Pressure Banner ── */
+const PressureBanner = ({ decisions }: { decisions: Decision[] }) => {
+  const delayedHigh = decisions.filter(d => (d.lifecycle === "proposed" || d.lifecycle === "under_review") && getDaysSinceAction(d.lastActionDate) >= 3);
+  if (delayedHigh.length === 0) return null;
+  return (
+    <div className="flex items-center gap-3 p-3 rounded-xl bg-warning/5 border border-warning/15 animate-pulse">
+      <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
+      <p className="text-xs text-warning font-medium">
+        {delayedHigh.length} yüksek etkili karar 3+ gündür bekliyor
+      </p>
     </div>
-    <div className="flex items-center gap-2">
-      <button onClick={() => onChange(Math.max(min, value - step))} className="h-6 w-6 rounded-lg bg-secondary border border-white/[0.06] flex items-center justify-center hover:bg-primary/20 transition-colors">
-        <Minus className="h-3 w-3" />
-      </button>
-      <div className="flex-1 relative h-1.5 bg-secondary rounded-full overflow-hidden">
-        <motion.div
-          className="absolute left-1/2 top-0 h-full rounded-full"
-          style={{
-            background: "linear-gradient(90deg, rgba(30,107,255,0.6), rgba(30,107,255,1))",
-            boxShadow: "0 0 10px rgba(30,107,255,0.4)",
-          }}
-          animate={{
-            width: `${Math.abs(value - min) / (max - min) * 50}%`,
-            x: value >= 0 ? 0 : "-100%",
-          }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        />
-      </div>
-      <button onClick={() => onChange(Math.min(max, value + step))} className="h-6 w-6 rounded-lg bg-secondary border border-white/[0.06] flex items-center justify-center hover:bg-primary/20 transition-colors">
-        <Plus className="h-3 w-3" />
-      </button>
-    </div>
-  </div>
-);
+  );
+};
 
 /* ── Main Page ── */
 const DecisionLab = () => {
-  const [horizon, setHorizon] = useState("quarter");
-  const [forecastPreset, setForecastPreset] = useState("balanced");
-  const [reportOpen, setReportOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabId>("pending");
+  const [timeFilter, setTimeFilter] = useState("quarter");
+  const [selectedDecision, setSelectedDecision] = useState<Decision | null>(null);
 
-  // Simulation state
-  const [simMarketing, setSimMarketing] = useState(0);
-  const [simPrice, setSimPrice] = useState(0);
-  const [simCost, setSimCost] = useState(0);
-  const [simHiring, setSimHiring] = useState(0);
-  const [simInventory, setSimInventory] = useState(0);
+  const pendingCount = allDecisions.filter(d => d.lifecycle === "proposed" || d.lifecycle === "under_review").length;
 
-  const trendData = generateTrendData(horizon);
-  const forecastData = generateForecastData(forecastPreset);
+  if (selectedDecision) {
+    return (
+      <AppLayout>
+        <DecisionDetailView decision={selectedDecision} onBack={() => setSelectedDecision(null)} />
+      </AppLayout>
+    );
+  }
 
-  // Sim impact calculation
-  const profitImpact = (simMarketing * -0.3 + simPrice * 2.1 + simCost * -1.5 + simHiring * -0.8 + simInventory * 0.4).toFixed(1);
-  const cashImpact = (simMarketing * -0.5 + simPrice * 1.8 + simCost * -1.2 + simHiring * -1.0 + simInventory * 0.6).toFixed(1);
-  const riskChange = (simMarketing * 0.1 + simPrice * 0.8 + simCost * 0.5 + simHiring * -0.2 + simInventory * -0.3).toFixed(1);
-  const growthAccel = (simMarketing * 0.6 + simPrice * -0.4 + simCost * 0.1 + simHiring * 0.3 + simInventory * 0.2).toFixed(1);
-
-  const chartAnimation = {
-    initial: { opacity: 0, pathLength: 0 },
-    animate: { opacity: 1, pathLength: 1 },
-    transition: { duration: 1.5, ease: "easeOut" },
-  };
+  const filteredDecisions = activeTab === "performance" ? [] : allDecisions.filter(d => tabs.find(t => t.id === activeTab)?.lifecycles.includes(d.lifecycle));
 
   return (
     <AppLayout>
       <div className="min-h-screen relative" style={{ background: "#05070D" }}>
-        {/* Subtle grid background */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: "linear-gradient(rgba(30,107,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(30,107,255,0.03) 1px, transparent 1px)",
-            backgroundSize: "40px 40px",
-          }}
-        />
-
-        <div className="relative z-10 px-6 py-6 space-y-6 max-w-[1400px] mx-auto">
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(30,107,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(30,107,255,0.03) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+        <div className="relative z-10 px-6 py-6 space-y-5 max-w-[1400px] mx-auto">
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -179,407 +615,71 @@ const DecisionLab = () => {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-foreground tracking-tight">Karar</h1>
-                <p className="text-xs text-muted-foreground">Stratejik Karar Değerlendirme & Simülasyon Motoru</p>
+                <p className="text-xs text-muted-foreground">Stratejik Karar Yürütme Motoru · Kapalı Döngü Yönetişim</p>
               </div>
               <span className="ml-4 text-[10px] font-medium text-primary/80 px-3 py-1 rounded-full border border-primary/20 bg-primary/5">
-                Analiz Kapsamı: Şirket Geneli
+                Şirket Geneli
               </span>
             </div>
 
-            {/* Report Button */}
-            <div className="relative">
-              <button
-                onClick={() => setReportOpen(!reportOpen)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary/10 border border-primary/30 text-sm font-medium text-primary hover:bg-primary/20 transition-all"
-                style={{ boxShadow: "0 0 15px rgba(30,107,255,0.1)" }}
-              >
-                <FileDown className="h-4 w-4" />
-                Stratejik Rapor Üret
-              </button>
-              <AnimatePresence>
-                {reportOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -8, scale: 0.95 }}
-                    className="absolute right-0 top-12 w-72 bg-[#0A0F1F]/95 border border-white/[0.08] rounded-xl backdrop-blur-xl p-4 space-y-3 z-50"
-                    style={{ boxShadow: "0 10px 40px rgba(0,0,0,0.5)" }}
-                  >
-                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Rapor Türü</p>
-                    {reportOptions.map((opt) => (
-                      <button key={opt} className="w-full text-left text-xs text-foreground/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors flex items-center gap-2">
-                        <ChevronRight className="h-3 w-3 text-primary/40" />
-                        {opt}
-                      </button>
-                    ))}
-                    <div className="border-t border-white/[0.06] pt-3">
-                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Format</p>
-                      <div className="flex gap-2">
-                        {exportFormats.map((f) => (
-                          <button key={f} className="text-[10px] px-3 py-1.5 rounded-lg border border-white/[0.08] text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors">
-                            {f}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+            {/* Time filters */}
+            <div className="flex items-center gap-1 p-1 rounded-xl bg-secondary/30 border border-white/[0.04]">
+              {timeFilters.map(tf => (
+                <button
+                  key={tf.key}
+                  onClick={() => setTimeFilter(tf.key)}
+                  className={`relative px-4 py-1.5 rounded-lg text-[11px] font-medium transition-all ${timeFilter === tf.key ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
+                >
+                  {timeFilter === tf.key && (
+                    <motion.div layoutId="time-filter-active" className="absolute inset-0 rounded-lg bg-primary/10 border border-primary/20" style={{ boxShadow: "0 0 12px rgba(30,107,255,0.12)" }} transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                  )}
+                  <span className="relative z-10">{tf.label}</span>
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* SECTION 0 — PENDING DECISIONS */}
-          <section className="space-y-3">
-            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
-              <Scale className="h-4 w-4 text-primary" />
-              Değerlendirme Bekleyen Kararlar
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-warning/15 text-warning">{pendingDecisions.filter(d => d.status === "pending").length}</span>
-            </h2>
-            <div className="space-y-2">
-              {pendingDecisions.map((dec) => {
-                const pos = executivePositions.find(p => p.shortTitle === dec.requiredApprovers[0]);
-                const riskColor = dec.riskLevel === "high" ? "text-destructive bg-destructive/10" : dec.riskLevel === "medium" ? "text-warning bg-warning/10" : "text-success bg-success/10";
-                const overrideRiskColor = dec.humanOverrideRisk === "high" ? "text-destructive" : dec.humanOverrideRisk === "medium" ? "text-warning" : "text-success";
-                const confidenceColor = dec.aiConfidence >= 90 ? "text-success" : dec.aiConfidence >= 75 ? "text-primary" : "text-warning";
-                return (
-                  <div key={dec.id} className={`bg-secondary/20 border rounded-2xl p-4 flex items-center gap-4 hover:border-primary/15 transition-all ${dec.humanOverrideRisk === "high" ? "border-warning/20" : "border-white/[0.04]"}`}>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        <p className="text-sm font-medium text-foreground">{dec.title}</p>
-                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${riskColor}`}>
-                          {dec.riskLevel === "high" ? "Yüksek Risk" : dec.riskLevel === "medium" ? "Orta Risk" : "Düşük Risk"}
-                        </span>
-                        {dec.simulationBacked && (
-                          <span className="text-[9px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">Simülasyon Destekli</span>
-                        )}
-                        {dec.humanOverrideRisk === "high" && (
-                          <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-warning/15 text-warning border border-warning/30 animate-pulse">
-                            Override Riski Yüksek
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-[11px] text-muted-foreground mb-1.5">{dec.description}</p>
-                      <div className="flex items-center gap-3 text-[10px] text-muted-foreground flex-wrap">
-                        <span>Öncelik: <strong className="text-foreground">{dec.priority}</strong></span>
-                        <span>·</span>
-                        <span>Etki: <strong className="text-foreground">{dec.impact}</strong></span>
-                        <span>·</span>
-                        <span>Kaynak: {dec.source}</span>
-                        <span>·</span>
-                        <span>AI Güven: <strong className={confidenceColor}>{dec.aiConfidence}%</strong></span>
-                        <span>·</span>
-                        <span>Override Risk: <strong className={overrideRiskColor}>{dec.humanOverrideRisk === "high" ? "Yüksek" : dec.humanOverrideRisk === "medium" ? "Orta" : "Düşük"}</strong></span>
-                      </div>
-                    </div>
-                    <div className="shrink-0 flex flex-col items-end gap-2">
-                      {/* AI Confidence Badge */}
-                      <div className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${dec.aiConfidence >= 90 ? "bg-success/10 text-success border-success/20" : dec.aiConfidence >= 75 ? "bg-primary/10 text-primary border-primary/20" : "bg-warning/10 text-warning border-warning/20"}`}
-                        style={{ boxShadow: `0 0 8px ${dec.aiConfidence >= 90 ? "rgba(16,185,129,0.2)" : dec.aiConfidence >= 75 ? "rgba(30,107,255,0.2)" : "rgba(245,158,11,0.2)"}` }}
-                      >
-                        AI %{dec.aiConfidence}
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        {dec.requiredApprovers.map(approver => {
-                          const approverPos = executivePositions.find(p => p.shortTitle === approver);
-                          return (
-                            <span key={approver} className="text-[10px] font-medium px-2 py-1 rounded-lg bg-secondary border border-border flex items-center gap-1">
-                              {approverPos?.assignedHuman ? <User className="h-3 w-3 text-primary" /> : <Bot className="h-3 w-3 text-purple-400" />}
-                              {approver}
-                            </span>
-                          );
-                        })}
-                      </div>
-                      {pos?.assignedHuman ? (
-                        <span className="text-[9px] text-primary">Final Yetki: {pos.assignedHuman.name}</span>
-                      ) : (
-                        <span className="text-[9px] text-purple-400">Tam Otopilot Aktif</span>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
+          {/* Pressure banner */}
+          <PressureBanner decisions={allDecisions} />
 
-          {/* SECTION 1 — TIME HORIZON SWITCHER */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-secondary/30 border border-white/[0.04] w-fit">
-            {timeHorizons.map((h) => (
-              <button
-                key={h.key}
-                onClick={() => setHorizon(h.key)}
-                className={`relative px-5 py-2 rounded-lg text-xs font-medium transition-all duration-300 ${
-                  horizon === h.key
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {horizon === h.key && (
-                  <motion.div
-                    layoutId="horizon-active"
-                    className="absolute inset-0 rounded-lg bg-primary/10 border border-primary/20"
-                    style={{ boxShadow: "0 0 15px rgba(30,107,255,0.15)" }}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">{h.label}</span>
-              </button>
-            ))}
+          {/* Tabs */}
+          <div className="flex gap-1 p-1 rounded-xl bg-secondary/30 border border-white/[0.04]">
+            {tabs.map(tab => {
+              const count = tab.id === "pending" ? pendingCount : tab.id === "performance" ? 0 : allDecisions.filter(d => tab.lifecycles.includes(d.lifecycle)).length;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-all ${activeTab === tab.id ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                >
+                  {tab.label}
+                  {count > 0 && (
+                    <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold ${tab.id === "pending" ? "bg-warning/15 text-warning" : "bg-secondary text-muted-foreground"}`}>{count}</span>
+                  )}
+                </button>
+              );
+            })}
           </div>
 
-          {/* SECTION 2 — PERFORMANS EVRİMİ */}
-          <section className="space-y-4">
-            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
-              <Activity className="h-4 w-4 text-primary" />
-              Performans Evrimi
-            </h2>
-
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                { title: "Gelir Trendi", dataKey: "revenue", color: "#1E6BFF", gradient: "url(#blueGrad)" },
-                { title: "Net Kâr", dataKey: "profit", color: "#10B981", gradient: "url(#greenGrad)" },
-                { title: "Katkı Marjı", dataKey: "margin", color: "#8B5CF6", gradient: "url(#purpleGrad)" },
-                { title: "Operasyonel Verimlilik", dataKey: "efficiency", color: "#F59E0B", gradient: "url(#amberGrad)" },
-                { title: "Pazarlama ROI", dataKey: "marketingROI", color: "#EC4899", gradient: "url(#pinkGrad)" },
-                { title: "Nakit Akışı", dataKey: "cashFlow", color: "#06B6D4", gradient: "url(#cyanGrad)" },
-              ].map((chart) => (
-                <motion.div
-                  key={chart.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="bg-secondary/20 border border-white/[0.04] rounded-2xl p-4 space-y-3"
-                  style={{ boxShadow: "0 0 20px rgba(0,0,0,0.2)" }}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-medium text-muted-foreground">{chart.title}</span>
-                    <TrendingUp className="h-3 w-3 text-emerald-400" />
-                  </div>
-                  <div className="h-[120px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={trendData}>
-                        <defs>
-                          <linearGradient id={`grad-${chart.dataKey}`} x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor={chart.color} stopOpacity={0.3} />
-                            <stop offset="100%" stopColor={chart.color} stopOpacity={0} />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
-                        <XAxis dataKey="period" hide />
-                        <YAxis hide />
-                        <RechartsTooltip content={<GlowTooltip />} />
-                        <Area
-                          type="monotone"
-                          dataKey={chart.dataKey}
-                          stroke={chart.color}
-                          strokeWidth={2}
-                          fill={`url(#grad-${chart.dataKey})`}
-                          name={chart.title}
-                          animationDuration={1500}
-                          animationEasing="ease-out"
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* AI Strategic Interpretation */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="bg-primary/[0.04] border border-primary/10 rounded-2xl p-5"
-              style={{ boxShadow: "0 0 30px rgba(30,107,255,0.05)" }}
-            >
-              <div className="flex items-start gap-3">
-                <div className="h-8 w-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-0.5">
-                  <Lightbulb className="h-4 w-4 text-primary" />
+          {/* Content */}
+          {activeTab === "performance" ? (
+            <KararSicili />
+          ) : (
+            <div className="space-y-3">
+              {filteredDecisions.length === 0 ? (
+                <div className="text-center py-16">
+                  <Scale className="h-8 w-8 text-muted-foreground/20 mx-auto mb-3" />
+                  <p className="text-sm text-muted-foreground">Bu kategoride karar bulunmuyor.</p>
                 </div>
-                <div className="space-y-1.5">
-                  <p className="text-[10px] font-semibold text-primary/70 uppercase tracking-wider">AI Stratejik Yorum</p>
-                  <p className="text-xs text-foreground/80 leading-relaxed">
-                    Son 2 çeyrekte marj artışı maliyet optimizasyonundan kaynaklanıyor. Büyüme ivmesi stabil fakat kanal konsantrasyonu artıyor.
-                    Pazarlama ROI'si sabit seyir izlerken operasyonel verimlilik %4.2 artış gösteriyor — bu durum maliyet yapısının sürdürülebilir olduğuna işaret ediyor.
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </section>
-
-          {/* SECTION 3 — ÖNGÖRÜ MOTORU */}
-          <section className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <Target className="h-4 w-4 text-primary" />
-                Öngörü Motoru
-              </h2>
-              <div className="flex items-center gap-1 p-1 rounded-lg bg-secondary/30 border border-white/[0.04]">
-                {scenarioPresets.map((p) => (
-                  <button
-                    key={p.key}
-                    onClick={() => setForecastPreset(p.key)}
-                    className={`px-4 py-1.5 rounded-md text-[11px] font-medium transition-all duration-300 ${
-                      forecastPreset === p.key
-                        ? `${p.color} bg-white/[0.06] border border-white/[0.08]`
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {p.label}
-                  </button>
-                ))}
-              </div>
+              ) : (
+                filteredDecisions
+                  .sort((a, b) => b.priorityScore - a.priorityScore)
+                  .map(dec => (
+                    <DecisionCard key={dec.id} decision={dec} onSelect={() => setSelectedDecision(dec)} />
+                  ))
+              )}
             </div>
-
-            <div className="grid grid-cols-4 gap-4">
-              <MetricMini label="Gelir Yörüngesi" value="₺4.2M" trend="up" icon={DollarSign} />
-              <MetricMini label="Nakit Pozisyonu" value="₺8.1M" trend="up" icon={BarChart3} />
-              <MetricMini label="Net Marj" value="%28.4" trend="flat" icon={PieChart} />
-              <MetricMini label="Risk Olasılığı" value="%12" trend="down" icon={ShieldAlert} />
-            </div>
-
-            <div className="bg-secondary/20 border border-white/[0.04] rounded-2xl p-5" style={{ boxShadow: "0 0 20px rgba(0,0,0,0.2)" }}>
-              <div className="h-[200px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={forecastData}>
-                    <defs>
-                      <linearGradient id="forecastGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#1E6BFF" stopOpacity={0.2} />
-                        <stop offset="100%" stopColor="#1E6BFF" stopOpacity={0} />
-                      </linearGradient>
-                      <linearGradient id="confidenceGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#1E6BFF" stopOpacity={0.08} />
-                        <stop offset="100%" stopColor="#1E6BFF" stopOpacity={0.02} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
-                    <XAxis dataKey="period" stroke="rgba(255,255,255,0.1)" tick={{ fontSize: 10 }} />
-                    <YAxis stroke="rgba(255,255,255,0.1)" tick={{ fontSize: 10 }} />
-                    <RechartsTooltip content={<GlowTooltip />} />
-                    <Area type="monotone" dataKey="revenueHigh" stroke="none" fill="url(#confidenceGrad)" name="Üst Band" animationDuration={1500} />
-                    <Area type="monotone" dataKey="revenueLow" stroke="none" fill="url(#confidenceGrad)" name="Alt Band" animationDuration={1500} />
-                    <Area type="monotone" dataKey="revenue" stroke="#1E6BFF" strokeWidth={2} fill="url(#forecastGrad)" name="Gelir Projeksiyonu" animationDuration={2000} animationEasing="ease-out" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-              <p className="text-[10px] text-muted-foreground/60 mt-3 text-center">Güven aralığı: %85 · Projeksiyon modeli: Bayesian Ensemble</p>
-            </div>
-          </section>
-
-          {/* SECTION 4 — SENARYO SİMÜLASYONU */}
-          <section className="space-y-4">
-            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
-              <Zap className="h-4 w-4 text-primary" />
-              Senaryo Simülasyonu
-            </h2>
-
-            <div className="grid grid-cols-2 gap-6">
-              {/* Inputs */}
-              <div className="bg-secondary/20 border border-white/[0.04] rounded-2xl p-5 space-y-5" style={{ boxShadow: "0 0 20px rgba(0,0,0,0.2)" }}>
-                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Değişken Girdiler</p>
-                <SimSlider label="Pazarlama Bütçesi" value={simMarketing} onChange={setSimMarketing} unit="%" min={-50} max={50} step={5} />
-                <SimSlider label="Fiyat Artışı" value={simPrice} onChange={setSimPrice} unit="%" min={-20} max={30} step={2} />
-                <SimSlider label="Maliyet Artışı" value={simCost} onChange={setSimCost} unit="%" min={-10} max={30} step={2} />
-                <SimSlider label="İstihdam Genişlemesi" value={simHiring} onChange={setSimHiring} unit=" kişi" min={-10} max={20} step={1} />
-                <SimSlider label="Envanter Devir Değişimi" value={simInventory} onChange={setSimInventory} unit="%" min={-30} max={30} step={5} />
-              </div>
-
-              {/* Outputs */}
-              <div className="bg-secondary/20 border border-white/[0.04] rounded-2xl p-5 space-y-4" style={{ boxShadow: "0 0 20px rgba(0,0,0,0.2)" }}>
-                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Simülasyon Çıktısı</p>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { label: "Kâr Etkisi", value: `${Number(profitImpact) >= 0 ? "+" : ""}${profitImpact}%`, positive: Number(profitImpact) >= 0 },
-                    { label: "Nakit Etkisi", value: `${Number(cashImpact) >= 0 ? "+" : ""}${cashImpact}%`, positive: Number(cashImpact) >= 0 },
-                    { label: "Risk Değişimi", value: `${Number(riskChange) >= 0 ? "+" : ""}${riskChange}%`, positive: Number(riskChange) <= 0 },
-                    { label: "Büyüme İvmesi", value: `${Number(growthAccel) >= 0 ? "+" : ""}${growthAccel}%`, positive: Number(growthAccel) >= 0 },
-                  ].map((out) => (
-                    <motion.div
-                      key={out.label}
-                      animate={{ scale: [1, 1.02, 1] }}
-                      transition={{ duration: 0.3 }}
-                      className={`rounded-xl border p-4 text-center ${
-                        out.positive
-                          ? "bg-emerald-500/[0.06] border-emerald-500/20"
-                          : "bg-red-500/[0.06] border-red-500/20"
-                      }`}
-                    >
-                      <p className="text-[10px] text-muted-foreground mb-1">{out.label}</p>
-                      <p className={`text-lg font-bold ${out.positive ? "text-emerald-400" : "text-red-400"}`}>
-                        {out.value}
-                      </p>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <div className="mt-3 p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-                  <p className="text-[10px] text-muted-foreground mb-1">Departmanlar Arası Etki</p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {["Finans", "Pazarlama", "Operasyon", "Teknoloji"].map((dept) => (
-                      <span key={dept} className="text-[10px] px-2 py-1 rounded-md bg-secondary/60 border border-white/[0.04] text-muted-foreground">
-                        {dept}: <span className="text-foreground font-medium">{(Math.random() * 4 - 2).toFixed(1)}%</span>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* SECTION 5 — STRATEJİK ÖZET MOTORU */}
-          <section className="space-y-4">
-            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
-              <Lightbulb className="h-4 w-4 text-primary" />
-              Bu Dönemin Stratejik Özeti
-            </h2>
-
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                {
-                  title: "En Doğru Hamle",
-                  icon: Target,
-                  color: "emerald",
-                  text: "Dijital kanal yatırımlarını %15 artırarak müşteri edinme maliyetini düşürmek. Mevcut operasyonel verimlilik kazanımlarını büyüme sermayesine dönüştürmek stratejik avantaj sağlayacak.",
-                },
-                {
-                  title: "En Büyük Risk",
-                  icon: AlertTriangle,
-                  color: "red",
-                  text: "Gelir konsantrasyonu tek kanala doğru yoğunlaşıyor. Mevcut kanalın kesintiye uğraması durumunda gelirin %40'ı risk altında. Kanal diversifikasyonu acil öncelik olmalı.",
-                },
-                {
-                  title: "Önümüzdeki Kritik Karar",
-                  icon: ShieldAlert,
-                  color: "amber",
-                  text: "Q2 bütçe tahsisatı onayı yaklaşıyor. Pazarlama ve teknoloji yatırımları arasındaki denge, yılın ikinci yarısındaki büyüme profilini belirleyecek.",
-                },
-              ].map((card) => (
-                <motion.div
-                  key={card.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  className="bg-secondary/20 border border-white/[0.04] rounded-2xl p-5 space-y-3 relative overflow-hidden"
-                  style={{ boxShadow: "0 0 20px rgba(0,0,0,0.2)" }}
-                >
-                  <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${
-                    card.color === "emerald" ? "from-emerald-500/60 to-emerald-500/0" :
-                    card.color === "red" ? "from-red-500/60 to-red-500/0" :
-                    "from-amber-500/60 to-amber-500/0"
-                  }`} />
-                  <div className="flex items-center gap-2">
-                    <card.icon className={`h-4 w-4 ${
-                      card.color === "emerald" ? "text-emerald-400" :
-                      card.color === "red" ? "text-red-400" :
-                      "text-amber-400"
-                    }`} />
-                    <span className="text-xs font-semibold text-foreground">{card.title}</span>
-                  </div>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">{card.text}</p>
-                </motion.div>
-              ))}
-            </div>
-          </section>
+          )}
         </div>
       </div>
     </AppLayout>

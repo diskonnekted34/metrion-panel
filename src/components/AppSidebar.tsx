@@ -15,10 +15,11 @@ const deptSubItems = [
   { label: "Modüller", suffix: "/modules", icon: Activity },
 ];
 
-// Mock counters
-const pendingDecisionCount = 5;
+// Dynamic counters from decision data
+import { decisions } from "@/data/decisions";
+const pendingDecisionCount = decisions.filter(d => d.lifecycle === "proposed" || d.lifecycle === "under_review").length;
 const pendingStrategicCount = 3;
-const pendingActionCount = 4;
+const pendingActionCount = decisions.filter(d => d.lifecycle === "in_execution" || d.lifecycle === "approved").length;
 
 const CountBadge = ({ count }: { count: number }) => {
   if (count <= 0) return null;
