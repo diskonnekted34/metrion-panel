@@ -2072,6 +2072,8 @@ export const departmentMetrics: Record<DepartmentId, MetricIntelligence[]> = {
   creative: creativeMetrics,
   marketplace: marketplaceMetrics,
   legal: legalMetrics,
+  hr: executiveMetrics,
+  sales: marketingMetrics,
 };
 
 export function getMetricIntelligence(deptId: DepartmentId, metricId: string): MetricIntelligence | undefined {

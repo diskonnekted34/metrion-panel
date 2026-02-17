@@ -97,6 +97,26 @@ const baseModules: Record<DepartmentId, DepartmentModule[]> = {
     { id: "lm-7", title: "E-İmza Entegrasyonu", description: "Dijital imza ve onay akışı.", status: "coming_soon", requiredSources: ["E-İmza"], icon: Zap, quarter: "Q2" },
     { id: "lm-8", title: "IP Portföy Yönetimi", description: "Fikri mülkiyet portföy takibi.", status: "coming_soon", requiredSources: ["IP DB"], icon: Shield, quarter: "Q3" },
   ],
+  hr: [
+    { id: "hrm-1", title: "İşgücü Planlama", description: "Headcount planlama ve simülasyon.", status: "enabled", requiredSources: ["HRIS"], icon: Users },
+    { id: "hrm-2", title: "Retention Engine", description: "Flight risk tespiti ve retention optimizasyonu.", status: "enabled", requiredSources: ["HRIS", "Anket"], icon: Shield },
+    { id: "hrm-3", title: "Compensation Intelligence", description: "Ücret benchmark ve pay equity analizi.", status: "enabled", requiredSources: ["HRIS", "Benchmark"], icon: DollarSign },
+    { id: "hrm-4", title: "Talent Acquisition AI", description: "AI destekli aday eleme ve matching.", status: "available", requiredSources: ["ATS"], icon: Brain },
+    { id: "hrm-5", title: "People Analytics", description: "Gelişmiş çalışan analitikleri.", status: "available", requiredSources: ["HRIS"], icon: BarChart3 },
+    { id: "hrm-6", title: "D&I Tracker", description: "Çeşitlilik ve kapsayıcılık takip.", status: "available", requiredSources: ["HRIS"], icon: Users },
+    { id: "hrm-7", title: "Workforce Simulation", description: "Kadro senaryosu simülatörü.", status: "coming_soon", requiredSources: ["HRIS"], icon: Activity, quarter: "Q2" },
+    { id: "hrm-8", title: "AI Career Pathing", description: "AI destekli kariyer yolu planlama.", status: "coming_soon", requiredSources: ["HRIS", "LMS"], icon: Zap, quarter: "Q3" },
+  ],
+  sales: [
+    { id: "sm-1", title: "Revenue Intelligence", description: "Gelir tahmini ve pipeline analizi.", status: "enabled", requiredSources: ["CRM"], icon: DollarSign },
+    { id: "sm-2", title: "Deal Intelligence", description: "Deal kalite skorlama ve öneriler.", status: "enabled", requiredSources: ["CRM"], icon: Target },
+    { id: "sm-3", title: "Forecast Engine", description: "AI destekli gelir tahmini.", status: "enabled", requiredSources: ["CRM", "Billing"], icon: BarChart3 },
+    { id: "sm-4", title: "Customer Health", description: "Müşteri sağlık skoru ve risk tespiti.", status: "available", requiredSources: ["CRM", "Product"], icon: Activity },
+    { id: "sm-5", title: "Competitive Intel", description: "Rakip izleme ve battlecard.", status: "available", requiredSources: ["Market Intel"], icon: Shield },
+    { id: "sm-6", title: "Revenue Simulation", description: "Gelir senaryosu simülatörü.", status: "available", requiredSources: ["CRM"], icon: Brain },
+    { id: "sm-7", title: "AI Sales Coach", description: "AI destekli satış koçluğu.", status: "coming_soon", requiredSources: ["CRM", "Calls"], icon: Zap, quarter: "Q2" },
+    { id: "sm-8", title: "Partner Analytics", description: "Kanal partner performans analizi.", status: "coming_soon", requiredSources: ["Partner Portal"], icon: Users, quarter: "Q3" },
+  ],
 };
 
 export const getDepartmentModules = (deptId: DepartmentId): DepartmentModule[] => {

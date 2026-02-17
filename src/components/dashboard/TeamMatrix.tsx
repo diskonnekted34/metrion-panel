@@ -18,6 +18,7 @@ const agentDeptMap: Record<string, DepartmentId> = {
 const deptLabel: Record<DepartmentId, string> = {
   executive: "Yönetim", technology: "Teknoloji", marketing: "Pazarlama", finance: "Finans",
   operations: "Operasyon", creative: "Kreatif", marketplace: "Pazaryeri", legal: "Hukuk",
+  hr: "İnsan Kaynakları", sales: "Satış",
 };
 
 const deptOrder: DepartmentId[] = ["executive", "technology", "marketing", "finance", "operations", "creative", "marketplace", "legal"];

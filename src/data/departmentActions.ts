@@ -1,6 +1,6 @@
 import { DepartmentId } from "@/contexts/RBACContext";
 import type { LucideIcon } from "lucide-react";
-import { Zap, Shield, TrendingUp, DollarSign, Users, AlertTriangle, Target, Activity, Package, Layers, FileText, BarChart3, ShoppingCart, Palette, Database } from "lucide-react";
+import { Zap, Shield, TrendingUp, DollarSign, Users, AlertTriangle, Target, Activity, Package, Layers, FileText, BarChart3, ShoppingCart, Palette, Database, Brain } from "lucide-react";
 
 export type RiskLevel = "Düşük" | "Orta" | "Yüksek";
 export type ActionStatus = "draft" | "pending" | "approved" | "rejected";
@@ -122,6 +122,30 @@ const baseActions: Record<DepartmentId, ActionTemplate[]> = {
     { id: "la-8", title: "Düzenleyici Rapor Hazırla", description: "Otoriteye sunulacak düzenleyici raporu hazırla.", risk: "Yüksek", approvers: ["Hukuk Direktörü", "CEO"], effort: "Yüksek Efor", icon: BarChart3, inputs: ["Otorite", "Rapor Türü", "Son Tarih"] },
     { id: "la-9", title: "Gizlilik Politikası Güncelleme", description: "Web sitesi gizlilik politikasını güncelle.", risk: "Orta", approvers: ["Hukuk Direktörü"], effort: "Düşük Efor", icon: Shield, inputs: ["Güncelleme Alanı"] },
     { id: "la-10", title: "Dava Strateji Değerlendirmesi", description: "Aktif dava stratejisini gözden geçir ve güncelle.", risk: "Yüksek", approvers: ["Hukuk Direktörü", "CEO"], effort: "Yüksek Efor", icon: Target, inputs: ["Dava No", "Strateji Seçenekleri"] },
+  ],
+  hr: [
+    { id: "hra-1", title: "Acil İşe Alım Başlat", description: "Kritik pozisyon için hızlandırılmış işe alım süreci.", risk: "Orta", approvers: ["CHRO"], effort: "Yüksek Efor", icon: Users, inputs: ["Pozisyon", "Departman", "Aciliyet"] },
+    { id: "hra-2", title: "Retention Paketi Aktive Et", description: "Yüksek risk çalışanlar için özel paket uygula.", risk: "Orta", approvers: ["CHRO", "CFO"], effort: "Orta Efor", icon: Shield, inputs: ["Çalışan Listesi", "Paket Detayı"] },
+    { id: "hra-3", title: "Performans İyileştirme Planı", description: "PIP süreci başlat.", risk: "Yüksek", approvers: ["CHRO", "CEO"], effort: "Orta Efor", icon: Target, inputs: ["Çalışan", "Hedefler"] },
+    { id: "hra-4", title: "Ücret Bant Revizyonu", description: "Departman bazlı ücret bandı güncellemesi.", risk: "Yüksek", approvers: ["CHRO", "CFO", "CEO"], effort: "Yüksek Efor", icon: DollarSign, inputs: ["Departman", "Yeni Bantlar"] },
+    { id: "hra-5", title: "Eğitim Programı Başlat", description: "Yeni eğitim programı organize et.", risk: "Düşük", approvers: ["CHRO"], effort: "Orta Efor", icon: Brain, inputs: ["Program Adı", "Hedef Kitle"] },
+    { id: "hra-6", title: "Çalışan Anket Başlat", description: "Çalışan bağlılığı veya memnuniyet anketi başlat.", risk: "Düşük", approvers: ["CHRO"], effort: "Düşük Efor", icon: BarChart3, inputs: ["Anket Türü", "Kapsam"] },
+    { id: "hra-7", title: "Organizasyon Yeniden Yapılanma", description: "Departman yapısını yeniden düzenle.", risk: "Yüksek", approvers: ["CHRO", "CEO"], effort: "Yüksek Efor", icon: Layers, inputs: ["Kapsam", "Gerekçe"] },
+    { id: "hra-8", title: "İşten Çıkarma Süreci", description: "Sözleşme feshi süreci başlat.", risk: "Yüksek", approvers: ["CHRO", "CEO"], effort: "Yüksek Efor", icon: AlertTriangle, inputs: ["Çalışan", "Gerekçe", "Kıdem"] },
+    { id: "hra-9", title: "Stajyer Alım Programı", description: "Dönemsel stajyer alım programı başlat.", risk: "Düşük", approvers: ["CHRO"], effort: "Orta Efor", icon: Users, inputs: ["Kontenjan", "Departmanlar"] },
+    { id: "hra-10", title: "Wellbeing Programı Aktive Et", description: "Çalışan sağlığı ve wellbeing programı başlat.", risk: "Düşük", approvers: ["CHRO"], effort: "Düşük Efor", icon: Activity, inputs: ["Program Türü", "Bütçe"] },
+  ],
+  sales: [
+    { id: "sa-1", title: "Fiyat Artışı Uygula", description: "Segment bazlı fiyat artışı aktive et.", risk: "Yüksek", approvers: ["Sales Director", "CFO"], effort: "Yüksek Efor", icon: DollarSign, inputs: ["Segment", "Artış Oranı"] },
+    { id: "sa-2", title: "Kampanya Başlat", description: "Satış kampanyası başlat.", risk: "Orta", approvers: ["Sales Director"], effort: "Orta Efor", icon: Zap, inputs: ["Kampanya Adı", "Kapsam", "Süre"] },
+    { id: "sa-3", title: "Pipeline Temizliği", description: "Düşük kalite deal'leri pipeline'dan çıkar.", risk: "Düşük", approvers: ["Sales Director"], effort: "Düşük Efor", icon: Target, inputs: ["Kalite Eşiği", "Kapsam"] },
+    { id: "sa-4", title: "Territory Yeniden Dağılım", description: "Satış bölgelerini yeniden düzenle.", risk: "Orta", approvers: ["Sales Director"], effort: "Orta Efor", icon: Layers, inputs: ["Bölgeler", "AE Atamaları"] },
+    { id: "sa-5", title: "Discount Approval Override", description: "Standart dışı indirim onayı ver.", risk: "Yüksek", approvers: ["Sales Director", "CFO"], effort: "Düşük Efor", icon: Shield, inputs: ["Deal", "İndirim Oranı", "Gerekçe"] },
+    { id: "sa-6", title: "Partner Onboarding", description: "Yeni kanal partner'ını sisteme ekle.", risk: "Orta", approvers: ["Sales Director"], effort: "Orta Efor", icon: Users, inputs: ["Partner Adı", "Sözleşme"] },
+    { id: "sa-7", title: "Win/Loss Analiz Başlat", description: "Belirli dönem için kapsamlı win/loss analizi.", risk: "Düşük", approvers: ["Sales Director"], effort: "Orta Efor", icon: BarChart3, inputs: ["Dönem", "Segment"] },
+    { id: "sa-8", title: "Sales Playbook Güncelle", description: "Satış rehberini güncelle.", risk: "Düşük", approvers: ["Sales Director"], effort: "Orta Efor", icon: FileText, inputs: ["Bölüm", "Güncelleme"] },
+    { id: "sa-9", title: "Forecast Override", description: "Dönemsel forecast'u manuel revize et.", risk: "Yüksek", approvers: ["Sales Director", "CFO"], effort: "Düşük Efor", icon: AlertTriangle, inputs: ["Dönem", "Yeni Hedef", "Gerekçe"] },
+    { id: "sa-10", title: "Customer Expansion Plan", description: "Mevcut müşteri genişletme planı oluştur.", risk: "Düşük", approvers: ["Sales Director"], effort: "Orta Efor", icon: TrendingUp, inputs: ["Müşteri", "Fırsat", "Hedef"] },
   ],
 };
 

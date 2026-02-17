@@ -46,6 +46,16 @@ const insightsByDept: Record<DepartmentId, Insight[]> = {
     { priority: "info", text: "Sözleşme inceleme SLA'sı hedefte", impact: "Pozitif" },
     { priority: "info", text: "Denetim takvimi güncel", impact: "Pozitif" },
   ],
+  hr: [
+    { priority: "critical", text: "Teknik ekipte %18 turnover tespit edildi", impact: "Yüksek", action: "Retention analizi başlat" },
+    { priority: "warning", text: "3 C-Level pozisyonda yedek aday bulunmuyor", impact: "Yüksek", action: "Yedekleme planı oluştur" },
+    { priority: "info", text: "eNPS skoru son çeyrekte 6 puan arttı", impact: "Pozitif" },
+  ],
+  sales: [
+    { priority: "critical", text: "Q3 pipeline coverage 2.1x ile hedefin altında", impact: "Yüksek", action: "Pipeline aksiyonu başlat" },
+    { priority: "warning", text: "Enterprise segment win rate %3 düştü", impact: "Orta", action: "Win/Loss analizi tetikle" },
+    { priority: "info", text: "Expansion revenue %16.5'e yükseldi", impact: "Pozitif" },
+  ],
   technology: [
     { priority: "warning", text: "Teknik borç oranı son çeyrekte %18 arttı", impact: "Yüksek", action: "Teknik borç analizi başlat" },
     { priority: "critical", text: "3 kritik güvenlik yaması bekliyor", impact: "Yüksek", action: "Güvenlik taraması tetikle" },

@@ -195,6 +195,18 @@ const chartSets: Record<DepartmentId, ChartDef[]> = {
       render: () => <BarChartMock data={[{ label: "Oca", value: 3 }, { label: "Şub", value: 5 }, { label: "Mar", value: 2 }, { label: "Nis", value: 4 }, { label: "May", value: 6 }, { label: "Haz", value: 3 }, { label: "Tem", value: 2 }]} />,
     },
   ],
+  hr: [
+    { title: "Headcount Trendi", subtitle: "Aylık toplam çalışan sayısı", agent: "CHRO Agent", render: () => <LineChartMock data={[118, 120, 122, 125, 124, 126, 128]} labels={["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem"]} showArea color="hsl(210, 76%, 52%)" /> },
+    { title: "Turnover Dağılımı", subtitle: "Departman bazlı turnover oranları", agent: "HR Analytics Agent", render: () => <DonutChartMock segments={[{ label: "Teknoloji", value: 18, color: "hsl(0, 72%, 51%)" }, { label: "Satış", value: 12, color: "hsl(45, 93%, 58%)" }, { label: "Diğer", value: 6, color: "hsl(160, 76%, 44%)" }]} centerLabel="Turnover" /> },
+    { title: "eNPS Trendi", subtitle: "Çalışan tavsiye skoru evrimi", agent: "CHRO Agent", render: () => <LineChartMock data={[28, 30, 32, 35, 38, 36, 42]} labels={["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem"]} color="hsl(160, 76%, 44%)" /> },
+    { title: "İşe Alım Hızı", subtitle: "Aylık ortalama time-to-fill", agent: "Talent Acquisition Agent", render: () => <BarChartMock data={[{ label: "Oca", value: 48 }, { label: "Şub", value: 45 }, { label: "Mar", value: 42 }, { label: "Nis", value: 40 }, { label: "May", value: 38 }, { label: "Haz", value: 35 }, { label: "Tem", value: 33 }]} /> },
+  ],
+  sales: [
+    { title: "MRR Trendi", subtitle: "Aylık tekrarlayan gelir", agent: "Revenue Intelligence Agent", render: () => <LineChartMock data={[1.2, 1.28, 1.35, 1.42, 1.48, 1.55, 1.62]} labels={["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem"]} showArea color="hsl(160, 76%, 44%)" /> },
+    { title: "Pipeline Dağılımı", subtitle: "Stage bazlı pipeline hacmi", agent: "Sales Ops Agent", render: () => <DonutChartMock segments={[{ label: "Discovery", value: 30, color: "hsl(210, 76%, 52%)" }, { label: "Proposal", value: 25, color: "hsl(45, 93%, 58%)" }, { label: "Negotiation", value: 20, color: "hsl(160, 76%, 44%)" }, { label: "Closing", value: 15, color: "hsl(280, 60%, 55%)" }]} centerLabel="Pipeline" /> },
+    { title: "Win Rate Trendi", subtitle: "Aylık deal kazanma oranı", agent: "Sales Intelligence Agent", render: () => <LineChartMock data={[26, 27, 28, 29, 30, 29, 31]} labels={["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem"]} color="hsl(45, 93%, 58%)" /> },
+    { title: "AE Performans", subtitle: "Temsilci bazlı quota attainment", agent: "Sales Ops Agent", render: () => <BarChartMock data={[{ label: "AE1", value: 112 }, { label: "AE2", value: 98 }, { label: "AE3", value: 85 }, { label: "AE4", value: 76 }, { label: "AE5", value: 92 }, { label: "AE6", value: 104 }, { label: "AE7", value: 88 }]} /> },
+  ],
   technology: [
     {
       title: "Sistem Uptime Trendi",

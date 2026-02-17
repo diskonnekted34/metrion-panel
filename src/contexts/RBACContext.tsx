@@ -2,7 +2,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 
 export type UserRole = "owner" | "admin" | "department_lead" | "operator" | "viewer";
 
-export type DepartmentId = "executive" | "marketing" | "finance" | "operations" | "creative" | "marketplace" | "legal" | "technology";
+export type DepartmentId = "executive" | "marketing" | "finance" | "operations" | "creative" | "marketplace" | "legal" | "technology" | "hr" | "sales";
 
 export interface Department {
   id: DepartmentId;
@@ -43,11 +43,13 @@ export const departments: Department[] = [
   { id: "creative", name: "Kreatif", icon: "🎨", agentIds: ["creative-director", "graphic-designer", "art-director"], healthScore: 79, activeAlerts: 1, activeTasks: 6, trend: "up", description: "Marka yönetimi, görsel üretim ve kreatif strateji." },
   { id: "marketplace", name: "Pazaryeri", icon: "🏪", agentIds: ["marketplace-agent"], healthScore: 76, activeAlerts: 1, activeTasks: 4, trend: "stable", description: "Çoklu pazaryeri listeleme, fiyat senkronizasyonu ve sipariş yönetimi." },
   { id: "legal", name: "Hukuk", icon: "⚖️", agentIds: ["legal"], healthScore: 85, activeAlerts: 0, activeTasks: 0, trend: "stable", description: "Sözleşme analizi, uyum denetimi ve hukuki risk değerlendirmesi." },
+  { id: "hr", name: "İnsan Kaynakları", icon: "👥", agentIds: ["chro", "hr-analytics", "talent-acquisition", "compensation-agent"], healthScore: 73, activeAlerts: 3, activeTasks: 7, trend: "down", description: "İşe alım, yetenek yönetimi, ücretlendirme ve çalışan bağlılığı." },
+  { id: "sales", name: "Satış", icon: "📈", agentIds: ["sales-director", "revenue-intel", "sales-ops", "customer-success"], healthScore: 77, activeAlerts: 2, activeTasks: 9, trend: "up", description: "Gelir yönetimi, pipeline analizi, müşteri başarısı ve satış operasyonları." },
 ];
 
 const mockTeam: TeamMember[] = [
-  { id: "u1", name: "Ahmet Yılmaz", email: "ahmet@company.com", role: "owner", departments: ["executive", "technology", "marketing", "finance", "operations", "creative", "marketplace", "legal"], joinedAt: "2024-01-15" },
-  { id: "u2", name: "Zeynep Kaya", email: "zeynep@company.com", role: "admin", departments: ["executive", "technology", "marketing", "finance", "operations", "creative", "marketplace", "legal"], joinedAt: "2024-02-01" },
+  { id: "u1", name: "Ahmet Yılmaz", email: "ahmet@company.com", role: "owner", departments: ["executive", "technology", "marketing", "finance", "operations", "creative", "marketplace", "legal", "hr", "sales"], joinedAt: "2024-01-15" },
+  { id: "u2", name: "Zeynep Kaya", email: "zeynep@company.com", role: "admin", departments: ["executive", "technology", "marketing", "finance", "operations", "creative", "marketplace", "legal", "hr", "sales"], joinedAt: "2024-02-01" },
   { id: "u3", name: "Mehmet Demir", email: "mehmet@company.com", role: "department_lead", departments: ["marketing"], joinedAt: "2024-03-10" },
   { id: "u4", name: "Elif Öztürk", email: "elif@company.com", role: "department_lead", departments: ["finance"], joinedAt: "2024-03-15" },
   { id: "u5", name: "Can Arslan", email: "can@company.com", role: "operator", departments: ["operations"], joinedAt: "2024-04-01" },
@@ -99,7 +101,7 @@ export const RBACProvider = ({ children }: { children: ReactNode }) => {
     name: "Ahmet Yılmaz",
     email: "ahmet@company.com",
     role: "owner",
-    departments: ["executive", "marketing", "finance", "operations", "creative", "marketplace", "legal"],
+    departments: ["executive", "marketing", "finance", "operations", "creative", "marketplace", "legal", "hr", "sales"],
   });
 
   const [viewMode, setViewMode] = useState<DepartmentId | "company">("company");
