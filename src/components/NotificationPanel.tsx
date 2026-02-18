@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { X, ArrowRight, Eye, CheckCircle2, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { alertsData } from "@/data/alerts";
@@ -41,7 +42,7 @@ const NotificationPanel = ({ open, onClose }: NotificationPanelProps) => {
       </div>
       {!alert.resolved && (
         <div className="flex gap-2 mt-3 ml-5.5">
-          <button className="text-[11px] font-medium py-1.5 px-3 rounded-2xl bg-accent/15 text-accent hover:bg-accent/25 transition-colors flex items-center gap-1">
+          <button onClick={() => toast.success("Görev oluşturuldu.")} className="text-[11px] font-medium py-1.5 px-3 rounded-2xl bg-accent/15 text-accent hover:bg-accent/25 transition-colors flex items-center gap-1">
             Göreve Dönüştür <ArrowRight className="h-3 w-3" />
           </button>
           <Link to={`/alerts/${alert.id}`} onClick={onClose} className="text-[11px] font-medium py-1.5 px-3 rounded-2xl bg-secondary hover:bg-secondary/80 text-muted-foreground transition-colors flex items-center gap-1">

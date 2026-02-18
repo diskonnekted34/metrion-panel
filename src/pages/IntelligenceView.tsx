@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -87,13 +88,13 @@ const IntelligenceView = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+          <button onClick={() => toast.info("Güncel veriyle yeniden çalıştırılıyor.")} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
             <RefreshCw className="h-3 w-3" /> Güncel Veriyle Yeniden Çalıştır
           </button>
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+          <button onClick={() => toast.info("Dışa aktarılıyor.")} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
             <Download className="h-3 w-3" /> Dışa Aktar
           </button>
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+          <button onClick={() => toast.info("Paylaşım bağlantısı kopyalandı.")} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
             <Share2 className="h-3 w-3" /> Paylaş
           </button>
           <button
@@ -242,7 +243,7 @@ function FinansReport() {
             <div key={i} className="flex items-center gap-3 px-4 py-3 glass-card">
               <Zap className="h-3.5 w-3.5 text-primary shrink-0" />
               <span className="text-xs text-foreground">{a}</span>
-              <button className="ml-auto text-[10px] text-primary font-medium hover:underline">Taslak Oluştur</button>
+              <button onClick={() => toast.success("Taslak oluşturuldu.")} className="ml-auto text-[10px] text-primary font-medium hover:underline">Taslak Oluştur</button>
             </div>
           ))}
         </div>
@@ -294,7 +295,7 @@ function BuyumeReport() {
             <div key={i} className="flex items-center gap-3 px-4 py-3 glass-card">
               <Zap className="h-3.5 w-3.5 text-primary shrink-0" />
               <span className="text-xs text-foreground">{a}</span>
-              <button className="ml-auto text-[10px] text-primary font-medium hover:underline">Taslak Oluştur</button>
+              <button onClick={() => toast.success("Taslak oluşturuldu.")} className="ml-auto text-[10px] text-primary font-medium hover:underline">Taslak Oluştur</button>
             </div>
           ))}
         </div>

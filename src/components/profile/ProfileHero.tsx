@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { Brain, Activity, BarChart3, Clock, Shield } from "lucide-react";
 import { Executive } from "@/data/experts";
 import { Button } from "@/components/ui/button";
@@ -97,8 +98,8 @@ const ProfileHero = ({ agent }: ProfileHeroProps) => (
 
         {/* CTAs */}
         <div className="flex flex-wrap gap-3">
-          <Button className="px-6">Analiz Başlat</Button>
-          <Button variant="outline" className="px-6">Ajanı Aktifleştir</Button>
+          <Button onClick={() => toast.info("Analiz başlatılıyor.")} className="px-6">Analiz Başlat</Button>
+          <Button onClick={() => toast.success("Ajan aktifleştirildi.")} variant="outline" className="px-6">Ajanı Aktifleştir</Button>
         </div>
       </div>
     </div>

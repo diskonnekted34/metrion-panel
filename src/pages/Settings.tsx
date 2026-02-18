@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Settings as SettingsIcon, User, Building2, CreditCard, Bell, ChevronDown, ChevronUp, Users, Shield, Plus, Trash2, Package, X, DollarSign, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -215,7 +216,7 @@ const Settings = () => {
                     <div className="flex items-center justify-between mb-3">
                       <p className="text-xs font-semibold text-foreground">{team.length} Members</p>
                       {canPerform("canInviteUsers") && (
-                        <button className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors">
+                        <button onClick={() => toast.info("Davet gönderildi.")} className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors">
                           <Plus className="h-3.5 w-3.5" /> Invite
                         </button>
                       )}
@@ -244,7 +245,7 @@ const Settings = () => {
                               {member.departments.length === 6 ? "All Depts." : member.departments.length + " Depts."}
                             </span>
                             {canPerform("canInviteUsers") && member.id !== currentUser.id && (
-                              <button className="p-1 rounded-lg hover:bg-destructive/10 transition-colors">
+                              <button onClick={() => toast.info(`${member.name} kaldırıldı.`)} className="p-1 rounded-lg hover:bg-destructive/10 transition-colors">
                                 <Trash2 className="h-3 w-3 text-muted-foreground hover:text-destructive" />
                               </button>
                             )}

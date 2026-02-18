@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, forwardRef } from "react";
 import AppLayout from "@/components/AppLayout";
+import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Scale, ChevronRight, TrendingUp, TrendingDown,
@@ -70,7 +71,7 @@ const GlowTooltip = ({ active, payload, label }: any) => {
 };
 
 /* ── Pressure Badge ── */
-const PressureBadge = ({ lastActionDate }: { lastActionDate: string }) => {
+const PressureBadge = forwardRef<HTMLSpanElement, { lastActionDate: string }>(({ lastActionDate }, ref) => {
   const days = getDaysSinceAction(lastActionDate);
   const level = getPressureLevel(days);
   if (level === "none") return null;
@@ -80,11 +81,12 @@ const PressureBadge = ({ lastActionDate }: { lastActionDate: string }) => {
     high: "bg-amber-500/15 border-amber-500/40 text-amber-300 animate-pulse",
   };
   return (
-    <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${styles[level]}`}>
+    <span ref={ref} className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${styles[level]}`}>
       <Timer className="h-2.5 w-2.5 inline mr-0.5" />{days}g
     </span>
   );
-};
+});
+PressureBadge.displayName = "PressureBadge";
 
 /* ── Decision Health Score ── */
 const DecisionHealthScore = ({ decisions }: { decisions: Decision[] }) => {
@@ -246,7 +248,7 @@ const DecisionCard = ({ decision, onSelect }: { decision: Decision; onSelect: ()
 };
 
 /* ── Decision Detail Drawer ── */
-const DecisionDetailView = ({ decision, onBack }: { decision: Decision; onBack: () => void }) => {
+const DecisionDetailView = ({ decision, onBack, onUpdateLifecycle }: { decision: Decision; onBack: () => void; onUpdateLifecycle: (id: string, newLifecycle: DecisionLifecycle) => void }) => {
   const [activeSection, setActiveSection] = useState<"context" | "simulation" | "approval" | "monitoring" | "outcome">("context");
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
@@ -289,9 +291,9 @@ const DecisionDetailView = ({ decision, onBack }: { decision: Decision; onBack: 
           </div>
           {(decision.lifecycle === "proposed" || decision.lifecycle === "under_review") && (
             <div className="flex gap-2 shrink-0">
-              <button className="btn-primary px-4 py-2 text-xs flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5" /> Onayla</button>
-              <button className="px-3 py-2 rounded-xl border border-primary/30 text-xs text-primary hover:bg-primary/10 transition-colors"><RotateCcw className="h-3.5 w-3.5" /></button>
-              <button className="px-3 py-2 rounded-xl border border-warning/30 text-xs text-warning hover:bg-warning/10 transition-colors"><Clock className="h-3.5 w-3.5" /></button>
+              <button onClick={() => { onUpdateLifecycle(decision.id, "approved"); toast.success("Karar onaylandı."); onBack(); }} className="btn-primary px-4 py-2 text-xs flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5" /> Onayla</button>
+              <button onClick={() => { onUpdateLifecycle(decision.id, "under_review"); toast.info("Karar gözden geçirmeye gönderildi."); }} className="px-3 py-2 rounded-xl border border-primary/30 text-xs text-primary hover:bg-primary/10 transition-colors"><RotateCcw className="h-3.5 w-3.5" /></button>
+              <button onClick={() => { onUpdateLifecycle(decision.id, "monitoring"); toast.info("Karar izlemeye alındı."); }} className="px-3 py-2 rounded-xl border border-warning/30 text-xs text-warning hover:bg-warning/10 transition-colors"><Clock className="h-3.5 w-3.5" /></button>
               <button onClick={() => setShowRejectModal(true)} className="px-3 py-2 rounded-xl border border-destructive/30 text-xs text-destructive hover:bg-destructive/10 transition-colors"><XCircle className="h-3.5 w-3.5" /></button>
             </div>
           )}
@@ -411,7 +413,7 @@ const DecisionDetailView = ({ decision, onBack }: { decision: Decision; onBack: 
                     <p className="text-sm font-bold text-destructive">Kayıp: {decision.decisionDelayRisk.estimatedLoss}</p>
                   </div>
                 </div>
-                <button className="w-full glass-card p-3 text-xs text-primary font-medium hover:bg-primary/5 transition-colors flex items-center justify-center gap-2">
+                <button onClick={() => toast.success("Simülasyon modülüne gönderildi.")} className="w-full glass-card p-3 text-xs text-primary font-medium hover:bg-primary/5 transition-colors flex items-center justify-center gap-2">
                   <Gauge className="h-3.5 w-3.5" /> Simülasyona Gönder
                 </button>
               </div>
@@ -564,7 +566,7 @@ const DecisionDetailView = ({ decision, onBack }: { decision: Decision; onBack: 
                 </div>
                 <div className="flex gap-2 justify-end">
                   <button onClick={() => setShowRejectModal(false)} className="px-4 py-2 rounded-xl text-xs text-muted-foreground hover:text-foreground transition-colors">İptal</button>
-                  <button disabled={!rejectReason.trim()} className="btn-primary px-4 py-2 text-xs disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5">
+                  <button onClick={() => { onUpdateLifecycle(decision.id, "rejected"); toast.info("Karar reddedildi."); setShowRejectModal(false); onBack(); }} disabled={!rejectReason.trim()} className="btn-primary px-4 py-2 text-xs disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5">
                     <XCircle className="h-3.5 w-3.5" /> Reddet
                   </button>
                 </div>
@@ -621,22 +623,28 @@ const DecisionLab = () => {
   const [activeTab, setActiveTab] = useState<TabId>("pending");
   const [timeFilter, setTimeFilter] = useState("quarter");
   const [selectedDecision, setSelectedDecision] = useState<Decision | null>(null);
+  const [localDecisions, setLocalDecisions] = useState<Decision[]>(allDecisions);
 
-  const pendingCount = allDecisions.filter(d => d.lifecycle === "proposed" || d.lifecycle === "under_review").length;
-  const highRiskCount = allDecisions.filter(d => d.riskLevel === "high" && (d.lifecycle === "proposed" || d.lifecycle === "under_review")).length;
-  const activeCount = allDecisions.filter(d => !["completed", "rejected", "failed"].includes(d.lifecycle)).length;
-  const approvalPending = allDecisions.filter(d => d.lifecycle === "proposed" || d.lifecycle === "under_review").length;
+  const handleUpdateLifecycle = (id: string, newLifecycle: DecisionLifecycle) => {
+    setLocalDecisions(prev => prev.map(d => d.id === id ? { ...d, lifecycle: newLifecycle } : d));
+    setSelectedDecision(null);
+  };
+
+  const pendingCount = localDecisions.filter(d => d.lifecycle === "proposed" || d.lifecycle === "under_review").length;
+  const highRiskCount = localDecisions.filter(d => d.riskLevel === "high" && (d.lifecycle === "proposed" || d.lifecycle === "under_review")).length;
+  const activeCount = localDecisions.filter(d => !["completed", "rejected", "failed"].includes(d.lifecycle)).length;
+  const approvalPending = localDecisions.filter(d => d.lifecycle === "proposed" || d.lifecycle === "under_review").length;
   const totalFinancialImpact = "₺12.8M";
 
   if (selectedDecision) {
     return (
       <AppLayout>
-        <DecisionDetailView decision={selectedDecision} onBack={() => setSelectedDecision(null)} />
+        <DecisionDetailView decision={selectedDecision} onBack={() => setSelectedDecision(null)} onUpdateLifecycle={handleUpdateLifecycle} />
       </AppLayout>
     );
   }
 
-  const filteredDecisions = activeTab === "performance" ? [] : allDecisions.filter(d => tabs.find(t => t.id === activeTab)?.lifecycles.includes(d.lifecycle));
+  const filteredDecisions = activeTab === "performance" ? [] : localDecisions.filter(d => tabs.find(t => t.id === activeTab)?.lifecycles.includes(d.lifecycle));
 
   return (
     <AppLayout>
@@ -689,22 +697,22 @@ const DecisionLab = () => {
                 </div>
               </div>
             ))}
-            <DecisionHealthScore decisions={allDecisions} />
+            <DecisionHealthScore decisions={localDecisions} />
           </div>
 
           {/* ── IMPACT MATRIX + PIPELINE ── */}
           <div className="grid grid-cols-2 gap-4">
-            <ImpactMatrix decisions={allDecisions} onSelect={setSelectedDecision} />
-            <PipelineView decisions={allDecisions} />
+            <ImpactMatrix decisions={localDecisions} onSelect={setSelectedDecision} />
+            <PipelineView decisions={localDecisions} />
           </div>
 
           {/* ── PRESSURE BANNER ── */}
-          <PressureBanner decisions={allDecisions} />
+          <PressureBanner decisions={localDecisions} />
 
           {/* ── TABS ── */}
           <div className="flex gap-1 p-1 rounded-xl bg-secondary/30 border border-white/[0.04]">
             {tabs.map(tab => {
-              const count = tab.id === "pending" ? pendingCount : tab.id === "performance" ? 0 : allDecisions.filter(d => tab.lifecycles.includes(d.lifecycle)).length;
+              const count = tab.id === "pending" ? pendingCount : tab.id === "performance" ? 0 : localDecisions.filter(d => tab.lifecycles.includes(d.lifecycle)).length;
               return (
                 <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-all ${activeTab === tab.id ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
                   {tab.label}
