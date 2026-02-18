@@ -8,6 +8,7 @@ import { RBACProvider } from "@/contexts/RBACContext";
 import { PackProvider } from "@/contexts/PackContext";
 import { IntegrationProvider } from "@/contexts/IntegrationContext";
 import { ActionModeProvider } from "@/contexts/ActionModeContext";
+import { TenantProvider } from "@/core/store/TenantContext";
 import Index from "./pages/Index";
 import ExpertProfile from "./pages/ExpertProfile";
 import Dashboard from "./pages/Dashboard";
@@ -43,6 +44,7 @@ const App = () => (
     <TooltipProvider>
       <LanguageProvider>
         <RBACProvider>
+        <TenantProvider>
         <PackProvider>
         <IntegrationProvider>
         <ActionModeProvider>
@@ -86,6 +88,7 @@ const App = () => (
         </ActionModeProvider>
         </IntegrationProvider>
         </PackProvider>
+        </TenantProvider>
         </RBACProvider>
       </LanguageProvider>
     </TooltipProvider>
