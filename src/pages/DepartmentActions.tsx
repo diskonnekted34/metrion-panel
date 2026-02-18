@@ -31,7 +31,7 @@ const statusColor: Record<ActionStatus, string> = {
   rejected: "bg-destructive/12 text-destructive",
 };
 
-const ActionCard = ({ action, onCompose }: { action: ActionTemplate; onCompose: (a: ActionTemplate) => void }) => {
+const ActionCard = ({ action, onCompose, canDraft }: { action: ActionTemplate; onCompose: (a: ActionTemplate) => void; canDraft: boolean }) => {
   const Icon = action.icon;
   return (
     <div className="glass-card p-5 flex flex-col gap-3 group">
@@ -58,16 +58,17 @@ const ActionCard = ({ action, onCompose }: { action: ActionTemplate; onCompose: 
 
       <button
         onClick={() => onCompose(action)}
-        className="w-full text-center text-xs py-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary transition-colors mt-auto flex items-center justify-center gap-1.5 border border-primary/20"
+        disabled={!canDraft}
+        className={`w-full text-center text-xs py-2 rounded-xl transition-colors mt-auto flex items-center justify-center gap-1.5 border ${canDraft ? "bg-primary/10 hover:bg-primary/20 text-primary border-primary/20" : "bg-muted/30 text-muted-foreground/50 border-border cursor-not-allowed"}`}
       >
-        Plan Oluştur
+        {canDraft ? "Plan Oluştur" : "Yetki Yok"}
         <ChevronRight className="h-3 w-3" />
       </button>
     </div>
   );
 };
 
-const ActionComposerModal = ({ action, open, onClose }: { action: ActionTemplate | null; open: boolean; onClose: () => void }) => {
+const ActionComposerModal = ({ action, open, onClose, canDraft }: { action: ActionTemplate | null; open: boolean; onClose: () => void; canDraft: boolean }) => {
   if (!action) return null;
   const Icon = action.icon;
   return (
@@ -127,7 +128,11 @@ const ActionComposerModal = ({ action, open, onClose }: { action: ActionTemplate
                 <span key={a} className="px-1.5 py-0.5 rounded-md bg-secondary border border-border/60">{a}</span>
               ))}
             </div>
-            <Button onClick={() => toast.success("Onaya gönderildi.")} className="gap-2">
+            <Button
+              onClick={() => canDraft ? toast.success("Onaya gönderildi.") : toast.error("Bu işlem için yetkiniz yok.")}
+              disabled={!canDraft}
+              className="gap-2"
+            >
               <Send className="h-3.5 w-3.5" />
               Onaya Gönder
             </Button>
@@ -140,10 +145,11 @@ const ActionComposerModal = ({ action, open, onClose }: { action: ActionTemplate
 
 const DepartmentActions = () => {
   const { deptId } = useParams<{ deptId: string }>();
-  const { hasAccessToDepartment } = useRBAC();
+  const { hasAccessToDepartment, canPerform } = useRBAC();
   const { isDepartmentUnlocked } = usePacks();
   const [search, setSearch] = useState("");
   const [composerAction, setComposerAction] = useState<ActionTemplate | null>(null);
+  const canDraft = canPerform("canCreateTasks");
 
   const dept = departments.find(d => d.id === deptId);
   const deptIdTyped = dept?.id as DepartmentId | undefined;
@@ -207,7 +213,7 @@ const DepartmentActions = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {actions.map((action, i) => (
                   <motion.div key={action.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
-                    <ActionCard action={action} onCompose={setComposerAction} />
+                    <ActionCard action={action} onCompose={setComposerAction} canDraft={canDraft} />
                   </motion.div>
                 ))}
               </div>
@@ -235,7 +241,7 @@ const DepartmentActions = () => {
           </TabsContent>
         </Tabs>
 
-        <ActionComposerModal action={composerAction} open={!!composerAction} onClose={() => setComposerAction(null)} />
+        <ActionComposerModal action={composerAction} open={!!composerAction} onClose={() => setComposerAction(null)} canDraft={canDraft} />
       </div>
     </AppLayout>
   );

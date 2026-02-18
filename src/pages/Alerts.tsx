@@ -2,15 +2,18 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Bell, AlertTriangle, ArrowRight, Eye, Search, CheckCircle2, Filter } from "lucide-react";
+import { Bell, AlertTriangle, ArrowRight, Eye, Search, CheckCircle2, Filter, Lock } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { alertsData } from "@/data/alerts";
+import { useRBAC } from "@/contexts/RBACContext";
 
 const severityOptions = ["Tümü", "Kritik", "Yüksek", "Orta", "Düşük"];
 const agentOptions = ["Tümü", "AI CMO", "AI CFO", "AI CSO", "AI CTO", "AI CEO", "Hukuk Masası"];
 const statusOptions = ["Tümü", "Çözülmemiş", "Çözülmüş"];
 
 const Alerts = () => {
+  const { canPerform } = useRBAC();
+  const canCreateTask = canPerform("canCreateTasks");
   const [search, setSearch] = useState("");
   const [severity, setSeverity] = useState("Tümü");
   const [agent, setAgent] = useState("Tümü");
@@ -122,8 +125,13 @@ const Alerts = () => {
                   </div>
                   {!alert.resolved && (
                     <div className="flex items-center gap-2 shrink-0">
-                      <button onClick={() => toast.success("Görev oluşturuldu.")} className="text-xs font-medium text-accent hover:underline flex items-center gap-1 whitespace-nowrap">
-                        Göreve Dönüştür <ArrowRight className="h-3 w-3" />
+                      <button
+                        onClick={() => canCreateTask ? toast.success("Görev oluşturuldu.") : toast.error("Görev oluşturma yetkiniz yok.")}
+                        disabled={!canCreateTask}
+                        className={`text-xs font-medium flex items-center gap-1 whitespace-nowrap ${canCreateTask ? "text-accent hover:underline" : "text-muted-foreground/40 cursor-not-allowed"}`}
+                      >
+                        {canCreateTask ? <ArrowRight className="h-3 w-3" /> : <Lock className="h-3 w-3" />}
+                        Göreve Dönüştür
                       </button>
                       <Link to={`/alerts/${alert.id}`} className="text-xs font-medium text-muted-foreground hover:text-foreground flex items-center gap-1 whitespace-nowrap">
                         <Eye className="h-3 w-3" /> Analiz
