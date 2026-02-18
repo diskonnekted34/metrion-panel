@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
-import { ChevronRight, Pause, Brain } from "lucide-react";
+import { ChevronRight, Pause, Brain, Lock } from "lucide-react";
 import { executives, agents, allExperts } from "@/data/experts";
 import { useRBAC, DepartmentId, departments } from "@/contexts/RBACContext";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -39,8 +39,10 @@ const statusLabel = (s: string) => {
 };
 
 const TeamMatrix = () => {
-  const { viewMode } = useRBAC();
+  const { viewMode, canPerform, currentUser } = useRBAC();
   const isMobile = useIsMobile();
+  const canAssign = canPerform("canAssignTasks");
+  const isOwnerOrAdmin = currentUser.role === "owner" || currentUser.role === "admin";
 
   // Use all experts
   const filtered = allExperts.filter(exec => {
@@ -126,9 +128,19 @@ const TeamMatrix = () => {
                   </div>
                   <div className="flex gap-2">
                     <Link to={`/workspace/${exec.id}`} className="flex-1 text-center text-xs py-2 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 transition-colors">Konsolu Aç</Link>
-                    <button onClick={() => toast.success("Görev atandı.")} className="flex-1 text-xs py-2 rounded-2xl bg-primary text-primary-foreground hover:brightness-110 transition-all shadow-[0_0_12px_rgba(30,107,255,0.15)]">Görev Ata</button>
-                    <button onClick={() => toast.info("Ajan duraklatıldı.")} className="text-xs py-2 px-3 rounded-2xl border border-border hover:bg-secondary text-muted-foreground transition-colors">
-                      <Pause className="h-3 w-3" />
+                    <button
+                      onClick={() => canAssign ? toast.success("Görev atandı.") : toast.error("Görev atama yetkiniz yok.")}
+                      disabled={!canAssign}
+                      className={`flex-1 text-xs py-2 rounded-2xl transition-all ${canAssign ? "bg-primary text-primary-foreground hover:brightness-110 shadow-[0_0_12px_rgba(30,107,255,0.15)]" : "bg-muted text-muted-foreground cursor-not-allowed"}`}
+                    >
+                      {canAssign ? "Görev Ata" : "Yetki Yok"}
+                    </button>
+                    <button
+                      onClick={() => isOwnerOrAdmin ? toast.info("Ajan duraklatıldı.") : toast.error("Bu işlem için yönetici yetkisi gerekli.")}
+                      disabled={!isOwnerOrAdmin}
+                      className={`text-xs py-2 px-3 rounded-2xl border transition-colors ${isOwnerOrAdmin ? "border-border hover:bg-secondary text-muted-foreground" : "border-border text-muted-foreground/40 cursor-not-allowed"}`}
+                    >
+                      {isOwnerOrAdmin ? <Pause className="h-3 w-3" /> : <Lock className="h-3 w-3" />}
                     </button>
                   </div>
                 </motion.div>

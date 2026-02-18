@@ -1,7 +1,8 @@
 import { toast } from "sonner";
-import { X, ArrowRight, Eye, CheckCircle2, AlertTriangle } from "lucide-react";
+import { X, ArrowRight, Eye, CheckCircle2, AlertTriangle, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { alertsData } from "@/data/alerts";
+import { useRBAC } from "@/contexts/RBACContext";
 
 interface NotificationPanelProps {
   open: boolean;
@@ -9,6 +10,8 @@ interface NotificationPanelProps {
 }
 
 const NotificationPanel = ({ open, onClose }: NotificationPanelProps) => {
+  const { canPerform } = useRBAC();
+  const canCreateTask = canPerform("canCreateTasks");
   if (!open) return null;
 
   const critical = alertsData.filter((a) => a.category === "critical");
@@ -42,8 +45,13 @@ const NotificationPanel = ({ open, onClose }: NotificationPanelProps) => {
       </div>
       {!alert.resolved && (
         <div className="flex gap-2 mt-3 ml-5.5">
-          <button onClick={() => toast.success("Görev oluşturuldu.")} className="text-[11px] font-medium py-1.5 px-3 rounded-2xl bg-accent/15 text-accent hover:bg-accent/25 transition-colors flex items-center gap-1">
-            Göreve Dönüştür <ArrowRight className="h-3 w-3" />
+          <button
+            onClick={() => canCreateTask ? toast.success("Görev oluşturuldu.") : toast.error("Görev oluşturma yetkiniz yok.")}
+            disabled={!canCreateTask}
+            className={`text-[11px] font-medium py-1.5 px-3 rounded-2xl transition-colors flex items-center gap-1 ${canCreateTask ? "bg-accent/15 text-accent hover:bg-accent/25" : "bg-muted/30 text-muted-foreground/50 cursor-not-allowed"}`}
+          >
+            {canCreateTask ? <ArrowRight className="h-3 w-3" /> : <Lock className="h-3 w-3" />}
+            Göreve Dönüştür
           </button>
           <Link to={`/alerts/${alert.id}`} onClick={onClose} className="text-[11px] font-medium py-1.5 px-3 rounded-2xl bg-secondary hover:bg-secondary/80 text-muted-foreground transition-colors flex items-center gap-1">
             <Eye className="h-3 w-3" /> Analiz

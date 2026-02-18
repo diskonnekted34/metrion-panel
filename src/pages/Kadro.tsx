@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Users, UserPlus, UserMinus, Bot, User, Shield, Eye, Crown,
   CheckCircle2, Zap, Brain, ChevronDown, AlertTriangle, ArrowUpRight,
-  Activity, Sparkles
+  Activity, Sparkles, Lock
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import {
@@ -13,6 +14,7 @@ import {
 } from "@/data/executivePositions";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+import { useRBAC } from "@/contexts/RBACContext";
 
 const scopeLabel = (scope: string) => {
   if (scope === "global") return "Şirket Geneli";
@@ -27,6 +29,8 @@ const categoryIcons: Record<SeatCategory, typeof Crown> = {
 };
 
 const Kadro = () => {
+  const { currentUser } = useRBAC();
+  const isOwner = currentUser.role === "owner";
   const [positions, setPositions] = useState(executivePositions);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -41,27 +45,41 @@ const Kadro = () => {
   const advisoryCount = positions.filter(p => p.mode === "advisory_dominant").length;
   const totalOverrides = positions.reduce((s, p) => s + p.overrideCount, 0);
 
+  const guardOwner = (action: () => void) => {
+    if (!isOwner) {
+      toast.error("Bu işlem yalnızca Sahip (Owner) yetkisiyle yapılabilir.");
+      return;
+    }
+    action();
+  };
+
   const cycleMode = (posId: string) => {
-    setPositions(prev => prev.map(p => {
-      if (p.id !== posId) return p;
-      if (p.assignedHuman) {
-        const next: PositionMode = p.mode === "advisory_dominant" ? "assisted" : "advisory_dominant";
-        return { ...p, mode: next };
-      }
-      return p;
-    }));
+    guardOwner(() => {
+      setPositions(prev => prev.map(p => {
+        if (p.id !== posId) return p;
+        if (p.assignedHuman) {
+          const next: PositionMode = p.mode === "advisory_dominant" ? "assisted" : "advisory_dominant";
+          return { ...p, mode: next };
+        }
+        return p;
+      }));
+    });
   };
 
   const removeHuman = (posId: string) => {
-    setPositions(prev => prev.map(p =>
-      p.id === posId ? { ...p, assignedHuman: undefined, mode: "autopilot" as PositionMode } : p
-    ));
+    guardOwner(() => {
+      setPositions(prev => prev.map(p =>
+        p.id === posId ? { ...p, assignedHuman: undefined, mode: "autopilot" as PositionMode } : p
+      ));
+    });
   };
 
   const assignHuman = (posId: string) => {
-    setPositions(prev => prev.map(p =>
-      p.id === posId ? { ...p, assignedHuman: { name: "Yeni Atanan", email: "yeni@company.com" }, mode: "advisory_dominant" as PositionMode } : p
-    ));
+    guardOwner(() => {
+      setPositions(prev => prev.map(p =>
+        p.id === posId ? { ...p, assignedHuman: { name: "Yeni Atanan", email: "yeni@company.com" }, mode: "advisory_dominant" as PositionMode } : p
+      ));
+    });
   };
 
   const formatDate = (iso: string) => {
@@ -293,25 +311,31 @@ const Kadro = () => {
                                           <>
                                             <button
                                               onClick={(e) => { e.stopPropagation(); removeHuman(pos.id); }}
-                                              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium border border-destructive/20 text-destructive hover:bg-destructive/10 transition-colors"
+                                              disabled={!isOwner}
+                                              className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium border transition-colors ${isOwner ? "border-destructive/20 text-destructive hover:bg-destructive/10" : "border-border text-muted-foreground/40 cursor-not-allowed"}`}
                                             >
-                                              <UserMinus className="h-3.5 w-3.5" /> İnsan Atamasını Kaldır
+                                              {isOwner ? <UserMinus className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />} İnsan Atamasını Kaldır
                                             </button>
                                             <button
                                               onClick={(e) => { e.stopPropagation(); cycleMode(pos.id); }}
-                                              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                                              disabled={!isOwner}
+                                              className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium border transition-colors ${isOwner ? "border-border text-muted-foreground hover:text-foreground hover:bg-secondary" : "border-border text-muted-foreground/40 cursor-not-allowed"}`}
                                             >
-                                              <Brain className="h-3.5 w-3.5" />
+                                              {isOwner ? <Brain className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
                                               {pos.mode === "advisory_dominant" ? "Asiste Moda Geç" : "Danışman Dominant Moda Geç"}
                                             </button>
                                           </>
                                         ) : (
                                           <button
                                             onClick={(e) => { e.stopPropagation(); assignHuman(pos.id); }}
-                                            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium border border-primary/20 text-primary hover:bg-primary/10 transition-colors"
+                                            disabled={!isOwner}
+                                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium border transition-colors ${isOwner ? "border-primary/20 text-primary hover:bg-primary/10" : "border-border text-muted-foreground/40 cursor-not-allowed"}`}
                                           >
-                                            <UserPlus className="h-3.5 w-3.5" /> İnsan Ata
+                                            {isOwner ? <UserPlus className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />} İnsan Ata
                                           </button>
+                                        )}
+                                        {!isOwner && (
+                                          <p className="text-[9px] text-muted-foreground/60 mt-1">Pozisyon yönetimi yalnızca Sahip yetkisiyle yapılabilir.</p>
                                         )}
                                       </div>
                                     </div>

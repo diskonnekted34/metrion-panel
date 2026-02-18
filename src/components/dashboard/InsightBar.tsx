@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { AlertTriangle, ArrowRight, Eye, Radio } from "lucide-react";
+import { AlertTriangle, ArrowRight, Eye, Radio, Lock } from "lucide-react";
 import { alertsData } from "@/data/alerts";
 import { useRBAC, DepartmentId } from "@/contexts/RBACContext";
 import { departments } from "@/contexts/RBACContext";
@@ -15,7 +15,8 @@ const agentDeptMap: Record<string, DepartmentId> = {
 };
 
 const InsightBar = () => {
-  const { viewMode } = useRBAC();
+  const { viewMode, canPerform } = useRBAC();
+  const canCreateTask = canPerform("canCreateTasks");
 
   const filtered = alertsData
     .filter(a => !a.resolved)
@@ -71,8 +72,13 @@ const InsightBar = () => {
                 <p className="text-[10px] text-muted-foreground">{insight.agent} · {insight.timestamp}</p>
               </div>
               <div className="flex gap-2 mt-4">
-                <button onClick={() => toast.success("Görev oluşturuldu.")} className="flex-1 text-xs font-medium py-2 rounded-2xl bg-primary text-primary-foreground hover:brightness-110 transition-all flex items-center justify-center gap-1 shadow-[0_0_12px_rgba(30,107,255,0.2)]">
-                  Göreve Dönüştür <ArrowRight className="h-3 w-3" />
+                <button
+                  onClick={() => canCreateTask ? toast.success("Görev oluşturuldu.") : toast.error("Görev oluşturma yetkiniz yok.")}
+                  disabled={!canCreateTask}
+                  className={`flex-1 text-xs font-medium py-2 rounded-2xl transition-all flex items-center justify-center gap-1 ${canCreateTask ? "bg-primary text-primary-foreground hover:brightness-110 shadow-[0_0_12px_rgba(30,107,255,0.2)]" : "bg-muted text-muted-foreground cursor-not-allowed"}`}
+                >
+                  {canCreateTask ? <ArrowRight className="h-3 w-3" /> : <Lock className="h-3 w-3" />}
+                  Göreve Dönüştür
                 </button>
                 <button onClick={() => toast.info("Detaylı analiz açılıyor.")} className="text-xs font-medium py-2 px-3 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 transition-colors flex items-center gap-1">
                   <Eye className="h-3 w-3" /> Analiz
