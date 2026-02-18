@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, Bell, BarChart3, Database, Settings as SettingsIcon, Scale, Crown, AlertTriangle } from "lucide-react";
+import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, Bell, BarChart3, Database, Settings as SettingsIcon, Scale, Crown, AlertTriangle, Target } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import UpgradeModal from "./UpgradeModal";
@@ -77,6 +77,7 @@ const commandLayerItems = [
   { label: "Karar", icon: Scale, path: "/decision-lab", count: pendingDecisionCount },
   { label: "Komuta", icon: LayoutDashboard, path: "/dashboard", count: pendingStrategicCount },
   { label: "Aksiyon", icon: Zap, path: "/action-center", count: pendingActionCount },
+  { label: "OKR", icon: Target, path: "/okr", count: 0 },
 ];
 
 // Executive Control items

@@ -9,6 +9,7 @@ import { PackProvider } from "@/contexts/PackContext";
 import { IntegrationProvider } from "@/contexts/IntegrationContext";
 import { ActionModeProvider } from "@/contexts/ActionModeContext";
 import { TenantProvider } from "@/core/store/TenantContext";
+import { OKRProvider } from "@/core/store/OKRContext";
 import Index from "./pages/Index";
 import ExpertProfile from "./pages/ExpertProfile";
 import Dashboard from "./pages/Dashboard";
@@ -35,6 +36,7 @@ import CreativeWorkspace from "./pages/CreativeWorkspace";
 import IntelligenceView from "./pages/IntelligenceView";
 import DecisionLab from "./pages/DecisionLab";
 import TechDataSources from "./pages/TechDataSources";
+import OKRPage from "./pages/OKR";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,6 +49,7 @@ const App = () => (
         <TenantProvider>
         <PackProvider>
         <IntegrationProvider>
+        <OKRProvider>
         <ActionModeProvider>
           <Toaster />
           <Sonner />
@@ -77,6 +80,7 @@ const App = () => (
               <Route path="/tech-data-sources" element={<TechDataSources />} />
               <Route path="/action-center" element={<ActionCenter />} />
               <Route path="/decision-lab" element={<DecisionLab />} />
+              <Route path="/okr" element={<OKRPage />} />
               <Route path="/creative-workspace" element={<CreativeWorkspace />} />
               <Route path="/intelligence/:clusterId" element={<IntelligenceView />} />
               <Route path="/expert/:id" element={<ExpertProfile />} />
@@ -86,6 +90,7 @@ const App = () => (
             </Routes>
           </BrowserRouter>
         </ActionModeProvider>
+        </OKRProvider>
         </IntegrationProvider>
         </PackProvider>
         </TenantProvider>

@@ -29,6 +29,12 @@ export type EventType =
   | "seat.assigned"
   | "seat.unassigned"
   | "usage.credit_consumed"
+  | "kpi.updated"
+  | "kr.recalculated"
+  | "objective.health_recalculated"
+  | "objective.deviation_checked"
+  | "objective.risk_updated"
+  | "corrective_decision.draft_created"
   | "usage.limit_reached";
 
 export type EventStatus = "pending" | "processed" | "failed";
