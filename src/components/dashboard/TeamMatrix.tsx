@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { ChevronRight, Pause, Brain } from "lucide-react";
 import { executives, agents, allExperts } from "@/data/experts";
@@ -125,8 +126,8 @@ const TeamMatrix = () => {
                   </div>
                   <div className="flex gap-2">
                     <Link to={`/workspace/${exec.id}`} className="flex-1 text-center text-xs py-2 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 transition-colors">Konsolu Aç</Link>
-                    <button className="flex-1 text-xs py-2 rounded-2xl bg-primary text-primary-foreground hover:brightness-110 transition-all shadow-[0_0_12px_rgba(30,107,255,0.15)]">Görev Ata</button>
-                    <button className="text-xs py-2 px-3 rounded-2xl border border-border hover:bg-secondary text-muted-foreground transition-colors">
+                    <button onClick={() => toast.success("Görev atandı.")} className="flex-1 text-xs py-2 rounded-2xl bg-primary text-primary-foreground hover:brightness-110 transition-all shadow-[0_0_12px_rgba(30,107,255,0.15)]">Görev Ata</button>
+                    <button onClick={() => toast.info("Ajan duraklatıldı.")} className="text-xs py-2 px-3 rounded-2xl border border-border hover:bg-secondary text-muted-foreground transition-colors">
                       <Pause className="h-3 w-3" />
                     </button>
                   </div>

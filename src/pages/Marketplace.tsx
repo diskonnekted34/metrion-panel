@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 import {
   ArrowRight, Check, Crown, Zap, Rocket, Shield, Lock, Eye, Sparkles,
@@ -57,7 +58,7 @@ const Marketplace = () => {
               <a href="#agent-grid" className="btn-primary px-8 py-3 text-sm flex items-center gap-2">
                 Tüm Ajanları Keşfet <ArrowRight className="h-4 w-4" />
               </a>
-              <button className="px-8 py-3 text-sm font-medium rounded-2xl border border-border text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all flex items-center gap-2">
+              <button onClick={() => toast.info("Demo modu başlatılıyor.")} className="px-8 py-3 text-sm font-medium rounded-2xl border border-border text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all flex items-center gap-2">
                 <Play className="h-4 w-4" /> Demo Modu Başlat
               </button>
             </div>

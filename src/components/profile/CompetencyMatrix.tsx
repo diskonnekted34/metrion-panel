@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { Layers, ExternalLink } from "lucide-react";
 import { Executive } from "@/data/experts";
 
@@ -35,7 +36,7 @@ const CompetencyMatrix = ({ agent }: CompetencyMatrixProps) => {
                   Veri destekli analiz ve sürekli izleme ile operasyonel içgörü üretir.
                 </p>
               </div>
-              <button className="text-[9px] text-primary/60 hover:text-primary flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity mt-0.5">
+              <button onClick={() => toast.info("Örnek görüntüleniyor.")} className="text-[9px] text-primary/60 hover:text-primary flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity mt-0.5">
                 <ExternalLink className="h-2.5 w-2.5" />
                 Örnek
               </button>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Bell, AlertTriangle, ArrowRight, Eye, Search, CheckCircle2, Filter } from "lucide-react";
@@ -121,7 +122,7 @@ const Alerts = () => {
                   </div>
                   {!alert.resolved && (
                     <div className="flex items-center gap-2 shrink-0">
-                      <button className="text-xs font-medium text-accent hover:underline flex items-center gap-1 whitespace-nowrap">
+                      <button onClick={() => toast.success("Görev oluşturuldu.")} className="text-xs font-medium text-accent hover:underline flex items-center gap-1 whitespace-nowrap">
                         Göreve Dönüştür <ArrowRight className="h-3 w-3" />
                       </button>
                       <Link to={`/alerts/${alert.id}`} className="text-xs font-medium text-muted-foreground hover:text-foreground flex items-center gap-1 whitespace-nowrap">

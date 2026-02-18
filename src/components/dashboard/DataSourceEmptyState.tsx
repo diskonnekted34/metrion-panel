@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { Radio, Upload, ShoppingBag, BarChart3, Globe } from "lucide-react";
 
 const DataSourceEmptyState = () => (
@@ -10,18 +11,18 @@ const DataSourceEmptyState = () => (
         Rol eğitimli AI ajanlarınızın gerçek verilerle çalışabilmesi için departman bazlı veri kaynaklarınızı bağlayın.
       </p>
       <div className="flex flex-wrap items-center justify-center gap-3">
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 text-sm transition-colors">
-          <ShoppingBag className="h-4 w-4" /> Shopify Bağla
-        </button>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 text-sm transition-colors">
-          <Globe className="h-4 w-4" /> Meta Ads Bağla
-        </button>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 text-sm transition-colors">
-          <BarChart3 className="h-4 w-4" /> Google Ads Bağla
-        </button>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 text-sm transition-colors">
-          <Upload className="h-4 w-4" /> CSV Yükle
-        </button>
+         <button onClick={() => toast.info("Shopify bağlantısı başlatılıyor.")} className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 text-sm transition-colors">
+           <ShoppingBag className="h-4 w-4" /> Shopify Bağla
+         </button>
+         <button onClick={() => toast.info("Meta Ads bağlantısı başlatılıyor.")} className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 text-sm transition-colors">
+           <Globe className="h-4 w-4" /> Meta Ads Bağla
+         </button>
+         <button onClick={() => toast.info("Google Ads bağlantısı başlatılıyor.")} className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 text-sm transition-colors">
+           <BarChart3 className="h-4 w-4" /> Google Ads Bağla
+         </button>
+         <button onClick={() => toast.info("CSV yükleme başlatılıyor.")} className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 text-sm transition-colors">
+           <Upload className="h-4 w-4" /> CSV Yükle
+         </button>
       </div>
     </div>
   </motion.div>

@@ -1,4 +1,5 @@
 import { useParams, Navigate, Link } from "react-router-dom";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { ArrowLeft, Download, Share2, Mail, Clock, Brain, Shield, TrendingUp, TrendingDown, AlertTriangle, Zap, Target, ChevronRight, BarChart3, Activity, Eye, Star, CheckCircle2 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
@@ -359,13 +360,13 @@ const ReportViewer = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button className="btn-accent px-3 py-2 text-xs flex items-center gap-1.5">
+              <button onClick={() => toast.info("PDF indiriliyor.")} className="btn-accent px-3 py-2 text-xs flex items-center gap-1.5">
                 <Download className="h-3.5 w-3.5" /> PDF
               </button>
-              <button className="btn-accent px-3 py-2 text-xs flex items-center gap-1.5">
+              <button onClick={() => toast.info("Paylaşım bağlantısı kopyalandı.")} className="btn-accent px-3 py-2 text-xs flex items-center gap-1.5">
                 <Share2 className="h-3.5 w-3.5" /> Paylaş
               </button>
-              <button className="btn-accent px-3 py-2 text-xs flex items-center gap-1.5">
+              <button onClick={() => toast.info("Rapor e-posta ile gönderiliyor.")} className="btn-accent px-3 py-2 text-xs flex items-center gap-1.5">
                 <Mail className="h-3.5 w-3.5" /> Gönder
               </button>
             </div>

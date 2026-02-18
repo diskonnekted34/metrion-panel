@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { toast } from "sonner";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Search, List, LayoutGrid, ChevronRight, X, Send, AlertTriangle } from "lucide-react";
@@ -126,7 +127,7 @@ const ActionComposerModal = ({ action, open, onClose }: { action: ActionTemplate
                 <span key={a} className="px-1.5 py-0.5 rounded-md bg-secondary border border-border/60">{a}</span>
               ))}
             </div>
-            <Button className="gap-2">
+            <Button onClick={() => toast.success("Onaya gönderildi.")} className="gap-2">
               <Send className="h-3.5 w-3.5" />
               Onaya Gönder
             </Button>

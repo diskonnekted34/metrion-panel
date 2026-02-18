@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 import {
   Palette, Plug, RefreshCw, ExternalLink, GitBranch, Layers, Clock,
@@ -156,15 +157,15 @@ const CreativeWorkspace = () => {
                   <span className="text-sm text-success font-medium">Canva Bağlı</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className="px-3 py-2 rounded-xl bg-secondary hover:bg-secondary/80 text-xs text-foreground transition-colors">
+                   <button onClick={() => toast.info("Canva senkronizasyonu başlatıldı.")} className="px-3 py-2 rounded-xl bg-secondary hover:bg-secondary/80 text-xs text-foreground transition-colors">
                     <RefreshCw className="h-3 w-3 mr-1.5 inline" />
                     Senkronize Et
                   </button>
-                  <button className="btn-primary px-4 py-2 text-xs">
+                  <button onClick={() => toast.info("Marka kiti seçimi açılıyor.")} className="btn-primary px-4 py-2 text-xs">
                     <Image className="h-3 w-3 mr-1.5 inline" />
                     Marka Kiti Seç
                   </button>
-                  <button className="btn-primary px-4 py-2 text-xs">
+                  <button onClick={() => toast.info("Şablon kütüphanesi açılıyor.")} className="btn-primary px-4 py-2 text-xs">
                     <Layers className="h-3 w-3 mr-1.5 inline" />
                     Şablon Kütüphanesi
                   </button>
@@ -196,7 +197,7 @@ const CreativeWorkspace = () => {
                       <span className={`text-[10px] font-medium px-2 py-0.5 rounded-2xl ${statusBadge(design.status)}`}>
                         {design.status}
                       </span>
-                      <button className="px-3 py-2 rounded-xl bg-secondary hover:bg-secondary/80 text-xs text-foreground transition-colors">
+                      <button onClick={() => toast.info("Canva'da açılıyor.")} className="px-3 py-2 rounded-xl bg-secondary hover:bg-secondary/80 text-xs text-foreground transition-colors">
                         <ExternalLink className="h-3 w-3 mr-1.5 inline" />
                         Canva'da Aç
                       </button>
@@ -206,7 +207,7 @@ const CreativeWorkspace = () => {
               ))}
 
               {/* Create Draft CTA */}
-              <button className="w-full glass-card p-4 text-center hover:bg-white/[0.03] transition-colors border-dashed border-2 border-border">
+              <button onClick={() => toast.info("Canva taslak oluşturuluyor.")} className="w-full glass-card p-4 text-center hover:bg-white/[0.03] transition-colors border-dashed border-2 border-border">
                 <Image className="h-5 w-5 text-muted-foreground mx-auto mb-2" />
                 <span className="text-sm text-muted-foreground">Canva'da Taslak Oluştur</span>
               </button>
@@ -223,15 +224,15 @@ const CreativeWorkspace = () => {
                   <span className="text-sm text-success font-medium">Figma Bağlı</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className="px-3 py-2 rounded-xl bg-secondary hover:bg-secondary/80 text-xs text-foreground transition-colors">
+                  <button onClick={() => toast.info("Figma senkronizasyonu başlatıldı.")} className="px-3 py-2 rounded-xl bg-secondary hover:bg-secondary/80 text-xs text-foreground transition-colors">
                     <RefreshCw className="h-3 w-3 mr-1.5 inline" />
                     Senkronize Et
                   </button>
-                  <button className="btn-primary px-4 py-2 text-xs">
+                  <button onClick={() => toast.info("Ekip çalışma alanı seçimi açılıyor.")} className="btn-primary px-4 py-2 text-xs">
                     <Layers className="h-3 w-3 mr-1.5 inline" />
                     Ekip Çalışma Alanı Seç
                   </button>
-                  <button className="px-3 py-2 rounded-xl bg-secondary hover:bg-secondary/80 text-xs text-foreground transition-colors">
+                  <button onClick={() => toast.info("Bileşen senkronizasyonu başlatıldı.")} className="px-3 py-2 rounded-xl bg-secondary hover:bg-secondary/80 text-xs text-foreground transition-colors">
                     <GitBranch className="h-3 w-3 mr-1.5 inline" />
                     Bileşen Senkronizasyonu
                   </button>
@@ -261,7 +262,7 @@ const CreativeWorkspace = () => {
                       <span className={`text-[10px] font-medium px-2 py-0.5 rounded-2xl ${statusBadge(project.status)}`}>
                         {project.status}
                       </span>
-                      <button className="px-3 py-2 rounded-xl bg-secondary hover:bg-secondary/80 text-xs text-foreground transition-colors">
+                      <button onClick={() => toast.info("Figma'da açılıyor.")} className="px-3 py-2 rounded-xl bg-secondary hover:bg-secondary/80 text-xs text-foreground transition-colors">
                         <ExternalLink className="h-3 w-3 mr-1.5 inline" />
                         Figma'da Aç
                       </button>
@@ -271,7 +272,7 @@ const CreativeWorkspace = () => {
               ))}
 
               {/* Create Draft CTA */}
-              <button className="w-full glass-card p-4 text-center hover:bg-white/[0.03] transition-colors border-dashed border-2 border-border">
+              <button onClick={() => toast.info("Figma taslak çerçeve oluşturuluyor.")} className="w-full glass-card p-4 text-center hover:bg-white/[0.03] transition-colors border-dashed border-2 border-border">
                 <PenTool className="h-5 w-5 text-muted-foreground mx-auto mb-2" />
                 <span className="text-sm text-muted-foreground">Figma'da Taslak Çerçeve Oluştur</span>
               </button>

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { AlertTriangle, ArrowRight, Eye, Radio } from "lucide-react";
 import { alertsData } from "@/data/alerts";
 import { useRBAC, DepartmentId } from "@/contexts/RBACContext";
@@ -70,10 +71,10 @@ const InsightBar = () => {
                 <p className="text-[10px] text-muted-foreground">{insight.agent} · {insight.timestamp}</p>
               </div>
               <div className="flex gap-2 mt-4">
-                <button className="flex-1 text-xs font-medium py-2 rounded-2xl bg-primary text-primary-foreground hover:brightness-110 transition-all flex items-center justify-center gap-1 shadow-[0_0_12px_rgba(30,107,255,0.2)]">
+                <button onClick={() => toast.success("Görev oluşturuldu.")} className="flex-1 text-xs font-medium py-2 rounded-2xl bg-primary text-primary-foreground hover:brightness-110 transition-all flex items-center justify-center gap-1 shadow-[0_0_12px_rgba(30,107,255,0.2)]">
                   Göreve Dönüştür <ArrowRight className="h-3 w-3" />
                 </button>
-                <button className="text-xs font-medium py-2 px-3 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 transition-colors flex items-center gap-1">
+                <button onClick={() => toast.info("Detaylı analiz açılıyor.")} className="text-xs font-medium py-2 px-3 rounded-2xl border border-primary/40 text-primary hover:bg-primary/10 transition-colors flex items-center gap-1">
                   <Eye className="h-3 w-3" /> Analiz
                 </button>
               </div>

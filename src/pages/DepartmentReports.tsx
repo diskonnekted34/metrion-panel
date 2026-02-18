@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { toast } from "sonner";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Search, Filter, Star, Clock, Calendar, ChevronRight, X, Play } from "lucide-react";
@@ -54,7 +55,7 @@ const ReportCard = ({ report, onOpen }: { report: DepartmentReport; onOpen: (r: 
         </div>
       </div>
 
-      <button className="w-full text-center text-xs py-2 rounded-xl bg-secondary hover:bg-secondary/80 text-foreground transition-colors mt-1 flex items-center justify-center gap-1.5">
+      <button onClick={() => toast.info("Rapor açılıyor.")} className="w-full text-center text-xs py-2 rounded-xl bg-secondary hover:bg-secondary/80 text-foreground transition-colors mt-1 flex items-center justify-center gap-1.5">
         Raporu Aç
         <ChevronRight className="h-3 w-3" />
       </button>
@@ -115,7 +116,7 @@ const ReportDetailDrawer = ({ report, open, onClose }: { report: DepartmentRepor
             <span>Son güncelleme: {report.lastUpdated}</span>
           </div>
 
-          <Button className="w-full gap-2 mt-2">
+          <Button onClick={() => toast.success("Rapor çalıştırılıyor.")} className="w-full gap-2 mt-2">
             <Play className="h-4 w-4" />
             Çalıştır
           </Button>
