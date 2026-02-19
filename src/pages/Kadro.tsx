@@ -1,206 +1,119 @@
 import { useState, useMemo, useCallback, memo } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  Crown, Bot, User, Search, Shield,
-  AlertTriangle, Users, Activity, ChevronDown
+  Crown, Bot, User, Search, ChevronDown
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { useRBAC } from "@/contexts/RBACContext";
 import { CommandService } from "@/services/CommandService";
 import type { CommandSeat, HierarchyNode } from "@/core/types/command";
-import { AI_MODE_LABELS, AI_MODE_COLORS } from "@/core/types/command";
+import { AI_MODE_COLORS } from "@/core/types/command";
 import GovernanceMonitoringPanel from "@/components/command/GovernanceMonitoringPanel";
 import SeatDetailDrawer from "@/components/command/SeatDetailDrawer";
 import { Input } from "@/components/ui/input";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-// ── Level-based tint styles (premium gradient) ────────
-const LEVEL_TINTS: Record<number, string> = {
-  0: "linear-gradient(135deg, rgba(255,193,7,0.06) 0%, rgba(255,160,0,0.02) 100%)",   // CEO — warm gold
-  1: "linear-gradient(135deg, rgba(30,107,255,0.05) 0%, rgba(59,130,246,0.02) 100%)",  // C-Level — electric blue
-  2: "linear-gradient(135deg, rgba(139,92,246,0.05) 0%, rgba(168,85,247,0.02) 100%)",  // Director — deep violet
-  3: "linear-gradient(135deg, rgba(34,211,238,0.05) 0%, rgba(6,182,212,0.02) 100%)",   // Manager — muted cyan
+// ── Node sizes per level ───────────────────────────────
+const LEVEL_SIZE: Record<number, number> = { 0: 160, 1: 140, 2: 130, 3: 120 };
+
+// ── Level accent colors (border + dot) ─────────────────
+const LEVEL_ACCENT: Record<number, { border: string; glow: string; dot: string }> = {
+  0: { border: "rgba(255,193,7,0.35)", glow: "0 0 24px rgba(255,193,7,0.12)", dot: "bg-yellow-400" },
+  1: { border: "rgba(59,130,246,0.30)", glow: "0 0 20px rgba(59,130,246,0.10)", dot: "bg-blue-400" },
+  2: { border: "rgba(139,92,246,0.28)", glow: "0 0 18px rgba(139,92,246,0.10)", dot: "bg-violet-400" },
+  3: { border: "rgba(34,211,238,0.25)", glow: "0 0 16px rgba(34,211,238,0.08)", dot: "bg-cyan-400" },
 };
 
-const LEVEL_BORDER: Record<number, string> = {
-  0: "rgba(255,193,7,0.18)",
-  1: "rgba(30,107,255,0.15)",
-  2: "rgba(139,92,246,0.15)",
-  3: "rgba(34,211,238,0.12)",
-};
-
-function getLevel(seat: CommandSeat, allSeats: CommandSeat[]): number {
-  let level = 0;
-  let current = seat;
-  while (current.parent_seat_key) {
-    const parent = allSeats.find(s => s.seat_key === current.parent_seat_key);
-    if (!parent) break;
-    current = parent;
-    level++;
-  }
-  return level;
-}
-
-// ── Seat Card (memoized) ───────────────────────────────
-const SeatCard = memo(({
-  seat,
-  level,
-  isSelected,
-  isCeo,
-  onSelect,
+// ── Minimal Seat Node ──────────────────────────────────
+const SeatNode = memo(({
+  seat, level, isSelected, onSelect,
 }: {
-  seat: CommandSeat;
-  level: number;
-  isSelected: boolean;
-  isCeo: boolean;
-  onSelect: (s: CommandSeat) => void;
+  seat: CommandSeat; level: number; isSelected: boolean; onSelect: (s: CommandSeat) => void;
 }) => {
-  const modeColor = AI_MODE_COLORS[seat.ai_mode];
+  const size = LEVEL_SIZE[level] ?? 120;
+  const accent = LEVEL_ACCENT[level] ?? LEVEL_ACCENT[3];
   const isHuman = seat.assigned_human !== null;
-  const hasRisk = seat.risk_exposure === "high" || seat.risk_exposure === "critical";
   const isRoot = level === 0;
-  const tint = LEVEL_TINTS[level] ?? LEVEL_TINTS[3];
-  const borderTint = LEVEL_BORDER[level] ?? LEVEL_BORDER[3];
+  const modeColor = AI_MODE_COLORS[seat.ai_mode];
+  const hasRisk = seat.risk_exposure === "high" || seat.risk_exposure === "critical";
 
   return (
     <motion.button
-      initial={{ opacity: 0, scale: 0.92 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      whileHover={{ y: -3, boxShadow: `0 0 36px ${borderTint}` }}
-      transition={{ duration: 0.2 }}
+      whileHover={{ y: -2, boxShadow: accent.glow }}
+      transition={{ duration: 0.18 }}
       onClick={() => onSelect(seat)}
-      className={`relative glass-card cursor-pointer transition-all duration-200 text-left ${
-        isRoot ? "w-[220px] p-5" : "w-[180px] p-4"
-      } ${isSelected ? "border-primary/50 glow-blue" : ""} ${hasRisk ? "border-warning/30" : ""}`}
+      className="relative flex flex-col items-center justify-center rounded-xl border bg-transparent cursor-pointer transition-all duration-200"
       style={{
-        background: tint,
-        borderColor: isSelected ? undefined : borderTint,
+        width: size,
+        height: size,
+        borderColor: isSelected ? "hsl(var(--primary))" : accent.border,
+        boxShadow: isSelected ? `0 0 20px hsl(var(--primary) / 0.15)` : "0 1px 4px rgba(0,0,0,0.06)",
       }}
     >
-      {/* Risk pulse */}
+      {/* Risk pulse dot */}
       {hasRisk && (
-        <div className="absolute -top-1.5 -right-1.5 h-3 w-3 rounded-full bg-warning animate-pulse" />
+        <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-warning animate-pulse" />
       )}
 
-      {/* Override count */}
-      {seat.override_count > 0 && (
-        <div className="absolute top-2 left-2">
-          <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-warning/15 text-warning border border-warning/30">
-            {seat.override_count}
-          </span>
-        </div>
-      )}
-
-      {/* Avatar / AI icon */}
-      <div className="flex items-center justify-center mb-3">
+      {/* Role icon — tiny */}
+      <div className="mb-1.5">
         {isHuman ? (
-          <div className="relative">
-            <div className={`${isRoot ? "h-14 w-14" : "h-11 w-11"} rounded-2xl flex items-center justify-center border ${modeColor}`}>
-              <User className={`${isRoot ? "h-7 w-7" : "h-5 w-5"}`} />
-            </div>
-            <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-card border border-border flex items-center justify-center">
-              <Shield className="h-3 w-3 text-primary" />
-            </div>
-          </div>
+          <User className={`${isRoot ? "h-5 w-5" : "h-4 w-4"} text-muted-foreground`} />
         ) : (
-          <div className={`${isRoot ? "h-14 w-14" : "h-11 w-11"} rounded-2xl flex items-center justify-center border ${modeColor}`}
-            style={{ boxShadow: "0 0 20px rgba(139,92,246,0.12)" }}
-          >
-            <Bot className={`${isRoot ? "h-7 w-7" : "h-5 w-5"}`} />
-          </div>
+          <Bot className={`${isRoot ? "h-5 w-5" : "h-4 w-4"} text-purple-400`} />
         )}
       </div>
 
-      {/* Role name */}
-      <div className="text-center">
-        <h3 className={`font-bold text-foreground flex items-center justify-center gap-1 ${isRoot ? "text-sm" : "text-xs"}`}>
-          {isRoot && <Crown className="h-3.5 w-3.5 text-warning" />}
-          {seat.label}
-        </h3>
-        {isHuman ? (
-          <p className="text-[10px] text-muted-foreground mt-0.5">{seat.assigned_human!.name}</p>
-        ) : (
-          <p className="text-[10px] text-purple-400 mt-0.5">Autonomous Mode</p>
-        )}
+      {/* Line 1: Role name */}
+      <span className={`font-semibold text-foreground leading-tight text-center px-2 flex items-center gap-1 ${isRoot ? "text-[11px]" : "text-[10px]"}`}>
+        {isRoot && <Crown className="h-3 w-3 text-yellow-400 shrink-0" />}
+        {seat.label}
+      </span>
+
+      {/* Line 2: Person name or "AI" */}
+      <span className={`mt-0.5 leading-tight ${isRoot ? "text-[10px]" : "text-[9px]"} ${isHuman ? "text-muted-foreground" : "text-purple-400"}`}>
+        {isHuman ? seat.assigned_human!.name : "AI"}
+      </span>
+
+      {/* Line 3: Mode dot */}
+      <div className="mt-1.5 flex items-center gap-1">
+        <div className={`h-1.5 w-1.5 rounded-full ${modeColor.split(" ")[0].replace("text-", "bg-")}`} />
+        <div className={`h-1.5 w-1.5 rounded-full ${accent.dot}`} />
       </div>
-
-      {/* Mode + Authority badges */}
-      <div className="flex items-center justify-center gap-1.5 mt-2 flex-wrap">
-        <span className={`text-[8px] font-bold px-2 py-0.5 rounded-full border ${modeColor}`}>
-          {AI_MODE_LABELS[seat.ai_mode]}
-        </span>
-        <span className="text-[8px] font-medium px-1.5 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border">
-          L{seat.approval.level}
-        </span>
-      </div>
-
-      {/* CEO + C-Level extras: governance score, decision count */}
-      {level <= 1 && (
-        <div className="flex items-center justify-center gap-3 mt-2.5 text-[9px] text-muted-foreground">
-          <span className="flex items-center gap-0.5">
-            <Activity className="h-2.5 w-2.5" />
-            {seat.decision_volume_30d}
-          </span>
-          {seat.linked_okr_ids.length > 0 && (
-            <span className="text-primary font-medium">OKR ✓</span>
-          )}
-          {seat.escalation_scope.length > 0 && (
-            <span className="text-violet-400">↑ {seat.escalation_scope[0]}</span>
-          )}
-        </div>
-      )}
-
-      {/* CEO budget (only CEO sees) */}
-      {isCeo && isRoot && (
-        <div className="mt-2 text-center">
-          <p className="text-[8px] text-muted-foreground">Budget</p>
-          <p className="text-[10px] font-bold text-foreground">
-            {CommandService.formatCurrency(seat.budget.annual_limit)}
-          </p>
-        </div>
-      )}
     </motion.button>
   );
 });
+SeatNode.displayName = "SeatNode";
 
-SeatCard.displayName = "SeatCard";
+// ── Connector Line (vertical) ──────────────────────────
+const VLine = ({ h = 24 }: { h?: number }) => (
+  <div className="w-px bg-border/40" style={{ height: h }} />
+);
 
-// ── Hierarchy Level Row ────────────────────────────────
+// ── Hierarchy Level ────────────────────────────────────
 const HierarchyLevel = memo(({
-  nodes,
-  level,
-  allSeats,
-  selectedId,
-  isCeo,
-  onSelect,
-  defaultCollapsed,
+  nodes, level, allSeats, selectedId, onSelect,
 }: {
-  nodes: HierarchyNode[];
-  level: number;
-  allSeats: CommandSeat[];
-  selectedId: string | null;
-  isCeo: boolean;
-  onSelect: (s: CommandSeat) => void;
-  defaultCollapsed: boolean;
+  nodes: HierarchyNode[]; level: number; allSeats: CommandSeat[];
+  selectedId: string | null; onSelect: (s: CommandSeat) => void;
 }) => {
+  const defaultCollapsed = level >= 3;
   const [collapsed, setCollapsed] = useState(defaultCollapsed);
 
-  // Collect all nodes at this level from the hierarchy
   if (nodes.length === 0) return null;
-
   const hasChildren = nodes.some(n => n.children.length > 0);
   const allChildren = nodes.flatMap(n => n.children);
 
   return (
     <div className="flex flex-col items-center">
       {/* Connector from parent */}
-      {level > 0 && (
-        <div className="w-px h-6 bg-border/30" />
-      )}
+      {level > 0 && <VLine h={20} />}
 
-      {/* Horizontal bar */}
+      {/* Horizontal bar across siblings */}
       {nodes.length > 1 && level > 0 && (
-        <div className="relative w-full flex justify-center mb-0">
+        <div className="relative w-full flex justify-center">
           <div
             className="h-px bg-border/30 absolute top-0"
             style={{
@@ -211,59 +124,62 @@ const HierarchyLevel = memo(({
         </div>
       )}
 
-      {/* Seat cards */}
-      <div className="flex gap-5 justify-center flex-wrap">
+      {/* Nodes */}
+      <div className="flex gap-4 justify-center flex-wrap">
         {nodes.map(node => (
           <div key={node.seat.id} className="flex flex-col items-center">
-            {level > 0 && nodes.length > 1 && (
-              <div className="w-px h-4 bg-border/30" />
-            )}
-            <SeatCard
+            {level > 0 && nodes.length > 1 && <VLine h={12} />}
+            <SeatNode
               seat={node.seat}
               level={level}
               isSelected={selectedId === node.seat.id}
-              isCeo={isCeo}
               onSelect={onSelect}
             />
           </div>
         ))}
       </div>
 
-      {/* Child level toggle (Manager level collapsible) */}
+      {/* Children */}
       {hasChildren && (
         <>
-          <div className="w-px h-4 bg-border/30" />
+          <VLine h={16} />
 
           {defaultCollapsed && (
             <button
               onClick={() => setCollapsed(!collapsed)}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full glass-card text-[10px] text-muted-foreground hover:text-foreground transition-colors mb-2"
+              className="flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-border/40 text-[9px] text-muted-foreground hover:text-foreground transition-colors mb-1"
             >
-              <ChevronDown className={`h-3 w-3 transition-transform ${collapsed ? "" : "rotate-180"}`} />
-              {collapsed ? `${allChildren.length} pozisyon göster` : "Daralt"}
+              <ChevronDown className={`h-2.5 w-2.5 transition-transform ${collapsed ? "" : "rotate-180"}`} />
+              {collapsed ? `${allChildren.length} pozisyon` : "Daralt"}
             </button>
           )}
 
-          {!collapsed && (
-            <HierarchyLevel
-              nodes={allChildren}
-              level={level + 1}
-              allSeats={allSeats}
-              selectedId={selectedId}
-              isCeo={isCeo}
-              onSelect={onSelect}
-              defaultCollapsed={level + 1 >= 3}
-            />
-          )}
+          <AnimatePresence>
+            {!collapsed && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <HierarchyLevel
+                  nodes={allChildren}
+                  level={level + 1}
+                  allSeats={allSeats}
+                  selectedId={selectedId}
+                  onSelect={onSelect}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </>
       )}
     </div>
   );
 });
-
 HierarchyLevel.displayName = "HierarchyLevel";
 
-// ── Main Page ──────────────────────────────────────────
+// ── Main ───────────────────────────────────────────────
 const Kadro = () => {
   const { currentUser } = useRBAC();
   const isCeo = currentUser.role === "owner";
@@ -295,51 +211,58 @@ const Kadro = () => {
     <AppLayout>
       <TooltipProvider>
         <div className="min-h-screen relative">
-          {/* Subtle grid */}
-          <div className="absolute inset-0 opacity-[0.015]" style={{
-            backgroundImage: "linear-gradient(rgba(30,107,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(30,107,255,0.3) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }} />
-
           <div className="relative z-10 p-6 md:p-8 max-w-[1400px] mx-auto">
-            {/* Search bar */}
-            <div className="flex justify-end mb-6">
-              <div className="relative w-72">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+
+            {/* Compact header + search */}
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h1 className="text-lg font-bold text-foreground">Kadro</h1>
+                <p className="text-[11px] text-muted-foreground">Organizasyon yapısı ve yetki dağılımı</p>
+              </div>
+              <div className="relative w-56">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
                 <Input
-                  placeholder="Pozisyon, kişi veya departman ara..."
+                  placeholder="Ara..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 h-9 text-xs"
+                  className="pl-8 h-8 text-xs"
                 />
               </div>
             </div>
 
-            {/* Governance overview panel */}
+            {/* Minimal governance strip */}
             <GovernanceMonitoringPanel summary={summary} />
 
-            {/* Search results OR hierarchy tree */}
+            {/* Search results OR org chart */}
             {filteredSeats ? (
               <div className="mt-8">
-                <h2 className="text-sm font-bold text-foreground mb-4">
-                  Arama Sonuçları ({filteredSeats.length})
+                <h2 className="text-xs font-semibold text-foreground mb-3">
+                  Sonuçlar ({filteredSeats.length})
                 </h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                  {filteredSeats.map(seat => (
-                    <SeatCard
-                      key={seat.id}
-                      seat={seat}
-                      level={getLevel(seat, allSeats)}
-                      isSelected={selectedSeat?.id === seat.id}
-                      isCeo={isCeo}
-                      onSelect={handleSelect}
-                    />
-                  ))}
+                <div className="flex flex-wrap gap-3 justify-center">
+                  {filteredSeats.map(seat => {
+                    let lvl = 0;
+                    let cur = seat;
+                    while (cur.parent_seat_key) {
+                      const p = allSeats.find(s => s.seat_key === cur.parent_seat_key);
+                      if (!p) break;
+                      cur = p;
+                      lvl++;
+                    }
+                    return (
+                      <SeatNode
+                        key={seat.id}
+                        seat={seat}
+                        level={lvl}
+                        isSelected={selectedSeat?.id === seat.id}
+                        onSelect={handleSelect}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             ) : (
-              /* Hierarchical tree */
-              <div className="mt-10 flex justify-center pb-12">
+              <div className="mt-8 flex justify-center pb-12">
                 {hierarchy.map(root => (
                   <HierarchyLevel
                     key={root.seat.id}
@@ -347,9 +270,7 @@ const Kadro = () => {
                     level={0}
                     allSeats={allSeats}
                     selectedId={selectedSeat?.id ?? null}
-                    isCeo={isCeo}
                     onSelect={handleSelect}
-                    defaultCollapsed={false}
                   />
                 ))}
               </div>
@@ -357,7 +278,6 @@ const Kadro = () => {
           </div>
         </div>
 
-        {/* Seat Profile Drawer */}
         <SeatDetailDrawer
           seat={selectedSeat}
           open={drawerOpen}
