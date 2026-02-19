@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, BarChart3, Database, Settings as SettingsIcon, Scale, Crown, AlertTriangle, Target } from "lucide-react";
+import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, BarChart3, Database, Settings as SettingsIcon, Scale, Crown, AlertTriangle, Target, History } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import UpgradeModal from "./UpgradeModal";
-import { departments, type DepartmentId } from "@/contexts/RBACContext";
+import { departments, type DepartmentId, useRBAC } from "@/contexts/RBACContext";
 import { usePacks } from "@/contexts/PackContext";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { decisions } from "@/data/decisions";
@@ -85,6 +85,7 @@ const executiveControlItems = [
   { label: "Kadro", icon: Crown, path: "/kadro" },
   { label: "Görevler", icon: ListTodo, path: "/tasks" },
   { label: "Raporlar", icon: BarChart3, path: "/reports" },
+  { label: "Pozisyon Geçmişleri", icon: History, path: "/executive/position-history", ceoOnly: true },
 ];
 
 // System items
@@ -98,6 +99,8 @@ const sistemItems = [
 const AppSidebar = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
+  const { currentUser } = useRBAC();
+  const isCeo = currentUser.role === "owner";
   const [notifOpen, setNotifOpen] = useState(false);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [upgradeDeptId, setUpgradeDeptId] = useState<DepartmentId | undefined>();
@@ -253,6 +256,7 @@ const AppSidebar = () => {
           >
             <div className="space-y-0.5">
               {executiveControlItems.map((item) => {
+                if ('ceoOnly' in item && item.ceoOnly && !isCeo) return null;
                 const active = isActive(item.path);
                 return (
                   <Link

@@ -237,6 +237,7 @@ const translations = {
       "/tech-data-sources": { title: "Tech Data Sources", subtitle: "Manage CTO/CIO integrations and monitoring." },
       "/creative-workspace": { title: "Creative Workspace", subtitle: "Content creation and creative management." },
       "/pricing": { title: "Pricing", subtitle: "Plans and packages." },
+      "/executive/position-history": { title: "Position History", subtitle: "Track executive position changes, scope diffs and handover quality." },
     } as Record<string, { title: string; subtitle: string }>,
     commandPalette: {
       pages: "Pages",
@@ -483,6 +484,7 @@ const translations = {
       "/tech-data-sources": { title: "Teknoloji Veri Kaynakları", subtitle: "CTO/CIO entegrasyonlarını yönetin ve izleyin." },
       "/creative-workspace": { title: "Kreatif Çalışma Alanı", subtitle: "İçerik üretimi ve kreatif yönetim." },
       "/pricing": { title: "Fiyatlandırma", subtitle: "Paketler ve planlar." },
+      "/executive/position-history": { title: "Pozisyon Geçmişleri", subtitle: "C-level pozisyon değişimlerini, scope diff'lerini ve devir-teslim kalitesini izleyin." },
     } as Record<string, { title: string; subtitle: string }>,
     commandPalette: {
       pages: "Sayfalar",

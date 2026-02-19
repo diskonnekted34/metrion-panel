@@ -6,3 +6,4 @@ export { AlertService } from "./AlertService";
 export { DecisionService } from "./DecisionService";
 export { IntegrationService } from "./IntegrationService";
 export { OkrService } from "./OkrService";
+export { PositionHistoryService } from "./PositionHistoryService";
