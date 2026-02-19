@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import AppSidebar from "./AppSidebar";
 import BottomNav from "./BottomNav";
+import GlobalTopBar from "./GlobalTopBar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AppLayoutProps {
@@ -16,13 +17,16 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       <div className="ambient-gradient" />
       <AppSidebar />
       <BottomNav />
-      <main
-        className={`min-h-screen relative z-10 ${
+      <div
+        className={`min-h-screen relative z-10 flex flex-col ${
           isMobile ? "pt-12 pb-20" : "pl-[264px]"
         }`}
       >
-        {children}
-      </main>
+        <GlobalTopBar />
+        <main className="flex-1">
+          {children}
+        </main>
+      </div>
     </div>
   );
 };

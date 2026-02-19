@@ -10,6 +10,8 @@ import { IntegrationProvider } from "@/contexts/IntegrationContext";
 import { ActionModeProvider } from "@/contexts/ActionModeContext";
 import { TenantProvider } from "@/core/store/TenantContext";
 import { OKRProvider } from "@/core/store/OKRContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { PageMetaProvider } from "@/contexts/PageMetaContext";
 import Index from "./pages/Index";
 import ExpertProfile from "./pages/ExpertProfile";
 import Dashboard from "./pages/Dashboard";
@@ -47,6 +49,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <LanguageProvider>
+        <ThemeProvider>
         <RBACProvider>
         <TenantProvider>
         <PackProvider>
@@ -56,6 +59,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+          <PageMetaProvider>
             <Routes>
               {/* Marketing pages — transparent overlay navbar */}
               <Route path="/" element={<Index />} />
@@ -92,6 +96,7 @@ const App = () => (
 
               <Route path="*" element={<NotFound />} />
             </Routes>
+          </PageMetaProvider>
           </BrowserRouter>
         </ActionModeProvider>
         </OKRProvider>
@@ -99,6 +104,7 @@ const App = () => (
         </PackProvider>
         </TenantProvider>
         </RBACProvider>
+        </ThemeProvider>
       </LanguageProvider>
     </TooltipProvider>
   </QueryClientProvider>
