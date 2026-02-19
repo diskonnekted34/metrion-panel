@@ -50,16 +50,7 @@ const CreativeWorkspace = () => {
     <AppLayout>
       <div className="p-6 max-w-5xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-          {/* Header */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center">
-              <Palette className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Kreatif Çalışma Alanı</h1>
-              <p className="text-sm text-muted-foreground">Tasarım taslakları, marka kiti ve platform senkronizasyonu</p>
-            </div>
-          </div>
+          {/* Header removed — title shown in Global Top Bar */}
 
           {/* Security Notice */}
           <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-success/5 border border-success/10 mb-6">

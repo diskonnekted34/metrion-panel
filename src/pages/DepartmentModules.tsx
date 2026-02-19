@@ -90,16 +90,8 @@ const DepartmentModules = () => {
   return (
     <AppLayout>
       <div className="p-6 max-w-5xl mx-auto">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-          <Link to={`/departments/${dept.id}`} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
-            <ArrowLeft className="h-4 w-4" /> {dept.name}
-          </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Modüller</h1>
-            <p className="text-sm text-muted-foreground mt-1">{dept.name} operasyonel yetenekleri</p>
-          </div>
-        </motion.div>
+        {/* Header — title shown in Global Top Bar */}
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-6" />
 
         {/* Filters */}
         <div className="flex gap-1.5 mb-6 flex-wrap">
