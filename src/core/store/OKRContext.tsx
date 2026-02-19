@@ -5,11 +5,11 @@
  */
 
 import { createContext, useContext, useState, useCallback, useMemo, ReactNode } from "react";
-import {
+import type {
   OKRCycle, Objective, KeyResult, OKRLink, CorrectiveDecisionDraft,
-  StrategicHealthIndex, DepartmentAlignment, OKRPlanLevel, getOKRPlanLevel,
-  OKR_PLAN_LIMITS,
+  StrategicHealthIndex, DepartmentAlignment, OKRPlanLevel,
 } from "../types/okr";
+import { getOKRPlanLevel } from "../types/okr";
 import {
   recalculateObjectiveHealth, generateCorrectiveDecisionDraft,
   calculateStrategicHealthIndex, calculateDepartmentAlignments,
@@ -66,7 +66,7 @@ export const useOKR = () => {
 };
 
 export const OKRProvider = ({ children }: { children: ReactNode }) => {
-  const { tenant, tenantId } = useTenant();
+  const { tenantId } = useTenant();
   const { currentTierId } = usePacks();
 
   const planLevel = getOKRPlanLevel(currentTierId);

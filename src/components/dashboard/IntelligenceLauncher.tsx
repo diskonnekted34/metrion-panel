@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Search, ChevronRight, X } from "lucide-react";
+import { motion } from "framer-motion";
+import { Zap, Search, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import {

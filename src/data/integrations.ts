@@ -89,12 +89,6 @@ const defaultHealth: DataHealth = {
   apiHealth: "unknown",
 };
 
-const connectedHealth: DataHealth = {
-  syncStatus: "healthy",
-  apiHealth: "operational",
-  rateLimitPercent: 12,
-};
-
 // ─── E-COMMERCE ────────────────────────────────
 const commerceIntegrations: Integration[] = [
   {

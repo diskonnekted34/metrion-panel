@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, FileText, Scale, Zap, Database, ChevronRight, X } from "lucide-react";
+import { Search, FileText, Scale, Zap, Database, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface PaletteItem {
   id: string;

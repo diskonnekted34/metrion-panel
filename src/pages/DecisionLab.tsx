@@ -1,14 +1,14 @@
-import { useState, useMemo, forwardRef } from "react";
+import { useState, forwardRef } from "react";
 import AppLayout from "@/components/AppLayout";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Scale, ChevronRight, TrendingUp, TrendingDown,
-  ShieldAlert, Target, AlertTriangle, Minus,
-  BarChart3, DollarSign, Activity, Zap, User, Bot, CheckCircle2,
-  XCircle, Clock, Eye, RotateCcw, ArrowRight, Brain, Timer,
-  Gauge, LineChart as LineChartIcon, Award, History, X, MessageSquare,
-  CalendarClock, Crosshair, Layers, Shield, CircleDot
+  Scale, ChevronRight,
+  ShieldAlert, AlertTriangle,
+  DollarSign, Activity, User, Bot, CheckCircle2,
+  XCircle, Clock, RotateCcw, ArrowRight, Brain, Timer,
+  Gauge, LineChart as LineChartIcon, Award, X, MessageSquare,
+  CalendarClock, Crosshair, Layers, CircleDot
 } from "lucide-react";
 import { executivePositions } from "@/data/executivePositions";
 import {
@@ -25,7 +25,6 @@ import {
 import {
   LineChart, Line, AreaChart, Area, ResponsiveContainer,
   XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid,
-  BarChart, Bar,
 } from "recharts";
 
 /* ── Tab Definition ── */

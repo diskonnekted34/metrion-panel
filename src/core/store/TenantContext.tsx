@@ -5,16 +5,16 @@
  */
 
 import { createContext, useContext, useState, useCallback, ReactNode } from "react";
-import {
+import type {
   Tenant, User, Membership, Seat, SeatKey, SeatCapability,
 } from "../types/identity";
-import {
+import type {
   Decision, Action, DecisionApproval, ActionApproval, ApprovalPolicy,
 } from "../types/governance";
-import {
-  DomainEvent, AuditLog, UsageLog, MetricPack,
+import type {
+  DomainEvent, AuditLog, UsageLog,
 } from "../types/infrastructure";
-import { seatHasCapability, getCapabilitiesForLevel } from "../engine/seats";
+import { seatHasCapability } from "../engine/seats";
 import { eventBus } from "../engine/events";
 import { auditLogger } from "../engine/audit";
 import { usageEngine } from "../engine/usage";

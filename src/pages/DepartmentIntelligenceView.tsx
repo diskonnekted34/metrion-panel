@@ -1,13 +1,8 @@
-import { useParams, Link, Navigate } from "react-router-dom";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowLeft, FileDown, Zap, Brain, Clock, Shield, BarChart3, Activity, Database, Layers, AlertTriangle, TrendingUp, TrendingDown, ChevronRight } from "lucide-react";
+import { useParams, Navigate } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";
-import { useRBAC, DepartmentId } from "@/contexts/RBACContext";
+import { useRBAC, type DepartmentId } from "@/contexts/RBACContext";
 import { usePacks } from "@/contexts/PackContext";
-import { getMetricIntelligence, MetricIntelligence } from "@/data/intelligenceMetrics";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "sonner";
+import { getMetricIntelligence } from "@/data/intelligenceMetrics";
 import IntelligenceContextBar from "@/components/intelligence/IntelligenceContextBar";
 import IntelligenceMainView from "@/components/intelligence/IntelligenceMainView";
 import IntelligenceSidePanel from "@/components/intelligence/IntelligenceSidePanel";

@@ -6,10 +6,10 @@
  * - Alignment Scoring Engine (Workforce only)
  */
 
-import {
+import type {
   Objective, KeyResult, OKRCycle, CorrectiveDecisionDraft,
   StrategicHealthIndex, DepartmentAlignment, OKRPlanLevel,
-  OKR_PLAN_LIMITS, ObjectiveHealthExplanation,
+  ObjectiveHealthExplanation,
 } from "../types/okr";
 
 // ── Config ──────────────────────────────────────────────
@@ -125,7 +125,7 @@ export function detectDeviation(
 
 // ── Full Objective Health Recalculation ─────────────────
 export function recalculateObjectiveHealth(
-  objective: Objective,
+  _objective: Objective,
   krs: KeyResult[],
   cycle: OKRCycle,
   deviationThreshold?: number

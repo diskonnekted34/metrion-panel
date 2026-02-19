@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Brain, Zap } from "lucide-react";
+import { Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 

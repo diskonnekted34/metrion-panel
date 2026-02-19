@@ -2,11 +2,11 @@ import { useState, useCallback } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft, Database, Plug, RefreshCw, Shield, CheckCircle2, AlertCircle,
+  ArrowLeft, Database, RefreshCw, Shield, CheckCircle2, AlertCircle,
   Loader2, Lock, X, Eye, Pencil, Zap, Clock, ExternalLink, Globe, Settings2,
-  Activity, Gauge, AlertTriangle, Radio, Webhook, FileJson, RotateCcw,
+  Activity, AlertTriangle, Webhook, FileJson, RotateCcw,
   Play, ChevronRight, Copy, Download, Trash2, BarChart3, Brain, Building2,
-  Users, Server, Key, ShieldCheck, FileText, CalendarClock, Timer, Hash,
+  Server, Key, ShieldCheck, FileText, CalendarClock, Timer, Hash,
   Signal, CircleDot, TrendingUp, Cpu, ChevronDown
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
@@ -14,7 +14,7 @@ import { useIntegrations } from "@/contexts/IntegrationContext";
 import { useRBAC } from "@/contexts/RBACContext";
 import { usePacks } from "@/contexts/PackContext";
 import { useActionMode } from "@/contexts/ActionModeContext";
-import { Integration, IntegrationStatus, hasWriteCapabilities } from "@/data/integrations";
+import { type IntegrationStatus, hasWriteCapabilities } from "@/data/integrations";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
@@ -171,7 +171,7 @@ const IntegrationDetail = () => {
   const { integrationId } = useParams<{ integrationId: string }>();
   const navigate = useNavigate();
   const { integrations, connect, disconnect, syncManual, isConnected, getDataHealth, isWriteEnabled, toggleWriteAccess } = useIntegrations();
-  const { canPerform, currentUser } = useRBAC();
+  const { canPerform } = useRBAC();
   const { activeTier } = usePacks();
   const { isActionModeEnabled, toggleActionMode } = useActionMode();
 

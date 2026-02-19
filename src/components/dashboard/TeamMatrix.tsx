@@ -2,8 +2,8 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { ChevronRight, Pause, Brain, Lock } from "lucide-react";
-import { executives, agents, allExperts } from "@/data/experts";
-import { useRBAC, DepartmentId, departments } from "@/contexts/RBACContext";
+import { allExperts } from "@/data/experts";
+import { useRBAC, type DepartmentId } from "@/contexts/RBACContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const agentDeptMap: Record<string, DepartmentId> = {

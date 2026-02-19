@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import AppLayout from "@/components/AppLayout";
 import { useIsMobile } from "@/hooks/use-mobile";
 import IntegrationBanner from "@/components/dashboard/IntegrationBanner";

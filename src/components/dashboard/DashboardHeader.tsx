@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, ChevronDown, Clock } from "lucide-react";
+import { Bell, Clock } from "lucide-react";
 import { useRBAC } from "@/contexts/RBACContext";
 import { usePacks } from "@/contexts/PackContext";
 import { alertsData } from "@/data/alerts";

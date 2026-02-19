@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import {
   Palette, Plug, RefreshCw, ExternalLink, GitBranch, Layers, Clock,
-  CheckCircle2, AlertCircle, Loader2, Shield, Image, PenTool, Eye
+  CheckCircle2, Shield, Image, PenTool, Eye
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { useIntegrations } from "@/contexts/IntegrationContext";

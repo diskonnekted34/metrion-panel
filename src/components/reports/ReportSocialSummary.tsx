@@ -1,4 +1,4 @@
-import { Shield, TrendingUp, Zap, Brain, Target } from "lucide-react";
+import { Shield, TrendingUp, Zap, Brain } from "lucide-react";
 import type { IntelligenceReport } from "@/data/intelligenceReports";
 import { timeframeConfig } from "@/data/intelligenceReports";
 

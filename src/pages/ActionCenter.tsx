@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Zap, ChevronDown, ChevronUp, CheckCircle2, XCircle, Send, Clock,
-  AlertTriangle, Shield, ArrowRight, FileText, BarChart3, Undo2, DollarSign,
-  History, X, Filter, Brain, Users, ChevronRight
+  Zap, CheckCircle2, XCircle, Send, Clock,
+  AlertTriangle, ArrowRight, FileText, BarChart3, Undo2, DollarSign,
+  History, Filter, Brain, ChevronRight
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { useActionMode, ActionDraft, ActionStatus, RiskLevel } from "@/contexts/ActionModeContext";
@@ -23,12 +23,11 @@ const riskColors: Record<RiskLevel, string> = {
   high: "text-destructive bg-destructive/10",
 };
 
-type ViewMode = "list" | "detail";
 type TabId = "pending" | "all" | "audit";
 type FilterStatus = "all" | ActionStatus;
 
 const ActionCenter = () => {
-  const { actions, auditLog, pendingCount, draftCount, approveDraft, publishAction, rejectAction, actionTypeLabels, riskLabels } = useActionMode();
+  const { actions, auditLog, pendingCount, draftCount, riskLabels } = useActionMode();
   const { currentUser } = useRBAC();
   const isAdmin = currentUser.role === "owner" || currentUser.role === "admin";
 

@@ -2,8 +2,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { AlertTriangle, ArrowRight, Eye, Radio, Lock } from "lucide-react";
 import { alertsData } from "@/data/alerts";
-import { useRBAC, DepartmentId } from "@/contexts/RBACContext";
-import { departments } from "@/contexts/RBACContext";
+import { useRBAC, type DepartmentId } from "@/contexts/RBACContext";
 
 const agentDeptMap: Record<string, DepartmentId> = {
   ceo: "executive", cso: "executive",

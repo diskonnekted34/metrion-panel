@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
-import { useParams, Navigate, Link } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Search, Filter, Star, Clock, Calendar, ChevronRight, X, Play } from "lucide-react";
+import { Search, Star, Clock, ChevronRight, Play } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { useRBAC, DepartmentId, departments } from "@/contexts/RBACContext";
 import { usePacks } from "@/contexts/PackContext";

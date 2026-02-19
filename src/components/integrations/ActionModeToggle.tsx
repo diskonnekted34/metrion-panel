@@ -9,7 +9,7 @@ interface ActionModeToggleProps {
   integrationName: string;
 }
 
-const ActionModeToggle = ({ integrationId, integrationName }: ActionModeToggleProps) => {
+const ActionModeToggle = ({ integrationId, integrationName: _integrationName }: ActionModeToggleProps) => {
   const { isActionModeEnabled, toggleActionMode, pendingCount } = useActionMode();
   const { currentUser } = useRBAC();
   const enabled = isActionModeEnabled(integrationId);

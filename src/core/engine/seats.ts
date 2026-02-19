@@ -3,7 +3,7 @@
  * Replaces traditional RBAC with seat-based authority model.
  */
 
-import { Seat, SeatKey, SeatCapability } from "../types/identity";
+import type { Seat, SeatCapability } from "../types/identity";
 
 /** Check if a seat has a given capability */
 export function seatHasCapability(seat: Seat, cap: SeatCapability): boolean {

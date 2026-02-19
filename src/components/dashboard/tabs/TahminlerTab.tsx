@@ -1,5 +1,5 @@
 import ChartCard from "./ChartCard";
-import { LineChartMock, GaugeMock, BarChartMock } from "./MockChart";
+import { LineChartMock, BarChartMock } from "./MockChart";
 
 const TahminlerTab = () => (
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">

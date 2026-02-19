@@ -296,7 +296,7 @@ const CashWaterfallBreakdown = ({ metric }: Props) => {
 
   return (
     <div className="space-y-1.5">
-      {metric.segments.map((seg, i) => {
+      {metric.segments.map((seg, _i) => {
         const isNegative = seg.value < 0;
         const absVal = Math.abs(seg.value);
         const pct = (absVal / total) * 100;
@@ -404,7 +404,7 @@ const RiskDistributionBreakdown = ({ metric }: Props) => {
   const severityColors = [
     "bg-destructive", "bg-warning", "bg-primary", "bg-success"
   ];
-  const severityLabels = ["Kritik", "Yüksek", "Orta", "Düşük"];
+  const _severityLabels = ["Kritik", "Yüksek", "Orta", "Düşük"];
 
   return (
     <div className="space-y-3">
