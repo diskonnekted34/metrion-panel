@@ -3,8 +3,8 @@
  * Tracks AI processing credits, enforces plan limits, supports overage.
  */
 
-import { UsageLog, UsageCategory } from "../types/infrastructure";
-import { Tenant } from "../types/identity";
+import type { UsageLog, UsageCategory } from "../types/infrastructure";
+import type { Tenant, SeatKey } from "../types/identity";
 
 interface PlanLimits {
   monthly_credits: number;
@@ -27,7 +27,7 @@ class UsageEngine {
   consume(entry: {
     tenant_id: string;
     user_id: string;
-    seat_key?: string;
+    seat_key?: SeatKey;
     category: UsageCategory;
     units: number;
     description: string;
@@ -38,7 +38,7 @@ class UsageEngine {
       id: `usg_${++this.idCounter}_${Date.now()}`,
       tenant_id: entry.tenant_id,
       user_id: entry.user_id,
-      seat_key: entry.seat_key as any,
+      seat_key: entry.seat_key,
       category: entry.category,
       units_consumed: entry.units,
       description: entry.description,
