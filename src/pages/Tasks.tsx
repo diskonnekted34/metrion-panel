@@ -23,15 +23,6 @@ const Tasks = () => {
     <AppLayout>
       <div className="p-6 max-w-4xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center">
-              <ListTodo className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Görevler</h1>
-              <p className="text-sm text-muted-foreground">AI ekibinizin aktif ve tamamlanan görevleri</p>
-            </div>
-          </div>
 
           <div className="grid grid-cols-3 gap-4 mb-8">
             {[

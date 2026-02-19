@@ -68,17 +68,8 @@ const ActionCenter = () => {
     <AppLayout>
       <div className="p-6 max-w-5xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-          {/* Header */}
-          <div className="flex items-start justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="h-11 w-11 rounded-2xl bg-warning/10 flex items-center justify-center">
-                <Zap className="h-5 w-5 text-warning" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">Aksiyon</h1>
-                <p className="text-sm text-muted-foreground">Taslak, onay ve yürütme sürecindeki aksiyonları yönetin.</p>
-              </div>
-            </div>
+          {/* Filter bar */}
+          <div className="flex items-center justify-end mb-6">
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${showFilters ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground hover:bg-secondary"}`}

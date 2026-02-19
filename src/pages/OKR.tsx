@@ -397,18 +397,9 @@ const OKRPage = () => {
   return (
     <AppLayout>
       <div className={`${isMobile ? "p-4 max-w-lg" : "p-6 max-w-6xl"} mx-auto`}>
-        {/* Header */}
+        {/* Header controls */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div>
-              <h1 className="text-2xl font-bold flex items-center gap-2">
-                <Target className="w-6 h-6 text-primary" />
-                OKR Stratejik Motoru
-              </h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                {isWorkforce ? "AI-driven strategic correction engine" : "Hedef takibi ve ilerleme analizi"}
-              </p>
-            </div>
+          <div className="flex items-center justify-end flex-wrap gap-3">
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="text-xs">
                 {planLevel === "workforce" ? "Full Engine" : "OKR Lite"}

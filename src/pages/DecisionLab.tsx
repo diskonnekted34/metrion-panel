@@ -654,20 +654,11 @@ const DecisionLab = () => {
 
           {/* ── HEADER ── */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="h-11 w-11 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center" style={{ boxShadow: "0 0 24px rgba(30,107,255,0.2)" }}>
-                <Scale className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <div className="flex items-center gap-3">
-                  <h1 className="text-xl font-bold text-foreground tracking-tight">Karar</h1>
-                  <span className="min-w-[22px] h-[22px] px-1.5 rounded-full bg-warning/20 text-warning text-[10px] font-bold flex items-center justify-center border border-warning/30" style={{ boxShadow: "0 0 8px rgba(245,158,11,0.25)" }}>{pendingCount}</span>
-                  {highRiskCount > 0 && (
-                    <span className="min-w-[22px] h-[22px] px-1.5 rounded-full bg-destructive/20 text-destructive text-[10px] font-bold flex items-center justify-center border border-destructive/30" style={{ boxShadow: "0 0 8px rgba(239,68,68,0.25)" }}>{highRiskCount}</span>
-                  )}
-                </div>
-                <p className="text-xs text-muted-foreground">Stratejik Karar Yönetim Alanı</p>
-              </div>
+            <div className="flex items-center gap-3">
+              <span className="min-w-[22px] h-[22px] px-1.5 rounded-full bg-warning/20 text-warning text-[10px] font-bold flex items-center justify-center border border-warning/30" style={{ boxShadow: "0 0 8px rgba(245,158,11,0.25)" }}>{pendingCount} Bekleyen</span>
+              {highRiskCount > 0 && (
+                <span className="min-w-[22px] h-[22px] px-1.5 rounded-full bg-destructive/20 text-destructive text-[10px] font-bold flex items-center justify-center border border-destructive/30" style={{ boxShadow: "0 0 8px rgba(239,68,68,0.25)" }}>{highRiskCount} Yüksek Risk</span>
+              )}
             </div>
             <div className="flex items-center gap-1 p-1 rounded-xl bg-secondary/30 border border-white/[0.04]">
               {timeFilters.map(tf => (

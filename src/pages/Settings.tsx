@@ -59,15 +59,6 @@ const Settings = () => {
     <AppLayout>
       <div className="p-6 max-w-3xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center">
-              <SettingsIcon className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Settings</h1>
-              <p className="text-sm text-muted-foreground">Account & platform configuration</p>
-            </div>
-          </div>
 
           <div className="space-y-3">
             {sections.map((section) => (

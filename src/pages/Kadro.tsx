@@ -97,11 +97,6 @@ const Kadro = () => {
           }} />
 
           <div className="relative z-10 p-6 md:p-10 max-w-7xl mx-auto">
-            {/* Header */}
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
-              <h1 className="text-2xl font-bold text-foreground mb-1">Kadro</h1>
-              <p className="text-sm text-muted-foreground">AI-Dominant Yönetişim Modeli · Pozisyon, yetki kapsamı ve karar hakları.</p>
-            </motion.div>
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">

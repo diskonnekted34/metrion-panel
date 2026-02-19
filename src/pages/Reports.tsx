@@ -101,18 +101,6 @@ const Reports = () => {
   return (
     <AppLayout>
       <div className="p-6 max-w-6xl mx-auto">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <div className="flex items-center gap-3 mb-1">
-            <div className="h-11 w-11 rounded-2xl bg-primary/10 flex items-center justify-center" style={{ boxShadow: "0 0 20px rgba(30,107,255,0.15)" }}>
-              <BarChart3 className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">İstihbarat Raporları</h1>
-              <p className="text-sm text-muted-foreground">AI tarafından otomatik üretilen kurumsal istihbarat dosyaları</p>
-            </div>
-          </div>
-        </motion.div>
 
         {/* Stats strip */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
