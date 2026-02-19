@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, TrendingUp, BarChart3, Layers, Palette, ShoppingCart, FileText, Check, FileBarChart, ArrowRight } from "lucide-react";
+import { Brain, TrendingUp, BarChart3, Layers, Palette, ShoppingCart, FileText, Check, FileBarChart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Executive } from "@/data/experts";
 

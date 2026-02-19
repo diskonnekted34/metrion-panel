@@ -13,7 +13,11 @@ src/
 │   └── data/       # Seed/mock data for domain entities
 │
 ├── lib/            # Shared utilities (pure functions, no domain knowledge)
-│   └── utils.ts    # cn(), formatters, validators
+│   ├── utils.ts    # cn(), formatters, validators
+│   └── integrations/ # Health, coverage, risk calculators (deterministic)
+│
+├── services/       # Data access layer (single gateway for mock → future API)
+│                   # AuthService, DecisionService, IntegrationService, OkrService
 │
 ├── data/           # UI catalog data (agent modules, integrations, packs)
 │                   # No business rules, no React components

@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Building2, AlertTriangle, ListTodo, TrendingUp, TrendingDown, Minus, Lock, ChevronRight } from "lucide-react";
+import { AlertTriangle, ListTodo, TrendingUp, TrendingDown, Minus, Lock, ChevronRight } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { useRBAC, type DepartmentId } from "@/contexts/RBACContext";
 import { usePacks } from "@/contexts/PackContext";
 import UpgradeModal from "@/components/UpgradeModal";
 
 const Departments = () => {
-  const { departments, hasAccessToDepartment, currentUser, roleLabels } = useRBAC();
+  const { departments, hasAccessToDepartment } = useRBAC();
   const { isDepartmentUnlocked } = usePacks();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [upgradeDeptId, setUpgradeDeptId] = useState<DepartmentId | undefined>();

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { DepartmentId } from "@/contexts/RBACContext";
 import { LineChartMock, BarChartMock, DonutChartMock, GaugeMock, HeatmapMock } from "@/components/dashboard/tabs/MockChart";
-import { getMetricId } from "@/data/intelligenceMetrics";
+// getMetricId removed — unused
 
 interface ChartDef {
   title: string;

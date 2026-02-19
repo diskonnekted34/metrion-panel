@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Database, Plug, CheckCircle2, AlertCircle, Loader2, Clock, Search,
-  Activity, ChevronRight, ChevronDown, RefreshCw, Settings2, Signal
+  Activity, RefreshCw, Settings2, Signal
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";

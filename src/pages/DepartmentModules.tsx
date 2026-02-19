@@ -1,12 +1,11 @@
 import { useState, useMemo } from "react";
-import { useParams, Navigate, Link } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Lock, Bell, ExternalLink } from "lucide-react";
+import { CheckCircle2, Bell, ExternalLink } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
-import { useRBAC, DepartmentId, departments } from "@/contexts/RBACContext";
+import { useRBAC, type DepartmentId, departments } from "@/contexts/RBACContext";
 import { usePacks } from "@/contexts/PackContext";
 import { getDepartmentModules, filterModules, type ModuleFilter, type DepartmentModule, type RoadmapQuarter } from "@/data/departmentModules";
-import { Button } from "@/components/ui/button";
 
 const filterOptions: ModuleFilter[] = ["Tümü", "Aktif", "Mevcut", "Yakında"];
 const quarters: RoadmapQuarter[] = ["Q1", "Q2", "Q3", "Q4"];

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  ChevronDown, ChevronUp, CheckCircle2, AlertCircle, Loader2, Plug,
+  ChevronDown, ChevronUp, CheckCircle2, AlertCircle, Plug,
   Shield, Clock, Eye
 } from "lucide-react";
 import { TechConnector } from "@/data/techIntegrations";

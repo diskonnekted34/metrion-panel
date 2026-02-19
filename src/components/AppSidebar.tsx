@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, Bell, BarChart3, Database, Settings as SettingsIcon, Scale, Crown, AlertTriangle, Target } from "lucide-react";
+import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, BarChart3, Database, Settings as SettingsIcon, Scale, Crown, AlertTriangle, Target } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import UpgradeModal from "./UpgradeModal";
@@ -53,7 +53,7 @@ const AlertBadge = ({ count, critical }: { count: number; critical: boolean }) =
   );
 };
 
-const BlueBadge = ({ count }: { count: number }) => {
+const _BlueBadge = ({ count }: { count: number }) => {
   if (count <= 0) return null;
   return (
     <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-primary/15 text-primary text-[9px] font-bold flex items-center justify-center border border-primary/20">

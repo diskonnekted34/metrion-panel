@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Brain, Shield, Zap, Target, TrendingUp, AlertTriangle, CheckCircle, ChevronRight } from "lucide-react";
+import { Brain, Shield, Zap, Target, TrendingUp, AlertTriangle, CheckCircle } from "lucide-react";
 import { MetricIntelligence } from "@/data/intelligenceMetrics";
 import { toast } from "sonner";
 
@@ -8,7 +8,7 @@ interface Props {
   deptId: string;
 }
 
-const IntelligenceSidePanel = ({ metric, deptId }: Props) => {
+const IntelligenceSidePanel = ({ metric, deptId: _deptId }: Props) => {
   const badgeColor = (type: "risk" | "opportunity" | "neutral") => {
     if (type === "risk") return "bg-destructive/10 text-destructive";
     if (type === "opportunity") return "bg-success/10 text-success";

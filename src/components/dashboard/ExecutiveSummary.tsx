@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { TrendingUp, TrendingDown, Minus, DollarSign, Activity, Shield, Zap, Users, Droplets, Target } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { LineChartMock, BarChartMock, DonutChartMock } from "./tabs/MockChart";
+import { LineChartMock, BarChartMock } from "./tabs/MockChart";
 
 interface ScoreCard {
   label: string;
@@ -140,7 +140,7 @@ const riskColor = (score: string | number) => {
   return "text-warning";
 };
 
-const costStructure = [
+const _costStructure = [
   { label: "COGS", value: 42, color: "hsl(220, 100%, 56%)" },
   { label: "Pazarlama", value: 22, color: "hsl(38, 92%, 50%)" },
   { label: "Lojistik", value: 18, color: "hsl(160, 76%, 44%)" },

@@ -1,4 +1,4 @@
-import { Calendar, Clock, TrendingUp, Shield, Zap, BarChart3, DollarSign, AlertTriangle, Target, Activity, Brain, Eye } from "lucide-react";
+import { Calendar, Clock, TrendingUp, BarChart3, Target } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export type ReportTimeframe = "daily" | "weekly" | "monthly" | "quarterly" | "annual";

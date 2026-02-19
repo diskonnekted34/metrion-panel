@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Check, Lock, Layers, Users, Zap, Database, ArrowRight } from "lucide-react";
+import { X, Check, Lock, Layers, Users, Database, ArrowRight } from "lucide-react";
 import { usePacks } from "@/contexts/PackContext";
 import { tiers } from "@/data/packs";
 import { departments, type DepartmentId } from "@/contexts/RBACContext";
@@ -25,7 +25,7 @@ const UpgradeModal = ({ departmentId, open, onClose }: UpgradeModalProps) => {
   const targetTierIndex = tiers.findIndex(t => t.id === targetTier.id);
   const isUpgrade = targetTierIndex > currentTierIndex;
 
-  const deptAgents = dept ? targetTier.agents.filter(() => true) : [];
+  const _deptAgents = dept ? targetTier.agents.filter(() => true) : [];
   const integrationIds = departmentId ? (departmentIntegrationMap[departmentId] || []) : [];
 
   const handleUpgrade = () => {
@@ -91,7 +91,7 @@ const UpgradeModal = ({ departmentId, open, onClose }: UpgradeModalProps) => {
                 </p>
                 <div className="space-y-2">
                   {dept.agentIds.map(agentId => {
-                    const agentInfo = targetTier.cumulativeAgentIds.includes(agentId);
+                    const _agentInfo = targetTier.cumulativeAgentIds.includes(agentId);
                     return (
                       <div key={agentId} className="flex items-center gap-2.5 p-2 rounded-xl bg-secondary/40">
                         <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useRBAC, UserRole, DepartmentId, departments } from "@/contexts/RBACContext";
+import { useRBAC, type UserRole } from "@/contexts/RBACContext";
 
 /**
  * Capability keys for the Agent Console permission system.

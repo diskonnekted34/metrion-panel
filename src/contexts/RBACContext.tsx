@@ -84,7 +84,7 @@ interface RBACContextType {
   viewMode: DepartmentId | "company";
   setViewMode: (mode: DepartmentId | "company") => void;
   getVisibleDepartments: () => Department[];
-  getVisibleAlerts: () => string[];
+  getVisibleDepartmentIds: () => string[];
 }
 
 const RBACContext = createContext<RBACContextType | null>(null);
@@ -125,7 +125,7 @@ export const RBACProvider = ({ children }: { children: ReactNode }) => {
     return departments.filter(d => hasAccessToDepartment(d.id));
   };
 
-  const getVisibleAlerts = () => {
+  const getVisibleDepartmentIds = () => {
     const visibleDeptIds = getVisibleDepartments().map(d => d.id);
     return visibleDeptIds as string[];
   };
@@ -143,7 +143,7 @@ export const RBACProvider = ({ children }: { children: ReactNode }) => {
       viewMode,
       setViewMode,
       getVisibleDepartments,
-      getVisibleAlerts,
+      getVisibleDepartmentIds,
     }}>
       {children}
     </RBACContext.Provider>
