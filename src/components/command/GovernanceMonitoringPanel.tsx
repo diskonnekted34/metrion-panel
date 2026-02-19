@@ -1,6 +1,6 @@
 import {
   Users, Bot, User, DollarSign, Shield,
-  AlertTriangle, Activity, TrendingUp
+  AlertTriangle, Activity, TrendingUp, UserX
 } from "lucide-react";
 import type { GovernanceSummary } from "@/core/types/command";
 import { CommandService } from "@/services/CommandService";
@@ -17,14 +17,16 @@ const riskColor = (r: string) => {
 };
 
 const GovernanceMonitoringPanel = ({ summary }: Props) => {
+  const vacantSeats = summary.total_seats - summary.human_assigned;
+
   const metrics = [
     { label: "Toplam Koltuk", value: summary.total_seats, icon: Users, color: "text-foreground" },
     { label: "İnsan Atanmış", value: summary.human_assigned, icon: User, color: "text-primary" },
     { label: "AI Koltuk", value: summary.ai_seats, icon: Bot, color: "text-purple-400" },
+    { label: "Boş Koltuk", value: vacantSeats, icon: UserX, color: vacantSeats > 0 ? "text-warning" : "text-foreground" },
     { label: "Bütçe Maruz", value: CommandService.formatCurrency(summary.total_budget_exposure), icon: DollarSign, color: "text-warning" },
     { label: "Aktif Onay", value: summary.active_approvals, icon: Shield, color: "text-primary" },
-    { label: "Eskalasyon", value: summary.escalations, icon: TrendingUp, color: "text-violet-400" },
-    { label: "Risk Seviyesi", value: summary.overall_risk.toUpperCase(), icon: AlertTriangle, color: riskColor(summary.overall_risk) },
+    { label: "Risk", value: summary.overall_risk.toUpperCase(), icon: AlertTriangle, color: riskColor(summary.overall_risk) },
     { label: "Override", value: summary.override_count, icon: Activity, color: summary.override_count > 0 ? "text-warning" : "text-foreground" },
   ];
 
