@@ -149,16 +149,10 @@ const DepartmentReports = () => {
   return (
     <AppLayout>
       <div className="p-6 max-w-5xl mx-auto">
-        {/* Header */}
+        {/* Header — title shown in Global Top Bar */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-          <Link to={`/departments/${dept.id}`} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
-            <ArrowLeft className="h-4 w-4" /> {dept.name}
-          </Link>
           <div className="flex items-center justify-between flex-wrap gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Raporlar</h1>
-              <p className="text-sm text-muted-foreground mt-1">{dept.name} için analiz ve içgörü raporları</p>
-            </div>
+            <div />
             <div className="flex items-center gap-2">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />

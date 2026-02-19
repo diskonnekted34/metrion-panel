@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import translations, { Lang } from "./translations";
 
 type Translations = (typeof translations)["en"] | (typeof translations)["tr"];
@@ -11,9 +11,21 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+const getInitialLang = (): Lang => {
+  const stored = localStorage.getItem("c-levels-lang");
+  if (stored === "tr" || stored === "en") return stored;
+  const browserLang = navigator.language?.toLowerCase() || "";
+  return browserLang.startsWith("tr") ? "tr" : "en";
+};
+
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [lang, setLang] = useState<Lang>("tr");
+  const [lang, setLangState] = useState<Lang>(getInitialLang);
   const t = translations[lang] as Translations;
+
+  const setLang = (l: Lang) => {
+    setLangState(l);
+    localStorage.setItem("c-levels-lang", l);
+  };
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, t }}>

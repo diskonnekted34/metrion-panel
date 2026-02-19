@@ -171,16 +171,10 @@ const DepartmentActions = () => {
   return (
     <AppLayout>
       <div className="p-6 max-w-5xl mx-auto">
-        {/* Header */}
+        {/* Header — title shown in Global Top Bar */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-          <Link to={`/departments/${dept.id}`} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
-            <ArrowLeft className="h-4 w-4" /> {dept.name}
-          </Link>
           <div className="flex items-center justify-between flex-wrap gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Aksiyonlar</h1>
-              <p className="text-sm text-muted-foreground mt-1">{dept.name} için aksiyon planları ve operasyonel öneriler</p>
-            </div>
+            <div />
             <div className="flex items-center gap-3">
               {pendingCount > 0 && (
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-warning/10 border border-warning/20">
