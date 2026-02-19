@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, BarChart3, Database, Settings as SettingsIcon, Scale, Crown, AlertTriangle, Target, History, Network } from "lucide-react";
+import { LayoutDashboard, Zap, ChevronDown, Lock, Eye, FileText, Activity, Building2, Users, ListTodo, BarChart3, Database, Settings as SettingsIcon, Scale, Crown, AlertTriangle, Target, History } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import UpgradeModal from "./UpgradeModal";
@@ -82,7 +82,6 @@ const commandLayerItems = [
 
 // Executive Control items
 const executiveControlItems = [
-  { label: "Emir-Komuta", icon: Network, path: "/command-structure", ceoOnly: true },
   { label: "Kadro", icon: Crown, path: "/kadro" },
   { label: "Görevler", icon: ListTodo, path: "/tasks" },
   { label: "Raporlar", icon: BarChart3, path: "/reports" },
