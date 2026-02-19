@@ -36,6 +36,7 @@ import CreativeWorkspace from "./pages/CreativeWorkspace";
 import IntelligenceView from "./pages/IntelligenceView";
 import DecisionLab from "./pages/DecisionLab";
 import TechDataSources from "./pages/TechDataSources";
+import TechIntegrationDetail from "./pages/TechIntegrationDetail";
 import OKRPage from "./pages/OKR";
 import IntegrationDetail from "./pages/IntegrationDetail";
 import NotFound from "./pages/NotFound";
@@ -80,6 +81,7 @@ const App = () => (
               <Route path="/data-sources" element={<DataSources />} />
               <Route path="/data-sources/:integrationId" element={<IntegrationDetail />} />
               <Route path="/tech-data-sources" element={<TechDataSources />} />
+              <Route path="/tech-data-sources/:connectorId" element={<TechIntegrationDetail />} />
               <Route path="/action-center" element={<ActionCenter />} />
               <Route path="/decision-lab" element={<DecisionLab />} />
               <Route path="/okr" element={<OKRPage />} />
