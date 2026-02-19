@@ -37,6 +37,7 @@ import IntelligenceView from "./pages/IntelligenceView";
 import DecisionLab from "./pages/DecisionLab";
 import TechDataSources from "./pages/TechDataSources";
 import OKRPage from "./pages/OKR";
+import IntegrationDetail from "./pages/IntegrationDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -77,6 +78,7 @@ const App = () => (
               <Route path="/marketplace" element={<Marketplace />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/data-sources" element={<DataSources />} />
+              <Route path="/data-sources/:integrationId" element={<IntegrationDetail />} />
               <Route path="/tech-data-sources" element={<TechDataSources />} />
               <Route path="/action-center" element={<ActionCenter />} />
               <Route path="/decision-lab" element={<DecisionLab />} />
