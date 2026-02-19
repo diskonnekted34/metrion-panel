@@ -57,6 +57,8 @@ function getMetaFromPath(pathname: string, pageMeta: Record<string, { title: str
     return { title: pageMeta["/tech-data-sources"]?.title || "Tech Data Sources" };
   if (pathname.startsWith("/data-sources/"))
     return { title: pageMeta["/data-sources"]?.title || "Data Sources" };
+  if (pathname.startsWith("/executive/"))
+    return pageMeta[pathname] || { title: pageMeta["/executive/position-history"]?.title || "Executive" };
 
   return { title: "C-Levels" };
 }

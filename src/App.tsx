@@ -41,6 +41,7 @@ import TechDataSources from "./pages/TechDataSources";
 import TechIntegrationDetail from "./pages/TechIntegrationDetail";
 import OKRPage from "./pages/OKR";
 import IntegrationDetail from "./pages/IntegrationDetail";
+import PositionHistory from "./pages/PositionHistory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -93,6 +94,7 @@ const App = () => (
               <Route path="/intelligence/:clusterId" element={<IntelligenceView />} />
               <Route path="/expert/:id" element={<ExpertProfile />} />
               <Route path="/workspace/:agentId" element={<AgentWorkspace />} />
+              <Route path="/executive/position-history" element={<PositionHistory />} />
 
               <Route path="*" element={<NotFound />} />
             </Routes>
