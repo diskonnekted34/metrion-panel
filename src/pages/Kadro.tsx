@@ -14,19 +14,19 @@ import SeatDetailDrawer from "@/components/command/SeatDetailDrawer";
 import { Input } from "@/components/ui/input";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-// ── Level-based tint styles ────────────────────────────
+// ── Level-based tint styles (premium gradient) ────────
 const LEVEL_TINTS: Record<number, string> = {
-  0: "rgba(255,193,7,0.04)",   // CEO — soft gold
-  1: "rgba(30,107,255,0.03)",  // C-Level — electric blue
-  2: "rgba(139,92,246,0.03)",  // Director — deep violet
-  3: "rgba(34,211,238,0.03)",  // Manager — muted cyan
+  0: "linear-gradient(135deg, rgba(255,193,7,0.06) 0%, rgba(255,160,0,0.02) 100%)",   // CEO — warm gold
+  1: "linear-gradient(135deg, rgba(30,107,255,0.05) 0%, rgba(59,130,246,0.02) 100%)",  // C-Level — electric blue
+  2: "linear-gradient(135deg, rgba(139,92,246,0.05) 0%, rgba(168,85,247,0.02) 100%)",  // Director — deep violet
+  3: "linear-gradient(135deg, rgba(34,211,238,0.05) 0%, rgba(6,182,212,0.02) 100%)",   // Manager — muted cyan
 };
 
 const LEVEL_BORDER: Record<number, string> = {
-  0: "rgba(255,193,7,0.15)",
-  1: "rgba(30,107,255,0.12)",
-  2: "rgba(139,92,246,0.12)",
-  3: "rgba(34,211,238,0.10)",
+  0: "rgba(255,193,7,0.18)",
+  1: "rgba(30,107,255,0.15)",
+  2: "rgba(139,92,246,0.15)",
+  3: "rgba(34,211,238,0.12)",
 };
 
 function getLevel(seat: CommandSeat, allSeats: CommandSeat[]): number {
