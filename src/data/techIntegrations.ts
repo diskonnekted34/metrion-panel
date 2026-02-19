@@ -933,3 +933,174 @@ export function getCIOImpact(connectors: TechConnector[]): { covered: number; to
   const connected = relevant.filter(c => c.status === "connected").length;
   return { covered: connected, total: relevant.length };
 }
+
+// ─── HEALTH SCORE CALCULATOR ─────────────────────────────────
+export interface HealthResult {
+  score: number;
+  state: "green" | "yellow" | "red";
+  reasons: string[];
+}
+
+export function computeHealthScore(c: TechConnector): HealthResult {
+  if (c.status !== "connected") return { score: 0, state: "red", reasons: ["Sistem bağlı değil"] };
+
+  let score = 0;
+  const reasons: string[] = [];
+
+  // Auth valid (+40)
+  if (c.status === "connected" && c.last_sync_status !== "failed") {
+    score += 40;
+  } else if (c.last_sync_status === "partial") {
+    score += 20;
+    reasons.push("Token süresi yaklaşıyor olabilir");
+  } else {
+    reasons.push("Kimlik doğrulama sorunu");
+  }
+
+  // Last sync freshness (+20)
+  if (c.last_sync_at) {
+    const ageMs = Date.now() - new Date(c.last_sync_at).getTime();
+    const expectedMs =
+      c.refresh_frequency === "realtime" ? 3_600_000 :
+      c.refresh_frequency === "hourly" ? 7_200_000 :
+      c.refresh_frequency === "daily" ? 172_800_000 : 604_800_000;
+    if (ageMs <= expectedMs) { score += 20; }
+    else if (ageMs <= expectedMs * 3) { score += 10; reasons.push("Senkronizasyon gecikmiş"); }
+    else { reasons.push("Senkronizasyon çok gecikmiş"); }
+  } else {
+    reasons.push("Hiç senkronize edilmemiş");
+  }
+
+  // Success rate (+20)
+  if (c.last_sync_status === "ok") { score += 20; }
+  else if (c.last_sync_status === "partial") { score += 10; reasons.push("Kısmi senkronizasyon"); }
+  else { reasons.push("Son senkronizasyon başarısız"); }
+
+  // Scope completeness (+10)
+  if (c.environment_scope_selected.length > 0) { score += 10; }
+  else { reasons.push("Ortam kapsamı seçilmemiş"); }
+
+  // General (+10)
+  score += 10;
+
+  const state: HealthResult["state"] = score >= 80 ? "green" : score >= 50 ? "yellow" : "red";
+  return { score: Math.min(score, 100), state, reasons };
+}
+
+// ─── RISK LEVEL CALCULATOR ───────────────────────────────────
+export interface RiskResult {
+  level: "low" | "medium" | "high" | "critical";
+  reasons: string[];
+}
+
+export function computeRiskLevel(c: TechConnector): RiskResult {
+  const reasons: string[] = [];
+  let severity = 0;
+
+  if (c.status === "error") {
+    severity += 3;
+    reasons.push("Sistem hata durumunda");
+  }
+  if (c.data_sensitivity === "high" && c.status !== "connected") {
+    severity += 2;
+    reasons.push("Yüksek hassasiyetli kaynak bağlı değil");
+  }
+  if (c.last_sync_status === "failed") {
+    severity += 2;
+    reasons.push("Son senkronizasyon başarısız");
+  }
+  if (c.status === "available" && ["security", "waf_edge", "iam"].includes(c.category)) {
+    severity += 2;
+    reasons.push("Güvenlik kategorisinde eksik bağlantı");
+  }
+
+  const level: RiskResult["level"] =
+    severity >= 5 ? "critical" : severity >= 3 ? "high" : severity >= 1 ? "medium" : "low";
+  return { level, reasons };
+}
+
+// ─── AI INSIGHTS (MOCK) ─────────────────────────────────────
+export interface AIInsightResult {
+  insights: string[];
+  recommendations: string[];
+}
+
+export function getAIInsights(c: TechConnector): AIInsightResult {
+  const insights: string[] = [];
+  const recommendations: string[] = [];
+
+  if (c.status === "connected") {
+    const records = 1200 + Math.floor(c.name_tr.length * 317 % 4800);
+    insights.push(`Son 24 saatte ${records.toLocaleString()} kayıt senkronize edildi.`);
+    insights.push(`${c.coverage_impact.metrics_covered.length} metrik aktif olarak besleniyor.`);
+    insights.push(`${c.coverage_impact.agents_impacted.length} AI ajanı bu kaynaktan veri alıyor.`);
+    if (c.refresh_frequency === "realtime") {
+      insights.push("Gerçek zamanlı veri akışı aktif — gecikme <1dk.");
+    }
+  }
+
+  if (c.status === "error") {
+    insights.push("Hata durumu devam ediyor — veri akışı durmuş.");
+    recommendations.push("Bağlantıyı yeniden kurarak veri akışını başlatın.");
+  }
+  if (c.refresh_frequency === "daily" && c.status === "connected") {
+    recommendations.push("Senkronizasyon sıklığını saatlik yaparak daha güncel veri elde edin.");
+  }
+  if (c.environment_scope_selected.length === 1 && c.environments_supported.length > 1) {
+    recommendations.push("Birden fazla ortam ekleyerek veri kapsamını genişletin.");
+  }
+  if (c.data_sensitivity === "high") {
+    recommendations.push("Token rotasyonu için otomatik hatırlatıcı kurun (90 gün).");
+  }
+  if (c.status === "available") {
+    recommendations.push(`${c.name_tr} bağlayarak ${c.coverage_impact.metrics_covered.length} ek metrik kazanın.`);
+  }
+
+  return { insights, recommendations };
+}
+
+// ─── MOCK METRICS 24H ────────────────────────────────────────
+export interface Metrics24h {
+  successRatePct: number;
+  errorRatePct: number;
+  rateLimitHits: number;
+  recordsSynced: number;
+}
+
+export function getMockMetrics24h(c: TechConnector): Metrics24h {
+  if (c.status !== "connected") {
+    return { successRatePct: 0, errorRatePct: 0, rateLimitHits: 0, recordsSynced: 0 };
+  }
+  const seed = c.id.length * 7;
+  return {
+    successRatePct: 95 + (seed % 5),
+    errorRatePct: seed % 5,
+    rateLimitHits: seed % 12,
+    recordsSynced: 800 + (seed * 137) % 5000,
+  };
+}
+
+// ─── MOCK SYNC JOBS ──────────────────────────────────────────
+export interface SyncJob {
+  id: string;
+  startedAt: string;
+  duration: string;
+  records: number;
+  status: "success" | "error";
+  traceId: string;
+  error: string | null;
+}
+
+export function generateSyncJobs(c: TechConnector): SyncJob[] {
+  if (c.status !== "connected") return [];
+  const base = new Date("2026-02-19T09:00:00Z");
+  return Array.from({ length: 6 }, (_, i) => ({
+    id: `SJ-${3000 - i}`,
+    startedAt: new Date(base.getTime() - i * 6 * 3_600_000).toISOString(),
+    duration: `${8 + ((c.id.length + i) * 3) % 25}s`,
+    records: i === 3 ? 0 : 500 + ((c.id.length + i) * 317) % 3000,
+    status: (i === 3 ? "error" : "success") as "success" | "error",
+    traceId: `tr-${c.id.slice(0, 3)}${(1000 + i * 111).toString(36)}`,
+    error: i === 3 ? "Timeout — upstream API did not respond within 30s." : null,
+  }));
+}
