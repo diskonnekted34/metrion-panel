@@ -76,15 +76,6 @@ const Team = () => {
 
         <div className="relative z-10 p-6 md:p-10 max-w-7xl mx-auto">
 
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-10"
-          >
-            <h1 className="text-2xl font-bold text-foreground mb-1">AI Ekibim</h1>
-            <p className="text-sm text-muted-foreground">Aktif istihbarat ajanlarınız ve operasyonel durumları.</p>
-          </motion.div>
 
           {/* ─── SUMMARY STATS ─── */}
           <motion.div

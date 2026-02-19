@@ -46,16 +46,6 @@ const Alerts = () => {
     <AppLayout>
       <div className="p-6 max-w-4xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-          {/* Header */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-10 w-10 rounded-2xl bg-destructive/15 flex items-center justify-center">
-              <Bell className="h-5 w-5 text-destructive" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Operasyonel Sinyaller</h1>
-              <p className="text-sm text-muted-foreground">AI ekibinizden gelen kritik sinyaller ve öneriler</p>
-            </div>
-          </div>
 
           {/* Filters */}
           <div className="glass-card p-4 mb-6">

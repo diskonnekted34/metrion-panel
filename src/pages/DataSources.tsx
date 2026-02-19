@@ -173,23 +173,6 @@ const DataSources = () => {
 
           {/* ═══ ZONE 1: OVERVIEW ═══ */}
           <div className="glass-card p-5 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
-                  <Database className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <h1 className="text-lg font-bold text-foreground">Entegrasyon Konsolu</h1>
-                  <p className="text-[10px] text-muted-foreground">Kurumsal veri kaynağı yönetimi & izleme</p>
-                </div>
-              </div>
-              <span className={`text-[9px] font-semibold px-2.5 py-1 rounded-full ${
-                activeTier.id === "workforce" ? "badge-info" : activeTier.id === "performance" ? "badge-warning" : "badge-neutral"
-              }`}>
-                {activeTier.name}
-              </span>
-            </div>
-
             <div className="grid grid-cols-4 gap-3">
               {[
                 { icon: Plug, value: connectedCount, label: "Bağlı", iconClass: "text-primary", bgClass: "bg-primary/10" },

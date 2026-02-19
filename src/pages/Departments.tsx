@@ -29,17 +29,6 @@ const Departments = () => {
     <AppLayout>
       <div className="p-6 max-w-5xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <div className="flex items-center gap-3 mb-1">
-            <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center">
-              <Building2 className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Departmanlar</h1>
-              <p className="text-sm text-muted-foreground">
-                {roleLabels[currentUser.role]} · {currentUser.name}
-              </p>
-            </div>
-          </div>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

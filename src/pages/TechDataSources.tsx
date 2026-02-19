@@ -190,13 +190,6 @@ const TechDataSources = () => {
           <div className="glass-card p-5 mb-5">
             <div className="flex items-start justify-between mb-5">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
-                  <Database className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <h1 className="text-lg font-bold text-foreground">Teknoloji Veri Kaynakları</h1>
-                  <p className="text-[10px] text-muted-foreground">CTO & CIO hatları için entegrasyon kataloğu</p>
-                </div>
               </div>
 
               {/* Quick Actions */}
