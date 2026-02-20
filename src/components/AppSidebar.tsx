@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Target, Scale, Zap, Database,
-  Crown, Settings as SettingsIcon, AlertTriangle
+  Building2, Settings as SettingsIcon, AlertTriangle
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -37,8 +37,8 @@ const menuItems = [
   { label: "Strateji", icon: Target, path: "/strategy" },
   { label: "Kararlar", icon: Scale, path: "/decision-lab", count: pendingDecisionCount },
   { label: "Operasyon", icon: Zap, path: "/action-center" },
+  { label: "Organizasyon", icon: Building2, path: "/organization" },
   { label: "Veri Kaynakları", icon: Database, path: "/data-sources" },
-  { label: "Kadro", icon: Crown, path: "/kadro" },
   { label: "Ayarlar", icon: SettingsIcon, path: "/settings" },
 ];
 
@@ -50,7 +50,7 @@ const AppSidebar = () => {
 
   const isActive = (path: string) => {
     if (path === "/strategy") return location.pathname.startsWith("/strategy") || location.pathname === "/okr" || location.pathname === "/reports" || location.pathname.startsWith("/reports/");
-    if (path === "/kadro") return location.pathname.startsWith("/kadro") || location.pathname.startsWith("/seat/");
+    if (path === "/organization") return location.pathname.startsWith("/organization") || location.pathname.startsWith("/kadro") || location.pathname.startsWith("/seat/") || location.pathname.startsWith("/departments");
     if (path === "/data-sources") return location.pathname.startsWith("/data-sources") || location.pathname.startsWith("/tech-data-sources");
     if (path === "/action-center") return location.pathname.startsWith("/action-center") || location.pathname === "/tasks";
     return location.pathname === path;

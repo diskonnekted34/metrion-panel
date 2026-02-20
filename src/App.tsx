@@ -16,6 +16,7 @@ import Index from "./pages/Index";
 import ExpertProfile from "./pages/ExpertProfile";
 import Dashboard from "./pages/Dashboard";
 import Kadro from "./pages/Kadro";
+import Organization from "./pages/Organization";
 import SeatDetail from "./pages/SeatDetail";
 import Strategy from "./pages/Strategy";
 import Tasks from "./pages/Tasks";
@@ -76,7 +77,8 @@ const App = () => (
               <Route path="/data-sources/:integrationId" element={<IntegrationDetail />} />
               <Route path="/tech-data-sources" element={<TechDataSources />} />
               <Route path="/tech-data-sources/:connectorId" element={<TechIntegrationDetail />} />
-              <Route path="/kadro" element={<Kadro />} />
+              <Route path="/organization" element={<Organization />} />
+              <Route path="/kadro" element={<Organization />} />
               <Route path="/seat/:seatKey" element={<SeatDetail />} />
               <Route path="/settings" element={<Settings />} />
 
@@ -100,8 +102,8 @@ const App = () => (
               <Route path="/workspace/:agentId" element={<AgentWorkspace />} />
               <Route path="/executive/position-history" element={<PositionHistory />} />
               {/* Legacy redirects */}
-              <Route path="/command-structure" element={<Kadro />} />
-              <Route path="/team" element={<Kadro />} />
+              <Route path="/command-structure" element={<Organization />} />
+              <Route path="/team" element={<Organization />} />
 
               <Route path="*" element={<NotFound />} />
             </Routes>
