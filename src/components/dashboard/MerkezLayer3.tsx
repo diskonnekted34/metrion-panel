@@ -24,9 +24,9 @@ const PremiumChart = ({ data, labels, color, title }: { data: number[]; labels: 
       className="p-4"
       style={{
         background: "rgba(8,8,8,0.5)",
-        backdropFilter: "blur(20px)",
+        backdropFilter: "blur(25px)",
         border: "0.5px solid rgba(255,255,255,0.06)",
-        borderRadius: "0.9rem",
+        borderRadius: "16px",
       }}
     >
       <p className="text-[0.7rem] font-medium text-foreground mb-3">{title}</p>
@@ -129,9 +129,9 @@ const MerkezLayer3 = () => {
           className="p-4"
           style={{
             background: "rgba(8,8,8,0.5)",
-            backdropFilter: "blur(20px)",
+            backdropFilter: "blur(25px)",
             border: "0.5px solid rgba(255,255,255,0.06)",
-            borderRadius: "0.9rem",
+            borderRadius: "16px",
           }}
         >
           <div className="space-y-0">
