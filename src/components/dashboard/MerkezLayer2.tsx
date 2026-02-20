@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { AlertTriangle, ArrowRight, Shield, Zap, Brain, Building2, TrendingUp } from "lucide-react";
+import { ArrowRight, Shield, Brain, Building2, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 /* ── Intervention Items ── */
@@ -35,10 +35,10 @@ const interventions: Intervention[] = [
   },
 ];
 
-const riskColors: Record<string, { bg: string; text: string; dot: string; glow: string }> = {
-  critical: { bg: "bg-destructive/8", text: "text-destructive", dot: "bg-destructive", glow: "0 0 12px rgba(239,68,68,0.25)" },
-  warning: { bg: "bg-warning/8", text: "text-warning", dot: "bg-warning", glow: "0 0 10px rgba(245,158,11,0.2)" },
-  info: { bg: "bg-primary/8", text: "text-primary", dot: "bg-primary", glow: "0 0 8px rgba(30,107,255,0.2)" },
+const riskIndicator: Record<string, { color: string; label: string }> = {
+  critical: { color: "#EF4444", label: "Kritik" },
+  warning: { color: "#F59E0B", label: "Uyarı" },
+  info: { color: "#1E6BFF", label: "Bilgi" },
 };
 
 /* ── Department Cards ── */
@@ -67,108 +67,123 @@ const MerkezLayer2 = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="mb-8 grid grid-cols-1 lg:grid-cols-5 gap-5">
-      {/* Intervention Panel — 3 cols */}
+    <div className="mb-6 grid grid-cols-1 lg:grid-cols-5 gap-4">
+      {/* Intervention Panel — structured list */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
         className="lg:col-span-3"
       >
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <div>
-            <h2 className="text-base font-semibold text-foreground">Öncelikli Müdahale Alanları</h2>
-            <p className="text-[0.65rem] text-muted-foreground/70 mt-0.5">Sistem ve AI tarafından tespit edilen kritik konular.</p>
+            <h2 className="text-[0.85rem] font-semibold text-foreground">Öncelikli Müdahale Alanları</h2>
+            <p className="text-[0.6rem] text-muted-foreground/60 mt-0.5">Sistem ve AI tarafından tespit edilen kritik konular.</p>
           </div>
-          <Shield className="h-4 w-4 text-muted-foreground/40" />
+          <Shield className="h-3.5 w-3.5 text-muted-foreground/30" />
         </div>
 
-        <div className="space-y-3">
+        <div
+          style={{
+            background: "rgba(8,8,8,0.5)",
+            backdropFilter: "blur(20px)",
+            border: "0.5px solid rgba(255,255,255,0.06)",
+            borderRadius: "0.9rem",
+          }}
+        >
           {interventions.map((item, i) => {
-            const rc = riskColors[item.risk];
+            const rc = riskIndicator[item.risk];
             return (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35 + i * 0.08 }}
-                className={`glass-card p-5 ${item.risk === "critical" ? "animate-[glow-pulse_3s_ease-in-out_1]" : ""}`}
-                style={item.risk === "critical" ? { boxShadow: "inset 0 0 40px rgba(239,68,68,0.03)" } : {}}
+                transition={{ delay: 0.32 + i * 0.06 }}
+                className="flex items-start gap-3 px-4 py-3.5 relative"
               >
-                <div className="flex items-start gap-4">
-                  <div className={`h-2.5 w-2.5 rounded-full mt-1.5 shrink-0 ${rc.dot}`} style={{ boxShadow: rc.glow }} />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className={`text-[0.6rem] font-bold px-2 py-0.5 rounded-full ${item.type === "AI" ? "bg-primary/15 text-primary" : "bg-secondary text-muted-foreground"}`}>
-                        {item.type}
-                      </span>
-                      <span className={`text-[0.6rem] font-medium px-2 py-0.5 rounded-full ${rc.bg} ${rc.text}`}>
-                        {item.risk === "critical" ? "Kritik" : item.risk === "warning" ? "Uyarı" : "Bilgi"}
-                      </span>
-                    </div>
-                    <p className="text-sm font-semibold text-foreground mb-1">{item.title}</p>
-                    <p className="text-[0.7rem] text-muted-foreground mb-2">
-                      KPI: <span className="text-foreground/80 font-medium">{item.kpi}</span> · {item.suggestion}
-                    </p>
-                    <button
-                      onClick={() => navigate("/decision-lab")}
-                      className="flex items-center gap-1.5 text-[0.7rem] font-medium text-primary hover:text-primary/80 transition-colors"
-                    >
-                      Karara Git <ArrowRight className="h-3 w-3" />
-                    </button>
+                {/* Risk vertical bar */}
+                <div
+                  className="absolute left-0 top-3 bottom-3 w-[2px] rounded-full"
+                  style={{ background: rc.color, boxShadow: `0 0 6px ${rc.color}40` }}
+                />
+                <div className="flex-1 min-w-0 pl-2">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`text-[0.55rem] font-bold px-1.5 py-0.5 rounded ${item.type === "AI" ? "bg-primary/12 text-primary" : "bg-secondary text-muted-foreground"}`}>
+                      {item.type}
+                    </span>
+                    <span className="text-[0.55rem] font-medium" style={{ color: rc.color }}>{rc.label}</span>
                   </div>
+                  <p className="text-[0.8rem] font-semibold text-foreground mb-0.5">{item.title}</p>
+                  <p className="text-[0.6rem] text-muted-foreground">
+                    KPI: <span className="text-foreground/70 font-medium">{item.kpi}</span> · {item.suggestion}
+                  </p>
+                  <button
+                    onClick={() => navigate("/decision-lab")}
+                    className="flex items-center gap-1 mt-1.5 text-[0.6rem] font-medium text-primary/80 hover:text-primary transition-colors"
+                  >
+                    Karara Git <ArrowRight className="h-2.5 w-2.5" />
+                  </button>
                 </div>
+                {/* Separator line */}
+                {i < interventions.length - 1 && (
+                  <div className="absolute bottom-0 left-4 right-4 h-px" style={{ background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%)" }} />
+                )}
               </motion.div>
             );
           })}
         </div>
       </motion.div>
 
-      {/* Department Performance — 2 cols */}
+      {/* Department Performance — compact */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
         className="lg:col-span-2"
       >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-semibold text-foreground">Departman Performansı</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-[0.85rem] font-semibold text-foreground">Departman Performansı</h2>
           <button
             onClick={() => navigate("/organization")}
-            className="text-[0.65rem] text-primary hover:underline"
+            className="text-[0.6rem] text-primary/70 hover:text-primary transition-colors"
           >
             Tümü
           </button>
         </div>
 
-        <div className="space-y-2.5">
+        <div className="space-y-1.5">
           {departments.map((dept, i) => {
             const rb = deptRiskBadge[dept.risk];
             return (
               <motion.button
                 key={dept.name}
-                initial={{ opacity: 0, x: 8 }}
+                initial={{ opacity: 0, x: 6 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.45 + i * 0.04 }}
+                transition={{ delay: 0.42 + i * 0.03 }}
                 onClick={() => navigate("/organization")}
-                className="glass-card p-4 w-full text-left group hover:-translate-y-0.5 transition-all duration-200"
+                className="w-full text-left group hover:-translate-y-px transition-all duration-200 px-3.5 py-2.5"
+                style={{
+                  background: "rgba(8,8,8,0.45)",
+                  backdropFilter: "blur(16px)",
+                  border: "0.5px solid rgba(255,255,255,0.05)",
+                  borderRadius: "0.75rem",
+                }}
               >
                 <div className="flex items-center gap-3">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-semibold text-foreground">{dept.name}</span>
-                      <span className={`text-[0.55rem] font-medium px-1.5 py-0.5 rounded-full ${rb.cls}`}>{rb.label}</span>
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="text-[0.75rem] font-semibold text-foreground">{dept.name}</span>
+                      <span className={`text-[0.5rem] font-medium px-1.5 py-0.5 rounded-full ${rb.cls}`}>{rb.label}</span>
                     </div>
-                    <div className="flex items-center gap-3 text-[0.65rem] text-muted-foreground">
+                    <div className="flex items-center gap-2.5 text-[0.55rem] text-muted-foreground">
                       <span className="flex items-center gap-1">{occupantIcon(dept.type)} {dept.cLevel}</span>
                       <span>{dept.okrs} OKR</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className={`text-lg font-bold ${dept.score >= 80 ? "text-success" : dept.score >= 70 ? "text-primary" : "text-warning"}`}>
+                    <span className={`text-base font-bold ${dept.score >= 80 ? "text-success" : dept.score >= 70 ? "text-primary" : "text-warning"}`}>
                       {dept.score}
                     </span>
-                    <p className="text-[0.55rem] text-muted-foreground">Skor</p>
                   </div>
                 </div>
               </motion.button>
