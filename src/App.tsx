@@ -15,9 +15,9 @@ import { PageMetaProvider } from "@/contexts/PageMetaContext";
 import Index from "./pages/Index";
 import ExpertProfile from "./pages/ExpertProfile";
 import Dashboard from "./pages/Dashboard";
-import Team from "./pages/Team";
 import Kadro from "./pages/Kadro";
-// CommandStructure merged into Kadro
+import SeatDetail from "./pages/SeatDetail";
+import Strategy from "./pages/Strategy";
 import Tasks from "./pages/Tasks";
 import Alerts from "./pages/Alerts";
 import AlertDetail from "./pages/AlertDetail";
@@ -63,40 +63,45 @@ const App = () => (
           <BrowserRouter>
           <PageMetaProvider>
             <Routes>
-              {/* Marketing pages — transparent overlay navbar */}
+              {/* Marketing pages */}
               <Route path="/" element={<Index />} />
               <Route path="/pricing" element={<Pricing />} />
 
-              {/* App pages — sidebar layout */}
+              {/* Main navigation (7 items) */}
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/strategy" element={<Strategy />} />
+              <Route path="/decision-lab" element={<DecisionLab />} />
+              <Route path="/action-center" element={<ActionCenter />} />
+              <Route path="/data-sources" element={<DataSources />} />
+              <Route path="/data-sources/:integrationId" element={<IntegrationDetail />} />
+              <Route path="/tech-data-sources" element={<TechDataSources />} />
+              <Route path="/tech-data-sources/:connectorId" element={<TechIntegrationDetail />} />
+              <Route path="/kadro" element={<Kadro />} />
+              <Route path="/seat/:seatKey" element={<SeatDetail />} />
+              <Route path="/settings" element={<Settings />} />
+
+              {/* Supporting pages */}
+              <Route path="/alerts" element={<Alerts />} />
+              <Route path="/alerts/:alertId" element={<AlertDetail />} />
+              <Route path="/tasks" element={<Tasks />} />
+              <Route path="/reports" element={<Reports />} />
+              <Route path="/reports/:reportId" element={<ReportViewer />} />
+              <Route path="/okr" element={<OKRPage />} />
+              <Route path="/marketplace" element={<Marketplace />} />
               <Route path="/departments" element={<Departments />} />
               <Route path="/departments/:deptId" element={<DepartmentDetail />} />
               <Route path="/departments/:deptId/reports" element={<DepartmentReports />} />
               <Route path="/departments/:deptId/actions" element={<DepartmentActions />} />
               <Route path="/departments/:deptId/modules" element={<DepartmentModules />} />
               <Route path="/departments/:deptId/intelligence/:metricId" element={<DepartmentIntelligenceView />} />
-              <Route path="/team" element={<Team />} />
-              <Route path="/kadro" element={<Kadro />} />
-              <Route path="/command-structure" element={<Kadro />} />
-              <Route path="/tasks" element={<Tasks />} />
-              <Route path="/alerts" element={<Alerts />} />
-              <Route path="/alerts/:alertId" element={<AlertDetail />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/reports/:reportId" element={<ReportViewer />} />
-              <Route path="/marketplace" element={<Marketplace />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/data-sources" element={<DataSources />} />
-              <Route path="/data-sources/:integrationId" element={<IntegrationDetail />} />
-              <Route path="/tech-data-sources" element={<TechDataSources />} />
-              <Route path="/tech-data-sources/:connectorId" element={<TechIntegrationDetail />} />
-              <Route path="/action-center" element={<ActionCenter />} />
-              <Route path="/decision-lab" element={<DecisionLab />} />
-              <Route path="/okr" element={<OKRPage />} />
               <Route path="/creative-workspace" element={<CreativeWorkspace />} />
               <Route path="/intelligence/:clusterId" element={<IntelligenceView />} />
               <Route path="/expert/:id" element={<ExpertProfile />} />
               <Route path="/workspace/:agentId" element={<AgentWorkspace />} />
               <Route path="/executive/position-history" element={<PositionHistory />} />
+              {/* Legacy redirects */}
+              <Route path="/command-structure" element={<Kadro />} />
+              <Route path="/team" element={<Kadro />} />
 
               <Route path="*" element={<NotFound />} />
             </Routes>

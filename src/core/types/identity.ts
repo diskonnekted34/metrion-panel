@@ -45,6 +45,44 @@ export interface Membership {
   joined_at: string;
 }
 
+// ── Seat Level (7-tier hierarchy) ───────────────────────
+export type SeatLevel =
+  | "ceo"
+  | "c_level"
+  | "director"
+  | "manager"
+  | "lead"
+  | "specialist"
+  | "junior"
+  | "intern";
+
+export const SEAT_LEVEL_ORDER: Record<SeatLevel, number> = {
+  ceo: 0,
+  c_level: 1,
+  director: 2,
+  manager: 3,
+  lead: 4,
+  specialist: 5,
+  junior: 6,
+  intern: 7,
+};
+
+export const SEAT_LEVEL_LABELS: Record<SeatLevel, string> = {
+  ceo: "CEO",
+  c_level: "C-Level",
+  director: "Direktör",
+  manager: "Müdür",
+  lead: "Lider",
+  specialist: "Uzman",
+  junior: "Junior",
+  intern: "Stajyer",
+};
+
+// AI can only be Specialist and above
+export function canBeAI(level: SeatLevel): boolean {
+  return SEAT_LEVEL_ORDER[level] <= SEAT_LEVEL_ORDER["specialist"];
+}
+
 // ── Seat Authority Model ────────────────────────────────
 export type SeatKey =
   | "CEO" | "CFO" | "CTO" | "CIO" | "CMO" | "COO" | "CHRO"
@@ -56,7 +94,18 @@ export type SeatKey =
   | "FINANCE_CONTROLLER" | "PRODUCT_MANAGER" | "PEOPLE_OPS"
   | "ACCOUNT_MANAGER" | "COMPLIANCE_LEAD" | "MARKETING_MANAGER"
   | "CONTENT_LEAD" | "OPS_MANAGER" | "STRATEGIC_INTEL"
-  | "RISK_ANALYST" | "FORECAST_ENGINE" | "DEVOPS_LEAD";
+  | "RISK_ANALYST" | "FORECAST_ENGINE" | "DEVOPS_LEAD"
+  // New specialist/lead roles
+  | "DATA_ENGINEER" | "FRONTEND_LEAD" | "BACKEND_LEAD"
+  | "QA_LEAD" | "UX_RESEARCHER" | "PERFORMANCE_MARKETER"
+  | "SEO_SPECIALIST" | "SOCIAL_MEDIA_SPECIALIST"
+  | "SUPPLY_CHAIN_LEAD" | "LOGISTICS_SPECIALIST"
+  | "PAYROLL_SPECIALIST" | "TRAINING_LEAD"
+  | "BIZ_DEV_LEAD" | "CUSTOMER_SUPPORT_LEAD"
+  // Junior & Intern
+  | "JUNIOR_DEV" | "JUNIOR_DESIGNER" | "JUNIOR_MARKETER"
+  | "JUNIOR_ANALYST" | "JUNIOR_SALES"
+  | "INTERN_TECH" | "INTERN_MARKETING" | "INTERN_FINANCE" | "INTERN_HR";
 
 export type AIMode = "advisory" | "hybrid" | "autonomous";
 
