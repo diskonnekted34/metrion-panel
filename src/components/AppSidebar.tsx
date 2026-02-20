@@ -58,7 +58,7 @@ const AppSidebar = () => {
 
   return (
     <TooltipProvider>
-      <aside className="fixed left-0 top-0 bottom-0 z-40 w-[263px] flex flex-col glass-strong border-r border-border">
+      <aside className="fixed left-0 top-0 bottom-0 z-40 w-[276px] flex flex-col glass-strong border-r border-border">
         {/* Logo */}
         <div className="flex items-center px-5 h-16 shrink-0">
           <Link to="/" className="flex items-center gap-2.5">

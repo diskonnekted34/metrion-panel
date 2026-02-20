@@ -35,7 +35,7 @@
     --input: 0 0% 6%;
     --ring: 220 100% 56%;
 
-    --radius: 0.9rem;
+    --radius: 1rem;
 
     --sidebar-background: 0 0% 2%;
     --sidebar-foreground: 220 15% 55%;
@@ -97,7 +97,7 @@
   }
 
   html {
-    font-size: 104.5%;
+    font-size: 110%;
   }
 
   body {

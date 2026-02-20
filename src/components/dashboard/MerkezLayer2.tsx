@@ -86,9 +86,9 @@ const MerkezLayer2 = () => {
         <div
           style={{
             background: "rgba(8,8,8,0.5)",
-            backdropFilter: "blur(20px)",
+            backdropFilter: "blur(25px)",
             border: "0.5px solid rgba(255,255,255,0.06)",
-            borderRadius: "0.9rem",
+            borderRadius: "16px",
           }}
         >
           {interventions.map((item, i) => {
@@ -164,9 +164,9 @@ const MerkezLayer2 = () => {
                 className="w-full text-left group hover:-translate-y-px transition-all duration-200 px-3.5 py-2.5"
                 style={{
                   background: "rgba(8,8,8,0.45)",
-                  backdropFilter: "blur(16px)",
+                  backdropFilter: "blur(20px)",
                   border: "0.5px solid rgba(255,255,255,0.05)",
-                  borderRadius: "0.75rem",
+                  borderRadius: "12px",
                 }}
               >
                 <div className="flex items-center gap-3">
