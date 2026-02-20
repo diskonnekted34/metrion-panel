@@ -85,10 +85,10 @@ const MerkezLayer2 = () => {
 
         <div
           style={{
-            background: "rgba(8,8,8,0.5)",
-            backdropFilter: "blur(25px)",
-            border: "0.5px solid rgba(255,255,255,0.06)",
-            borderRadius: "16px",
+            background: "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 45%, rgba(0,0,0,0.35) 100%)",
+            backdropFilter: "blur(14px)",
+            border: "0.5px solid rgba(255,255,255,0.10)",
+            borderRadius: "var(--radius-card, 16px)",
           }}
         >
           {interventions.map((item, i) => {
@@ -163,10 +163,10 @@ const MerkezLayer2 = () => {
                 onClick={() => navigate("/organization")}
                 className="w-full text-left group hover:-translate-y-px transition-all duration-200 px-3.5 py-2.5"
                 style={{
-                  background: "rgba(8,8,8,0.45)",
-                  backdropFilter: "blur(20px)",
-                  border: "0.5px solid rgba(255,255,255,0.05)",
-                  borderRadius: "12px",
+                  background: "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.3) 100%)",
+                  backdropFilter: "blur(14px)",
+                  border: "0.5px solid rgba(255,255,255,0.08)",
+                  borderRadius: "var(--radius-inner, 12px)",
                 }}
               >
                 <div className="flex items-center gap-3">

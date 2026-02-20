@@ -6,7 +6,7 @@ import { TrendingUp, DollarSign, Users, ShoppingCart, Target, BarChart3, Percent
 const HealthScore = () => {
   const score = 78;
   const delta = "+3.2%";
-  const r = 58;
+  const r = 62;
   const circumference = 2 * Math.PI * r;
   const dashLen = (score / 100) * circumference;
 
@@ -15,34 +15,32 @@ const HealthScore = () => {
       initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.1 }}
-      className="h-full flex flex-col items-center justify-center p-7"
+      className="h-full flex flex-col items-center justify-center p-8"
       style={{
-        background: "rgba(8,8,8,0.55)",
-        backdropFilter: "blur(25px)",
-        border: "0.5px solid",
-        borderImage: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 100%) 1",
-        borderRadius: "16px",
+        background: "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 45%, rgba(0,0,0,0.35) 100%)",
+        backdropFilter: "blur(14px)",
+        border: "0.5px solid rgba(255,255,255,0.10)",
+        borderRadius: "var(--radius-card, 16px)",
       }}
     >
-      <p className="text-[0.6rem] font-semibold text-muted-foreground tracking-[0.15em] uppercase mb-4">Şirket Sağlık Skoru</p>
+      <p className="text-[0.65rem] font-semibold text-muted-foreground tracking-[0.15em] uppercase mb-5">Şirket Sağlık Skoru</p>
       <div className="relative">
-        <svg width={140} height={140} className="-rotate-90">
-          <circle cx={70} cy={70} r={r} fill="none" stroke="#111" strokeWidth="9" />
+        <svg width={150} height={150} className="-rotate-90">
+          <circle cx={75} cy={75} r={r} fill="none" stroke="#111" strokeWidth="9" />
           <circle
-            cx={70} cy={70} r={r} fill="none"
+            cx={75} cy={75} r={r} fill="none"
             stroke="url(#healthGradNew)" strokeWidth="9" strokeLinecap="round"
             strokeDasharray={`${dashLen} ${circumference - dashLen}`}
           >
             <animate attributeName="stroke-dashoffset" from={circumference.toString()} to="0" dur="1s" fill="freeze" />
           </circle>
-          {/* Moving sheen */}
           <circle
-            cx={70} cy={70} r={r} fill="none"
+            cx={75} cy={75} r={r} fill="none"
             stroke="url(#sheenGrad)" strokeWidth="9" strokeLinecap="round"
             strokeDasharray={`${circumference * 0.08} ${circumference * 0.92}`}
             opacity="0.35"
           >
-            <animateTransform attributeName="transform" type="rotate" from="0 70 70" to="360 70 70" dur="7s" repeatCount="indefinite" />
+            <animateTransform attributeName="transform" type="rotate" from="0 75 75" to="360 75 75" dur="7s" repeatCount="indefinite" />
           </circle>
           <defs>
             <linearGradient id="healthGradNew" x1="0" y1="0" x2="1" y2="1">
@@ -57,16 +55,16 @@ const HealthScore = () => {
           </defs>
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-[2.8rem] font-bold text-foreground leading-none tracking-tight">{score}</span>
-          <span className="text-[0.6rem] text-muted-foreground mt-1">/ 100</span>
+          <span className="text-[3rem] font-bold text-foreground leading-none" style={{ letterSpacing: "-0.03em" }}>{score}</span>
+          <span className="text-[0.65rem] text-muted-foreground mt-1">/ 100</span>
         </div>
       </div>
-      <div className="flex items-center gap-1.5 mt-4">
+      <div className="flex items-center gap-1.5 mt-5">
         <TrendingUp className="h-3.5 w-3.5 text-success" />
         <span className="text-xs font-semibold text-success">{delta}</span>
         <span className="text-[0.6rem] text-muted-foreground ml-1">son 30 gün</span>
       </div>
-      <p className="text-[0.6rem] text-muted-foreground leading-relaxed mt-2 text-center max-w-[200px]">
+      <p className="text-[0.65rem] text-muted-foreground leading-relaxed mt-3 text-center max-w-[220px]">
         Finansal stabilite güçlü. Operasyonel verimlilik stabil.
       </p>
     </motion.div>
@@ -113,17 +111,20 @@ const timeFilterData: Record<TF, Record<string, number[]>> = {
 };
 
 const TimeFilter = ({ active, onChange }: { active: TF; onChange: (v: TF) => void }) => (
-  <div className="flex gap-0.5 p-0.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)" }}>
+  <div className="flex gap-0.5 p-0.5" style={{ borderRadius: "var(--radius-pill, 999px)", background: "rgba(255,255,255,0.04)" }}>
     {timeFilters.map((f) => (
       <button
         key={f}
         onClick={() => onChange(f)}
-        className={`px-2.5 py-1 text-[0.55rem] font-medium transition-all duration-200 ${
+        className={`px-3 py-1 text-[0.6rem] font-medium transition-all duration-200 ${
           active === f
             ? "text-primary bg-primary/12 shadow-sm"
             : "text-muted-foreground hover:text-foreground"
         }`}
-        style={{ borderRadius: "999px", border: active === f ? "0.5px solid rgba(30,144,255,0.3)" : "0.5px solid transparent" }}
+        style={{
+          borderRadius: "var(--radius-pill, 999px)",
+          border: active === f ? "0.5px solid rgba(30,144,255,0.3)" : "0.5px solid transparent",
+        }}
       >
         {f}
       </button>
@@ -133,7 +134,7 @@ const TimeFilter = ({ active, onChange }: { active: TF; onChange: (v: TF) => voi
 
 /* ── KPI Chart with neon gradient & sweep ── */
 const KPIChart = ({ data, positive, uniqueId }: { data: number[]; positive: boolean; uniqueId: string }) => {
-  const h = 48;
+  const h = 56;
   const w = 100;
   const max = Math.max(...data);
   const min = Math.min(...data);
@@ -145,20 +146,19 @@ const KPIChart = ({ data, positive, uniqueId }: { data: number[]; positive: bool
   const line = points.map(p => p.join(",")).join(" ");
   const area = `M${points.map(p => p.join(",")).join(" L")} L${w},${h} L0,${h} Z`;
   const gradId = `kpi-${uniqueId}`;
-  const colors = positive ? { from: "#00E5FF", to: "#1E90FF" } : { from: "#FF6B6B", to: "#EF4444" };
+  const colors = positive ? { from: "#00E5FF", to: "#2D7BFF" } : { from: "#FF6B6B", to: "#EF4444" };
 
   return (
     <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height: h }}>
       <defs>
         <linearGradient id={`${gradId}-fill`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={colors.from} stopOpacity="0.06" />
+          <stop offset="0%" stopColor={colors.from} stopOpacity="0.18" />
           <stop offset="100%" stopColor={colors.from} stopOpacity="0" />
         </linearGradient>
-        <linearGradient id={`${gradId}-line`} x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={`${gradId}-line`} x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor={colors.from} />
           <stop offset="100%" stopColor={colors.to} />
         </linearGradient>
-        {/* Sweep glow mask */}
         <linearGradient id={`${gradId}-sweep`} x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="white" stopOpacity="0">
             <animate attributeName="offset" values="-0.3;1.3" dur="5s" repeatCount="indefinite" />
@@ -179,9 +179,8 @@ const KPIChart = ({ data, positive, uniqueId }: { data: number[]; positive: bool
         strokeWidth="1.5"
         strokeLinejoin="round"
         strokeLinecap="round"
-        style={{ filter: `drop-shadow(0 0 8px ${colors.from}99)` }}
+        style={{ filter: `drop-shadow(0 0 10px ${colors.from}88)` }}
       />
-      {/* Sweep overlay */}
       <polyline
         points={line}
         fill="none"
@@ -191,9 +190,8 @@ const KPIChart = ({ data, positive, uniqueId }: { data: number[]; positive: bool
         strokeLinecap="round"
         opacity="0.3"
       />
-      {/* Last point */}
       <circle cx={points[points.length - 1][0]} cy={points[points.length - 1][1]} r="2.5" fill={colors.from} opacity="0.9" />
-      <circle cx={points[points.length - 1][0]} cy={points[points.length - 1][1]} r="5" fill={colors.from} opacity="0.15" />
+      <circle cx={points[points.length - 1][0]} cy={points[points.length - 1][1]} r="6" fill={colors.from} opacity="0.12" />
     </svg>
   );
 };
@@ -208,7 +206,7 @@ interface KPICard {
   min: string;
   max: string;
   avg: string;
-  tint: string; // subtle background tint
+  tint: string;
 }
 
 const kpis: KPICard[] = [
@@ -221,7 +219,7 @@ const kpis: KPICard[] = [
 ];
 
 const KPICardComponent = ({ kpi, i }: { kpi: KPICard; i: number }) => {
-  const [timeFilter, setTimeFilter] = useState<TF>("A");
+  const [timeFilter, setTimeFilter] = useState<TF>("H");
   const chartId = useId();
   const chartData = timeFilterData[timeFilter]?.[kpi.label] || [0];
 
@@ -230,50 +228,68 @@ const KPICardComponent = ({ kpi, i }: { kpi: KPICard; i: number }) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.12 + i * 0.04 }}
-      className="group transition-all duration-200 hover:-translate-y-px"
+      className="group transition-all duration-200 hover:-translate-y-px relative overflow-hidden"
       style={{
-        background: `linear-gradient(135deg, rgba(${kpi.tint},0.04) 0%, rgba(8,8,8,0.55) 50%)`,
-        backdropFilter: "blur(25px)",
-        border: "0.5px solid",
-        borderImage: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 100%) 1",
-        borderRadius: "16px",
-        padding: "1.1rem",
+        background: `linear-gradient(135deg, rgba(${kpi.tint},0.04) 0%, rgba(255,255,255,0.03) 30%, rgba(0,0,0,0.35) 100%)`,
+        backdropFilter: "blur(14px)",
+        border: "0.5px solid rgba(255,255,255,0.10)",
+        borderRadius: "var(--radius-card, 16px)",
+        padding: "1.2rem",
       }}
     >
+      {/* 3D sheen overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          borderRadius: "inherit",
+          background: "linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02), rgba(255,255,255,0.00))",
+          opacity: 0.35,
+          mixBlendMode: "screen",
+        }}
+      />
+
       {/* Top row: icon + delta */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="h-8 w-8 rounded-xl flex items-center justify-center" style={{ background: `rgba(${kpi.tint},0.1)` }}>
-          <kpi.icon className="h-4 w-4" style={{ color: `rgba(${kpi.tint},0.8)` }} />
+      <div className="flex items-center justify-between mb-3 relative">
+        <div
+          className="h-9 w-9 flex items-center justify-center"
+          style={{
+            background: `rgba(${kpi.tint},0.1)`,
+            borderRadius: "var(--radius-inner, 12px)",
+          }}
+        >
+          <kpi.icon className="h-[18px] w-[18px]" style={{ color: `rgba(${kpi.tint},0.8)` }} />
         </div>
-        <span className={`text-[0.65rem] font-semibold ${kpi.positive ? "text-success" : "text-destructive"}`}>
+        <span className={`text-[0.7rem] font-semibold ${kpi.positive ? "text-success" : "text-destructive"}`}>
           {kpi.delta}
         </span>
       </div>
 
       {/* Value — primary focus */}
-      <p className="text-[1.5rem] font-semibold text-foreground leading-none mb-1" style={{ letterSpacing: "-0.02em" }}>{kpi.value}</p>
+      <p className="text-[1.7rem] font-semibold text-foreground leading-none mb-1 relative" style={{ letterSpacing: "-0.03em" }}>
+        {kpi.value}
+      </p>
 
       {/* Label */}
-      <p className="text-[0.65rem] text-muted-foreground/70 font-medium mb-3">{kpi.label}</p>
+      <p className="text-[0.7rem] text-muted-foreground/70 font-medium mb-3 relative">{kpi.label}</p>
 
       {/* Time filter */}
-      <div className="mb-2">
+      <div className="mb-2 relative">
         <TimeFilter active={timeFilter} onChange={setTimeFilter} />
       </div>
 
-      {/* Chart — full width */}
+      {/* Chart — full width, neon glow */}
       <motion.div
         key={timeFilter}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="-mx-1"
+        className="-mx-2 relative"
       >
         <KPIChart data={chartData} positive={kpi.positive} uniqueId={`${chartId}-${i}`} />
       </motion.div>
 
       {/* Summary row */}
-      <div className="flex justify-between mt-2 text-[0.5rem] text-muted-foreground/60">
+      <div className="flex justify-between mt-2 text-[0.55rem] text-muted-foreground/60 relative">
         <span>Min: {kpi.min}</span>
         <span>Ort: {kpi.avg}</span>
         <span>Max: {kpi.max}</span>
@@ -284,11 +300,11 @@ const KPICardComponent = ({ kpi, i }: { kpi: KPICard; i: number }) => {
 
 const MerkezLayer1 = () => (
   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-7">
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-[18px]">
       <div className="lg:col-span-1">
         <HealthScore />
       </div>
-      <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-3 gap-[18px]">
         {kpis.map((kpi, i) => (
           <KPICardComponent key={kpi.label} kpi={kpi} i={i} />
         ))}

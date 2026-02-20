@@ -10,7 +10,7 @@ const Dashboard = () => {
 
   return (
     <AppLayout>
-      <div className={`${isMobile ? "p-3 max-w-lg" : "p-6 max-w-7xl"} mx-auto`}>
+      <div className={`${isMobile ? "p-4 max-w-lg" : "p-7 max-w-7xl"} mx-auto`}>
         {!isMobile && <IntegrationBanner />}
         <MerkezLayer1 />
         <MerkezLayer2 />

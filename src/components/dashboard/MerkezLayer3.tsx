@@ -23,10 +23,10 @@ const PremiumChart = ({ data, labels, color, title }: { data: number[]; labels: 
     <div
       className="p-4"
       style={{
-        background: "rgba(8,8,8,0.5)",
-        backdropFilter: "blur(25px)",
-        border: "0.5px solid rgba(255,255,255,0.06)",
-        borderRadius: "16px",
+        background: "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 45%, rgba(0,0,0,0.35) 100%)",
+        backdropFilter: "blur(14px)",
+        border: "0.5px solid rgba(255,255,255,0.10)",
+        borderRadius: "var(--radius-card, 16px)",
       }}
     >
       <p className="text-[0.7rem] font-medium text-foreground mb-3">{title}</p>
@@ -128,10 +128,10 @@ const MerkezLayer3 = () => {
         <div
           className="p-4"
           style={{
-            background: "rgba(8,8,8,0.5)",
-            backdropFilter: "blur(25px)",
-            border: "0.5px solid rgba(255,255,255,0.06)",
-            borderRadius: "16px",
+            background: "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 45%, rgba(0,0,0,0.35) 100%)",
+            backdropFilter: "blur(14px)",
+            border: "0.5px solid rgba(255,255,255,0.10)",
+            borderRadius: "var(--radius-card, 16px)",
           }}
         >
           <div className="space-y-0">
