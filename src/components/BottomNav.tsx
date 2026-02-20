@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Target, Scale, Zap, Crown, Bell } from "lucide-react";
+import { LayoutDashboard, Target, Scale, Zap, Building2, Bell } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import { alertsData } from "@/data/alerts";
@@ -10,7 +10,7 @@ const bottomItems = [
   { label: "Strateji", icon: Target, path: "/strategy" },
   { label: "Kararlar", icon: Scale, path: "/decision-lab" },
   { label: "Operasyon", icon: Zap, path: "/action-center" },
-  { label: "Kadro", icon: Crown, path: "/kadro" },
+  { label: "Organizasyon", icon: Building2, path: "/organization" },
 ];
 
 const BottomNav = () => {
