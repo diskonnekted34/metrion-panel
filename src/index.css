@@ -35,7 +35,7 @@
     --input: 222 35% 10%;
     --ring: 220 100% 56%;
 
-    --radius: 0.875rem;
+    --radius: 0.96rem;
 
     --sidebar-background: 222 45% 5%;
     --sidebar-foreground: 220 15% 55%;
@@ -96,10 +96,15 @@
     @apply border-border;
   }
 
+  html {
+    font-size: 110%;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Helvetica Neue', 'Helvetica', 'Arial', system-ui, sans-serif;
     transition: background-color 200ms ease, color 200ms ease;
+    line-height: 1.62;
   }
 
   *, *::before, *::after {

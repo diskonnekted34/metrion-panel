@@ -19,7 +19,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       <BottomNav />
       <div
         className={`min-h-screen relative z-10 flex flex-col ${
-          isMobile ? "pt-12 pb-20" : "pl-[264px]"
+          isMobile ? "pt-12 pb-20" : "pl-[277px]"
         }`}
       >
         <GlobalTopBar />
