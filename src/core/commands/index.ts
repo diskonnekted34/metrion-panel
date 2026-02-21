@@ -29,3 +29,6 @@ export {
   updateBudgetCaps,
   changeAIMode,
 } from "./governance.commands";
+
+// Policy Wrapper
+export { withPolicy } from "./policy-wrapper";

@@ -26,3 +26,6 @@ export {
 
 // Commands
 export * from "./commands";
+
+// Security Core
+export * from "./security";
