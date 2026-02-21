@@ -1,16 +1,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { LanguageProvider } from "@/i18n/LanguageContext";
-import { RBACProvider } from "@/contexts/RBACContext";
-import { PackProvider } from "@/contexts/PackContext";
-import { IntegrationProvider } from "@/contexts/IntegrationContext";
-import { ActionModeProvider } from "@/contexts/ActionModeContext";
-import { TenantProvider } from "@/core/store/TenantContext";
-import { OKRProvider } from "@/core/store/OKRContext";
-import { ThemeProvider } from "@/contexts/ThemeContext";
+import { AppProviders } from "@/contexts/AppProviders";
 import { PageMetaProvider } from "@/contexts/PageMetaContext";
 import Index from "./pages/Index";
 import ExpertProfile from "./pages/ExpertProfile";
@@ -46,24 +37,15 @@ import IntegrationDetail from "./pages/IntegrationDetail";
 import PositionHistory from "./pages/PositionHistory";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <LanguageProvider>
-        <ThemeProvider>
-        <RBACProvider>
-        <TenantProvider>
-        <PackProvider>
-        <IntegrationProvider>
-        <OKRProvider>
-        <ActionModeProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-          <PageMetaProvider>
-            <Routes>
+  <AppProviders>
+    <Toaster />
+    <Sonner />
+    <BrowserRouter>
+      <PageMetaProvider>
+        <Routes>
               {/* Marketing pages */}
               <Route path="/" element={<Index />} />
               <Route path="/pricing" element={<Pricing />} />
@@ -106,19 +88,10 @@ const App = () => (
               <Route path="/team" element={<Organization />} />
 
               <Route path="*" element={<NotFound />} />
-            </Routes>
-          </PageMetaProvider>
-          </BrowserRouter>
-        </ActionModeProvider>
-        </OKRProvider>
-        </IntegrationProvider>
-        </PackProvider>
-        </TenantProvider>
-        </RBACProvider>
-        </ThemeProvider>
-      </LanguageProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
+        </Routes>
+      </PageMetaProvider>
+    </BrowserRouter>
+  </AppProviders>
 );
 
 export default App;
