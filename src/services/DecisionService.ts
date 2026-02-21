@@ -1,16 +1,28 @@
-import { decisions, type Decision, type DecisionLifecycle } from "@/data/decisions";
+/**
+ * DecisionService — Data Access Layer
+ *
+ * Provides both sync and async methods.
+ */
+
+import type { Decision } from "@/data/decisions";
+import { decisions as allDecisions } from "@/data/decisions";
 
 export const DecisionService = {
+  // Sync methods (existing consumers)
   getAll(): Decision[] {
-    return decisions;
+    return allDecisions;
   },
+
   getById(id: string): Decision | undefined {
-    return decisions.find(d => d.id === id);
+    return allDecisions.find(d => d.id === id);
   },
-  getByLifecycle(lifecycle: DecisionLifecycle): Decision[] {
-    return decisions.filter(d => d.lifecycle === lifecycle);
+
+  // Async methods (future API replacement)
+  async fetchAll(): Promise<Decision[]> {
+    return Promise.resolve(allDecisions);
   },
-  getPending(): Decision[] {
-    return decisions.filter(d => d.lifecycle === "proposed" || d.lifecycle === "under_review");
+
+  async fetchById(id: string): Promise<Decision | undefined> {
+    return Promise.resolve(allDecisions.find(d => d.id === id));
   },
 };

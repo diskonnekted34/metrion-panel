@@ -26,6 +26,14 @@ import {
   LineChart, Line, AreaChart, Area, ResponsiveContainer,
   XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid,
 } from "recharts";
+import {
+  calculateDecisionHealth,
+  calculateDecisionMetrics,
+  calculateMatrixPosition,
+  calculatePipelineStageCounts,
+  projectDecisionScenarios,
+  getDecisionNodeColor,
+} from "@/core/engine/decisions";
 
 /* ── Tab Definition ── */
 type TabId = "pending" | "monitoring" | "completed" | "rejected" | "performance";
@@ -88,25 +96,25 @@ const PressureBadge = forwardRef<HTMLSpanElement, { lastActionDate: string }>(({
 PressureBadge.displayName = "PressureBadge";
 
 /* ── Decision Health Score ── */
+const HEALTH_COLOR_MAP = { green: "text-emerald-400", amber: "text-amber-400", red: "text-destructive" } as const;
+const HEALTH_STROKE_MAP = { green: "#34D399", amber: "#F59E0B", red: "#EF4444" } as const;
+
 const DecisionHealthScore = ({ decisions }: { decisions: Decision[] }) => {
-  const total = decisions.length || 1;
-  const completed = decisions.filter(d => d.lifecycle === "completed").length;
-  const successful = decisions.filter(d => d.performanceReport?.status === "successful").length;
-  const avgConfidence = Math.round(decisions.reduce((s, d) => s + d.aiConfidence, 0) / total);
-  const score = Math.round((completed / total) * 30 + (successful / Math.max(completed, 1)) * 40 + (avgConfidence / 100) * 30);
-  const color = score >= 75 ? "text-emerald-400" : score >= 50 ? "text-amber-400" : "text-destructive";
+  const { score, color } = calculateDecisionHealth(decisions);
+  const textColor = HEALTH_COLOR_MAP[color];
+  const strokeColor = HEALTH_STROKE_MAP[color];
   return (
     <div className="glass-card p-4 flex items-center gap-4">
       <div className="relative h-14 w-14 shrink-0">
         <svg viewBox="0 0 36 36" className="h-14 w-14 -rotate-90">
           <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="3" />
-          <circle cx="18" cy="18" r="16" fill="none" stroke={score >= 75 ? "#34D399" : score >= 50 ? "#F59E0B" : "#EF4444"} strokeWidth="3" strokeDasharray={`${score} ${100 - score}`} strokeLinecap="round" />
+          <circle cx="18" cy="18" r="16" fill="none" stroke={strokeColor} strokeWidth="3" strokeDasharray={`${score} ${100 - score}`} strokeLinecap="round" />
         </svg>
-        <span className={`absolute inset-0 flex items-center justify-center text-sm font-bold ${color}`}>{score}</span>
+        <span className={`absolute inset-0 flex items-center justify-center text-sm font-bold ${textColor}`}>{score}</span>
       </div>
       <div>
         <p className="text-[10px] text-muted-foreground">Karar Sağlık Skoru</p>
-        <p className={`text-lg font-bold ${color}`}>{score}/100</p>
+        <p className={`text-lg font-bold ${textColor}`}>{score}/100</p>
         <p className="text-[9px] text-muted-foreground mt-0.5">Tamamlanma, başarı ve AI güven ortalaması</p>
       </div>
     </div>
@@ -115,12 +123,6 @@ const DecisionHealthScore = ({ decisions }: { decisions: Decision[] }) => {
 
 /* ── Impact Matrix (2D) ── */
 const ImpactMatrix = ({ decisions, onSelect }: { decisions: Decision[]; onSelect: (d: Decision) => void }) => {
-  const getNodeColor = (d: Decision) => {
-    if (d.lifecycle === "approved" || d.lifecycle === "completed") return "#34D399";
-    if (d.riskLevel === "high") return "#EF4444";
-    if (d.lifecycle === "proposed" || d.lifecycle === "under_review") return "#F59E0B";
-    return "#1E6BFF";
-  };
   return (
     <div className="glass-card p-5">
       <h3 className="text-xs font-semibold text-foreground mb-4 flex items-center gap-2">
@@ -131,9 +133,8 @@ const ImpactMatrix = ({ decisions, onSelect }: { decisions: Decision[]; onSelect
         <span className="absolute -left-0 top-1/2 -translate-y-1/2 -rotate-90 text-[9px] text-muted-foreground tracking-wider">ETKİ ↑</span>
         <span className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[9px] text-muted-foreground tracking-wider mb-0.5">RİSK →</span>
         {decisions.slice(0, 20).map((d) => {
-          const riskX = d.riskLevel === "high" ? 75 + Math.random() * 15 : d.riskLevel === "medium" ? 35 + Math.random() * 25 : 5 + Math.random() * 25;
-          const impactY = 100 - (d.priorityScore + Math.random() * 5);
-          const color = getNodeColor(d);
+          const { riskX, impactY } = calculateMatrixPosition(d);
+          const color = getDecisionNodeColor(d);
           return (
             <motion.button
               key={d.id}
@@ -167,7 +168,8 @@ const PipelineView = ({ decisions }: { decisions: Decision[] }) => (
     </h3>
     <div className="flex gap-2">
       {pipelineStages.map((stage, i) => {
-        const count = decisions.filter(d => d.lifecycle === stage.key).length;
+        const stageCounts = calculatePipelineStageCounts(decisions, pipelineStages);
+        const count = stageCounts[stage.key] ?? 0;
         const lc = lifecycleConfig[stage.key];
         return (
           <div key={stage.key} className="flex-1 relative">
@@ -262,11 +264,11 @@ const DecisionDetailView = ({ decision, onBack, onUpdateLifecycle }: { decision:
     { id: "outcome" as const, label: "Sonuç", icon: Award },
   ];
 
-  const scenarioData = Array.from({ length: 12 }, (_, i) => ({
+  const scenarioData = projectDecisionScenarios(decision).map((pt, i) => ({
     month: `Ay ${i + 1}`,
-    best: 100 + i * (decision.priorityScore / 8) + Math.sin(i) * 10,
-    base: 100 + i * (decision.priorityScore / 12),
-    worst: 100 + i * (decision.priorityScore / 20) - Math.abs(Math.sin(i)) * 8,
+    best: pt.best,
+    base: pt.base,
+    worst: pt.worst,
   }));
 
   return (
@@ -607,12 +609,12 @@ const KararSicili = () => (
 
 /* ── Pressure Banner ── */
 const PressureBanner = ({ decisions }: { decisions: Decision[] }) => {
-  const delayedHigh = decisions.filter(d => (d.lifecycle === "proposed" || d.lifecycle === "under_review") && getDaysSinceAction(d.lastActionDate) >= 3);
-  if (delayedHigh.length === 0) return null;
+  const { delayedHighPriority } = calculateDecisionMetrics(decisions);
+  if (delayedHighPriority.length === 0) return null;
   return (
     <div className="flex items-center gap-3 p-3 rounded-xl bg-warning/5 border border-warning/15 animate-pulse">
       <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
-      <p className="text-xs text-warning font-medium">{delayedHigh.length} yüksek etkili karar 3+ gündür bekliyor</p>
+      <p className="text-xs text-warning font-medium">{delayedHighPriority.length} yüksek etkili karar 3+ gündür bekliyor</p>
     </div>
   );
 };
@@ -629,10 +631,7 @@ const DecisionLab = () => {
     setSelectedDecision(null);
   };
 
-  const pendingCount = localDecisions.filter(d => d.lifecycle === "proposed" || d.lifecycle === "under_review").length;
-  const highRiskCount = localDecisions.filter(d => d.riskLevel === "high" && (d.lifecycle === "proposed" || d.lifecycle === "under_review")).length;
-  const activeCount = localDecisions.filter(d => !["completed", "rejected", "failed"].includes(d.lifecycle)).length;
-  const approvalPending = localDecisions.filter(d => d.lifecycle === "proposed" || d.lifecycle === "under_review").length;
+  const { pendingCount, highRiskCount, activeCount, approvalPending } = calculateDecisionMetrics(localDecisions);
   const totalFinancialImpact = "₺12.8M";
 
   if (selectedDecision) {
@@ -702,7 +701,9 @@ const DecisionLab = () => {
           {/* ── TABS ── */}
           <div className="flex gap-1 p-1 rounded-xl bg-secondary/30 border border-white/[0.04]">
             {tabs.map(tab => {
-              const count = tab.id === "pending" ? pendingCount : tab.id === "performance" ? 0 : localDecisions.filter(d => tab.lifecycles.includes(d.lifecycle)).length;
+              const count = tab.id === "pending" ? pendingCount
+                : tab.id === "performance" ? 0
+                : calculatePipelineStageCounts(localDecisions, tab.lifecycles.map(lc => ({ key: lc })))[tab.lifecycles[0]] ?? localDecisions.filter(d => tab.lifecycles.includes(d.lifecycle)).length;
               return (
                 <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-all ${activeTab === tab.id ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
                   {tab.label}
