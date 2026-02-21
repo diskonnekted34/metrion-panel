@@ -1,13 +1,23 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Zap, CheckCircle2, XCircle, Send, Clock,
   AlertTriangle, ArrowRight, FileText, BarChart3, Undo2, DollarSign,
-  History, Filter, Brain, ChevronRight
+  History, Filter, Brain, ChevronRight, Shield
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { useActionMode, ActionDraft, ActionStatus, RiskLevel } from "@/contexts/ActionModeContext";
 import { useRBAC } from "@/contexts/RBACContext";
+import {
+  approveActionCommand,
+  rejectActionCommand,
+  executeAction,
+  submitActionForApproval,
+  type CommandContext,
+} from "@/core/commands";
+import AuditTimeline from "@/components/AuditTimeline";
+import ExecutionConfirmModal from "@/components/ExecutionConfirmModal";
+import { toast } from "sonner";
 
 const statusConfig: Record<ActionStatus, { label: string; color: string; icon: typeof Clock; bg: string }> = {
   draft: { label: "Taslak", color: "text-muted-foreground", icon: FileText, bg: "bg-secondary/50" },
@@ -27,7 +37,7 @@ type TabId = "pending" | "all" | "audit";
 type FilterStatus = "all" | ActionStatus;
 
 const ActionCenter = () => {
-  const { actions, auditLog, pendingCount, draftCount, riskLabels } = useActionMode();
+  const { actions, auditLog, pendingCount, draftCount, riskLabels, approveDraft, publishAction, rejectAction } = useActionMode();
   const { currentUser } = useRBAC();
   const isAdmin = currentUser.role === "owner" || currentUser.role === "admin";
 
@@ -36,6 +46,58 @@ const ActionCenter = () => {
   const [statusFilter, setStatusFilter] = useState<FilterStatus>("all");
   const [riskFilter, setRiskFilter] = useState<RiskLevel | "all">("all");
   const [showFilters, setShowFilters] = useState(false);
+  const [auditDrawerOpen, setAuditDrawerOpen] = useState(false);
+  const [auditEntityId, setAuditEntityId] = useState("");
+  const [execConfirm, setExecConfirm] = useState<ActionDraft | null>(null);
+
+  const cmdCtx: CommandContext = useMemo(() => ({
+    tenant_id: "tenant_1",
+    user_id: currentUser.id,
+    user_name: currentUser.name,
+    user_role: currentUser.role,
+    seat_key: null,
+  }), [currentUser]);
+
+  // Command-based action handlers
+  const handleApprove = useCallback((action: ActionDraft) => {
+    const result = approveActionCommand(action, cmdCtx);
+    if (result.success) {
+      approveDraft(action.id, currentUser.name);
+      toast.success("Aksiyon onaylandı.");
+    } else {
+      toast.error(result.error || "Onay başarısız");
+    }
+  }, [cmdCtx, approveDraft, currentUser.name]);
+
+  const handleReject = useCallback((action: ActionDraft) => {
+    const result = rejectActionCommand(action, cmdCtx);
+    if (result.success) {
+      rejectAction(action.id, currentUser.name);
+      toast.info("Aksiyon reddedildi.");
+    } else {
+      toast.error(result.error || "Red başarısız");
+    }
+  }, [cmdCtx, rejectAction, currentUser.name]);
+
+  const handleExecute = useCallback((action: ActionDraft) => {
+    const result = executeAction(action, cmdCtx);
+    if (result.success) {
+      publishAction(action.id, currentUser.name);
+      toast.success("Aksiyon yürütüldü.");
+    } else {
+      toast.error(result.error || "Yürütme başarısız");
+    }
+  }, [cmdCtx, publishAction, currentUser.name]);
+
+  const handleSubmitForApproval = useCallback((action: ActionDraft) => {
+    const result = submitActionForApproval(action, cmdCtx);
+    if (result.success) {
+      approveDraft(action.id, currentUser.name); // triggers status change in context
+      toast.success("Onaya gönderildi.");
+    } else {
+      toast.error(result.error || "Gönderim başarısız");
+    }
+  }, [cmdCtx, approveDraft, currentUser.name]);
 
   const tabs: { id: TabId; label: string; count?: number }[] = [
     { id: "pending", label: "Bekleyen", count: pendingCount + draftCount },
@@ -59,6 +121,7 @@ const ActionCenter = () => {
           onBack={() => setSelectedAction(null)}
           auditLog={auditLog.filter(l => l.actionId === selectedAction.id)}
         />
+        <AuditTimeline entityType="Action" entityId={selectedAction.id} tenantId="tenant_1" isOpen={auditDrawerOpen} onClose={() => setAuditDrawerOpen(false)} />
       </AppLayout>
     );
   }
@@ -193,6 +256,27 @@ const ActionCenter = () => {
           )}
         </motion.div>
       </div>
+
+      {/* Execution Confirmation Modal */}
+      {execConfirm && (
+        <ExecutionConfirmModal
+          isOpen={!!execConfirm}
+          onClose={() => setExecConfirm(null)}
+          onConfirm={() => handleExecute(execConfirm)}
+          title={execConfirm.title}
+          riskLevel={execConfirm.riskLevel}
+          estimatedImpact={execConfirm.estimatedImpact}
+        />
+      )}
+
+      {/* Audit Timeline Drawer */}
+      <AuditTimeline
+        entityType="Action"
+        entityId={auditEntityId}
+        tenantId="tenant_1"
+        isOpen={auditDrawerOpen}
+        onClose={() => setAuditDrawerOpen(false)}
+      />
     </AppLayout>
   );
 };
@@ -200,10 +284,21 @@ const ActionCenter = () => {
 // ── Hybrid Card-List Row ──
 
 const ActionRow = ({ action, onViewDetail, isAdmin }: { action: ActionDraft; onViewDetail: () => void; isAdmin: boolean }) => {
-  const { approveDraft, publishAction, rejectAction, actionTypeLabels, riskLabels } = useActionMode();
+  const { actionTypeLabels, riskLabels } = useActionMode();
   const { currentUser } = useRBAC();
   const cfg = statusConfig[action.status];
   const StatusIcon = cfg.icon;
+  const isDraft = action.status === "draft";
+  const isPending = action.status === "pending_approval";
+  const isApproved = action.status === "approved";
+
+  const cmdCtx: CommandContext = {
+    tenant_id: "tenant_1",
+    user_id: currentUser.id,
+    user_name: currentUser.name,
+    user_role: currentUser.role,
+    seat_key: null,
+  };
 
   return (
     <div className="glass-card p-4 flex items-center gap-4 hover:border-primary/20 transition-all cursor-pointer group" onClick={onViewDetail}>
@@ -244,25 +339,33 @@ const ActionRow = ({ action, onViewDetail, isAdmin }: { action: ActionDraft; onV
           {cfg.label}
         </span>
 
-        {isAdmin && (action.status === "draft" || action.status === "pending_approval") && (
+        {isDraft && (
           <button
-            onClick={(e) => { e.stopPropagation(); approveDraft(action.id, currentUser.name); }}
-            className="px-2.5 py-1 rounded-lg bg-success/10 text-success text-[10px] font-medium hover:bg-success/20 transition-colors"
+            onClick={(e) => { e.stopPropagation(); const r = submitActionForApproval(action, cmdCtx); if (r.success) { toast.success("Onaya gönderildi"); } else { toast.error(r.error!); } }}
+            className="px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-medium hover:bg-primary/20 transition-colors"
+          >
+            <Send className="h-3 w-3 inline mr-1" />Onaya Gönder
+          </button>
+        )}
+        {isAdmin && isPending && (
+          <button
+            onClick={(e) => { e.stopPropagation(); const r = approveActionCommand(action, cmdCtx); if (r.success) { toast.success("Onaylandı"); } else { toast.error(r.error!); } }}
+            className="px-2.5 py-1 rounded-lg bg-emerald-400/10 text-emerald-400 text-[10px] font-medium hover:bg-emerald-400/20 transition-colors"
           >
             <CheckCircle2 className="h-3 w-3 inline mr-1" />Onayla
           </button>
         )}
-        {isAdmin && action.status === "approved" && (
+        {isAdmin && isApproved && (
           <button
-            onClick={(e) => { e.stopPropagation(); publishAction(action.id, currentUser.name); }}
+            onClick={(e) => { e.stopPropagation(); const r = executeAction(action, cmdCtx); if (r.success) { toast.success("Yürütüldü"); } else { toast.error(r.error!); } }}
             className="px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-medium hover:bg-primary/20 transition-colors"
           >
-            <Send className="h-3 w-3 inline mr-1" />Yayınla
+            <Send className="h-3 w-3 inline mr-1" />Yürüt
           </button>
         )}
-        {isAdmin && (action.status === "draft" || action.status === "pending_approval") && (
+        {isAdmin && (isDraft || isPending) && (
           <button
-            onClick={(e) => { e.stopPropagation(); rejectAction(action.id, currentUser.name); }}
+            onClick={(e) => { e.stopPropagation(); const r = rejectActionCommand(action, cmdCtx); if (r.success) { toast.info("Reddedildi"); } else { toast.error(r.error!); } }}
             className="px-2.5 py-1 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive text-[10px] transition-colors"
           >
             <XCircle className="h-3 w-3" />

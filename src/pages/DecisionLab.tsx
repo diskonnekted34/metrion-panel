@@ -1,4 +1,4 @@
-import { useState, forwardRef } from "react";
+import { useState, forwardRef, useCallback, useMemo } from "react";
 import AppLayout from "@/components/AppLayout";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,7 +8,7 @@ import {
   DollarSign, Activity, User, Bot, CheckCircle2,
   XCircle, Clock, RotateCcw, ArrowRight, Brain, Timer,
   Gauge, LineChart as LineChartIcon, Award, X, MessageSquare,
-  CalendarClock, Crosshair, Layers, CircleDot
+  CalendarClock, Crosshair, Layers, CircleDot, Shield, Send, History
 } from "lucide-react";
 import { executivePositions } from "@/data/executivePositions";
 import {
@@ -22,6 +22,15 @@ import {
   type Decision,
   type DecisionLifecycle,
 } from "@/data/decisions";
+import { useRBAC } from "@/contexts/RBACContext";
+import {
+  submitDecisionForApproval,
+  approveDecision,
+  rejectDecision,
+  transitionDecisionLifecycle,
+  type CommandContext,
+} from "@/core/commands";
+import AuditTimeline from "@/components/AuditTimeline";
 import {
   LineChart, Line, AreaChart, Area, ResponsiveContainer,
   XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid,
@@ -190,12 +199,14 @@ const PipelineView = ({ decisions }: { decisions: Decision[] }) => (
 );
 
 /* ── Decision Card (compact) ── */
-const DecisionCard = ({ decision, onSelect }: { decision: Decision; onSelect: () => void }) => {
+const DecisionCard = ({ decision, onSelect, onCommand, canApprove }: { decision: Decision; onSelect: () => void; onCommand?: (id: string, lifecycle: DecisionLifecycle) => void; canApprove?: boolean }) => {
   const lc = lifecycleConfig[decision.lifecycle];
   const riskColor = decision.riskLevel === "high" ? "text-destructive bg-destructive/10" : decision.riskLevel === "medium" ? "text-warning bg-warning/10" : "text-emerald-400 bg-emerald-400/10";
   const isHighRisk = decision.riskLevel === "high";
   const days = getDaysSinceAction(decision.lastActionDate);
   const pressureLevel = getPressureLevel(days);
+  const isDraft = decision.lifecycle === "proposed";
+  const isPendingApproval = decision.lifecycle === "under_review";
 
   return (
     <motion.div
@@ -234,6 +245,33 @@ const DecisionCard = ({ decision, onSelect }: { decision: Decision; onSelect: ()
         <div className="shrink-0 flex flex-col items-end gap-1.5 min-w-[100px]">
           <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${decision.aiConfidence >= 90 ? "bg-emerald-400/10 text-emerald-400 border-emerald-400/20" : decision.aiConfidence >= 75 ? "bg-primary/10 text-primary border-primary/20" : "bg-warning/10 text-warning border-warning/20"}`}>
             AI %{decision.aiConfidence}
+          </div>
+          {/* Command buttons inline */}
+          <div className="flex items-center gap-1 flex-wrap justify-end">
+            {isDraft && onCommand && (
+              <button
+                onClick={(e) => { e.stopPropagation(); onCommand(decision.id, "under_review"); }}
+                className="px-2 py-0.5 rounded-lg bg-primary/10 text-primary text-[9px] font-medium hover:bg-primary/20 transition-colors flex items-center gap-1"
+              >
+                <Send className="h-2.5 w-2.5" /> Onaya Gönder
+              </button>
+            )}
+            {isPendingApproval && canApprove && onCommand && (
+              <>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onCommand(decision.id, "approved"); }}
+                  className="px-2 py-0.5 rounded-lg bg-emerald-400/10 text-emerald-400 text-[9px] font-medium hover:bg-emerald-400/20 transition-colors flex items-center gap-1"
+                >
+                  <CheckCircle2 className="h-2.5 w-2.5" /> Onayla
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onCommand(decision.id, "rejected"); }}
+                  className="px-2 py-0.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive text-[9px] transition-colors"
+                >
+                  <XCircle className="h-2.5 w-2.5" />
+                </button>
+              </>
+            )}
           </div>
           <div className="flex items-center gap-1 flex-wrap justify-end">
             {decision.requiredApprovers.slice(0, 2).map(a => (
@@ -625,11 +663,55 @@ const DecisionLab = () => {
   const [timeFilter, setTimeFilter] = useState("quarter");
   const [selectedDecision, setSelectedDecision] = useState<Decision | null>(null);
   const [localDecisions, setLocalDecisions] = useState<Decision[]>(allDecisions);
+  const [auditDrawerOpen, setAuditDrawerOpen] = useState(false);
+  const [auditEntityId, setAuditEntityId] = useState<string>("");
 
-  const handleUpdateLifecycle = (id: string, newLifecycle: DecisionLifecycle) => {
-    setLocalDecisions(prev => prev.map(d => d.id === id ? { ...d, lifecycle: newLifecycle } : d));
-    setSelectedDecision(null);
-  };
+  const { currentUser } = useRBAC();
+  const isApprover = currentUser.role === "owner" || currentUser.role === "admin" || currentUser.role === "department_lead";
+
+  const cmdCtx: CommandContext = useMemo(() => ({
+    tenant_id: "tenant_1",
+    user_id: currentUser.id,
+    user_name: currentUser.name,
+    user_role: currentUser.role,
+    seat_key: null,
+  }), [currentUser]);
+
+  const handleUpdateLifecycle = useCallback((id: string, newLifecycle: DecisionLifecycle) => {
+    const decision = localDecisions.find(d => d.id === id);
+    if (!decision) return;
+
+    let result;
+    if (newLifecycle === "under_review") {
+      result = submitDecisionForApproval(decision, cmdCtx);
+    } else if (newLifecycle === "approved") {
+      result = approveDecision(decision, cmdCtx);
+    } else if (newLifecycle === "rejected") {
+      result = rejectDecision(decision, "Reddedildi", cmdCtx);
+    } else {
+      result = transitionDecisionLifecycle(decision, newLifecycle, cmdCtx);
+    }
+
+    if (result.success && result.data) {
+      setLocalDecisions(prev => prev.map(d => d.id === id ? result.data! : d));
+      setSelectedDecision(null);
+      const labels: Record<string, string> = {
+        under_review: "Onaya gönderildi",
+        approved: "Karar onaylandı",
+        rejected: "Karar reddedildi",
+        monitoring: "İzlemeye alındı",
+        in_execution: "Yürütmeye alındı",
+      };
+      toast.success(labels[newLifecycle] || `Durum güncellendi: ${newLifecycle}`);
+    } else {
+      toast.error(result.error || "İşlem başarısız");
+    }
+  }, [localDecisions, cmdCtx]);
+
+  const openAuditDrawer = useCallback((entityId: string) => {
+    setAuditEntityId(entityId);
+    setAuditDrawerOpen(true);
+  }, []);
 
   const { pendingCount, highRiskCount, activeCount, approvalPending } = calculateDecisionMetrics(localDecisions);
   const totalFinancialImpact = "₺12.8M";
@@ -638,6 +720,7 @@ const DecisionLab = () => {
     return (
       <AppLayout>
         <DecisionDetailView decision={selectedDecision} onBack={() => setSelectedDecision(null)} onUpdateLifecycle={handleUpdateLifecycle} />
+        <AuditTimeline entityType="Decision" entityId={selectedDecision.id} tenantId="tenant_1" isOpen={auditDrawerOpen} onClose={() => setAuditDrawerOpen(false)} />
       </AppLayout>
     );
   }
@@ -657,6 +740,12 @@ const DecisionLab = () => {
               {highRiskCount > 0 && (
                 <span className="min-w-[22px] h-[22px] px-1.5 rounded-full bg-destructive/20 text-destructive text-[10px] font-bold flex items-center justify-center border border-destructive/30" style={{ boxShadow: "0 0 8px rgba(239,68,68,0.25)" }}>{highRiskCount} Yüksek Risk</span>
               )}
+              <button
+                onClick={() => { setAuditEntityId(""); setAuditDrawerOpen(true); }}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+              >
+                <History className="h-3 w-3" /> Denetim Günlüğü
+              </button>
             </div>
             <div className="flex items-center gap-1 p-1 rounded-xl bg-secondary/30 border border-white/[0.04]">
               {timeFilters.map(tf => (
@@ -727,13 +816,28 @@ const DecisionLab = () => {
                 filteredDecisions
                   .sort((a, b) => b.priorityScore - a.priorityScore)
                   .map(dec => (
-                    <DecisionCard key={dec.id} decision={dec} onSelect={() => setSelectedDecision(dec)} />
+                    <DecisionCard
+                      key={dec.id}
+                      decision={dec}
+                      onSelect={() => setSelectedDecision(dec)}
+                      onCommand={handleUpdateLifecycle}
+                      canApprove={isApprover}
+                    />
                   ))
               )}
             </div>
           )}
         </div>
       </div>
+
+      {/* Audit Timeline Drawer */}
+      <AuditTimeline
+        entityType="Decision"
+        entityId={auditEntityId}
+        tenantId="tenant_1"
+        isOpen={auditDrawerOpen}
+        onClose={() => setAuditDrawerOpen(false)}
+      />
     </AppLayout>
   );
 };

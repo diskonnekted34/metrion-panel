@@ -23,3 +23,6 @@ export {
   calculateStrategicHealthIndex, calculateDepartmentAlignments,
   canAccessOKR, canUseHierarchy, canUseAICorrection, canUseMultiCycle, canUseAlignment,
 } from "./engine/okr";
+
+// Commands
+export * from "./commands";
