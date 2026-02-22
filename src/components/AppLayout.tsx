@@ -13,8 +13,6 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
   return (
     <div className="min-h-screen bg-background relative">
-      {/* Animated ambient gradient background */}
-      <div className="ambient-gradient" />
       <AppSidebar />
       <BottomNav />
       <div
