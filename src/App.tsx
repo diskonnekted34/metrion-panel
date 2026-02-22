@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProviders } from "@/contexts/AppProviders";
 import { PageMetaProvider } from "@/contexts/PageMetaContext";
+import AppErrorBoundary from "@/components/system/AppErrorBoundary";
 import Index from "./pages/Index";
 import ExpertProfile from "./pages/ExpertProfile";
 import Dashboard from "./pages/Dashboard";
@@ -37,59 +38,59 @@ import IntegrationDetail from "./pages/IntegrationDetail";
 import PositionHistory from "./pages/PositionHistory";
 import NotFound from "./pages/NotFound";
 
-
-
 const App = () => (
   <AppProviders>
     <Toaster />
     <Sonner />
     <BrowserRouter>
-      <PageMetaProvider>
-        <Routes>
-              {/* Marketing pages */}
-              <Route path="/" element={<Index />} />
-              <Route path="/pricing" element={<Pricing />} />
+      <AppErrorBoundary>
+        <PageMetaProvider>
+          <Routes>
+            {/* Marketing pages */}
+            <Route path="/" element={<Index />} />
+            <Route path="/pricing" element={<Pricing />} />
 
-              {/* Main navigation (7 items) */}
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/strategy" element={<Strategy />} />
-              <Route path="/decision-lab" element={<DecisionLab />} />
-              <Route path="/action-center" element={<ActionCenter />} />
-              <Route path="/data-sources" element={<DataSources />} />
-              <Route path="/data-sources/:integrationId" element={<IntegrationDetail />} />
-              <Route path="/tech-data-sources" element={<TechDataSources />} />
-              <Route path="/tech-data-sources/:connectorId" element={<TechIntegrationDetail />} />
-              <Route path="/organization" element={<Organization />} />
-              <Route path="/kadro" element={<Organization />} />
-              <Route path="/seat/:seatKey" element={<SeatDetail />} />
-              <Route path="/settings" element={<Settings />} />
+            {/* Main navigation */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/strategy" element={<Strategy />} />
+            <Route path="/decision-lab" element={<DecisionLab />} />
+            <Route path="/action-center" element={<ActionCenter />} />
+            <Route path="/data-sources" element={<DataSources />} />
+            <Route path="/data-sources/:integrationId" element={<IntegrationDetail />} />
+            <Route path="/tech-data-sources" element={<TechDataSources />} />
+            <Route path="/tech-data-sources/:connectorId" element={<TechIntegrationDetail />} />
+            <Route path="/organization" element={<Organization />} />
+            <Route path="/kadro" element={<Organization />} />
+            <Route path="/seat/:seatKey" element={<SeatDetail />} />
+            <Route path="/settings" element={<Settings />} />
 
-              {/* Supporting pages */}
-              <Route path="/alerts" element={<Alerts />} />
-              <Route path="/alerts/:alertId" element={<AlertDetail />} />
-              <Route path="/tasks" element={<Tasks />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/reports/:reportId" element={<ReportViewer />} />
-              <Route path="/okr" element={<OKRPage />} />
-              <Route path="/marketplace" element={<Marketplace />} />
-              <Route path="/departments" element={<Departments />} />
-              <Route path="/departments/:deptId" element={<DepartmentDetail />} />
-              <Route path="/departments/:deptId/reports" element={<DepartmentReports />} />
-              <Route path="/departments/:deptId/actions" element={<DepartmentActions />} />
-              <Route path="/departments/:deptId/modules" element={<DepartmentModules />} />
-              <Route path="/departments/:deptId/intelligence/:metricId" element={<DepartmentIntelligenceView />} />
-              <Route path="/creative-workspace" element={<CreativeWorkspace />} />
-              <Route path="/intelligence/:clusterId" element={<IntelligenceView />} />
-              <Route path="/expert/:id" element={<ExpertProfile />} />
-              <Route path="/workspace/:agentId" element={<AgentWorkspace />} />
-              <Route path="/executive/position-history" element={<PositionHistory />} />
-              {/* Legacy redirects */}
-              <Route path="/command-structure" element={<Organization />} />
-              <Route path="/team" element={<Organization />} />
+            {/* Supporting pages */}
+            <Route path="/alerts" element={<Alerts />} />
+            <Route path="/alerts/:alertId" element={<AlertDetail />} />
+            <Route path="/tasks" element={<Tasks />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/reports/:reportId" element={<ReportViewer />} />
+            <Route path="/okr" element={<OKRPage />} />
+            <Route path="/marketplace" element={<Marketplace />} />
+            <Route path="/departments" element={<Departments />} />
+            <Route path="/departments/:deptId" element={<DepartmentDetail />} />
+            <Route path="/departments/:deptId/reports" element={<DepartmentReports />} />
+            <Route path="/departments/:deptId/actions" element={<DepartmentActions />} />
+            <Route path="/departments/:deptId/modules" element={<DepartmentModules />} />
+            <Route path="/departments/:deptId/intelligence/:metricId" element={<DepartmentIntelligenceView />} />
+            <Route path="/creative-workspace" element={<CreativeWorkspace />} />
+            <Route path="/intelligence/:clusterId" element={<IntelligenceView />} />
+            <Route path="/expert/:id" element={<ExpertProfile />} />
+            <Route path="/workspace/:agentId" element={<AgentWorkspace />} />
+            <Route path="/executive/position-history" element={<PositionHistory />} />
+            {/* Legacy redirects */}
+            <Route path="/command-structure" element={<Organization />} />
+            <Route path="/team" element={<Organization />} />
 
-              <Route path="*" element={<NotFound />} />
-        </Routes>
-      </PageMetaProvider>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </PageMetaProvider>
+      </AppErrorBoundary>
     </BrowserRouter>
   </AppProviders>
 );
