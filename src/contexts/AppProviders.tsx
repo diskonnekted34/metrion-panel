@@ -1,13 +1,9 @@
 /**
- * AppProviders
- *
- * Composes all global providers into a single wrapper component.
- * This keeps App.tsx clean and makes it trivial to add/remove/reorder
- * providers without touching routing logic.
+ * AppProviders — composes all global providers.
  */
-
 import type { ReactNode } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import { RBACProvider } from "@/contexts/RBACContext";
@@ -17,15 +13,7 @@ import { ActionModeProvider } from "@/contexts/ActionModeContext";
 import { TenantProvider } from "@/core/store/TenantContext";
 import { OKRProvider } from "@/core/store/OKRContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5,
-      retry: 1,
-    },
-  },
-});
+import { queryClient } from "@/lib/queryClient";
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -53,6 +41,7 @@ export function AppProviders({ children }: AppProvidersProps) {
           </ThemeProvider>
         </LanguageProvider>
       </TooltipProvider>
+      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );
 }
