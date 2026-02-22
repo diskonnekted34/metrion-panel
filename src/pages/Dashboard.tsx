@@ -1,62 +1,52 @@
 import AppLayout from "@/components/AppLayout";
 import { useIsMobile } from "@/hooks/use-mobile";
-import IntegrationBanner from "@/components/dashboard/IntegrationBanner";
-import ExecutiveStatusBar from "@/components/dashboard/ExecutiveStatusBar";
-import CEOInbox from "@/components/dashboard/CEOInbox";
-import RiskRadar from "@/components/dashboard/RiskRadar";
+import StatusStrip from "@/components/dashboard/StatusStrip";
+import KPIWall from "@/components/dashboard/KPIWall";
+import InterventionPanel from "@/components/dashboard/InterventionPanel";
+import RiskConsole from "@/components/dashboard/RiskConsole";
+import DepartmentTable from "@/components/dashboard/DepartmentTable";
+import DecisionImpactTable from "@/components/dashboard/DecisionImpactTable";
 import ExecutiveHealth from "@/components/dashboard/ExecutiveHealth";
-import CompanyPulse from "@/components/dashboard/CompanyPulse";
-import DecisionImpact from "@/components/dashboard/DecisionImpact";
-import AIBriefingPanel from "@/components/dashboard/AIBriefingPanel";
-import { useState } from "react";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
-  const [scrollToInbox, setScrollToInbox] = useState(false);
 
   return (
     <AppLayout>
-      <div className={`${isMobile ? "p-4 max-w-lg" : "p-7 max-w-7xl"} mx-auto`}>
-        {!isMobile && <IntegrationBanner />}
+      <div className={`${isMobile ? "p-4 max-w-lg" : "p-5 max-w-[1600px]"} mx-auto`}>
+        {/* 1. Executive Status Strip */}
+        {!isMobile && <StatusStrip onInboxClick={() => {
+          document.getElementById("intervention-panel")?.scrollIntoView({ behavior: "smooth" });
+        }} />}
 
-        {/* 1. Executive Status Bar */}
-        <ExecutiveStatusBar
-          onHealthClick={() => {}}
-          onInboxClick={() => {
-            document.getElementById("ceo-inbox")?.scrollIntoView({ behavior: "smooth" });
-          }}
-        />
+        {/* 2. KPI Wall + Intervention Panel */}
+        <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-12"} gap-4 mb-5`}>
+          <div className="lg:col-span-9">
+            <KPIWall />
+          </div>
+          <div className="lg:col-span-3" id="intervention-panel">
+            <InterventionPanel />
+          </div>
+        </div>
 
-        {/* 2-column layout: Inbox+Risk+Health | Briefing */}
-        <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-4"} gap-5 mb-6`}>
-          {/* Left: Primary content */}
-          <div className="lg:col-span-3 space-y-5">
-            {/* 2. CEO Inbox (Primary) */}
-            <div id="ceo-inbox">
-              <CEOInbox />
-            </div>
-
-            {/* 3. Risk Radar */}
-            <RiskRadar />
-
-            {/* 4. Executive Health */}
+        {/* 3. Risk Console + Executive Health */}
+        <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-12"} gap-4 mb-5`}>
+          <div className="lg:col-span-8">
+            <RiskConsole />
+          </div>
+          <div className="lg:col-span-4">
             <ExecutiveHealth />
           </div>
-
-          {/* Right: AI Briefing */}
-          <div className="lg:col-span-1">
-            <AIBriefingPanel />
-          </div>
         </div>
 
-        {/* 5. Company Pulse (Reduced KPIs) */}
-        <div className="mb-6">
-          <CompanyPulse />
+        {/* 4. Department Table */}
+        <div className="mb-5">
+          <DepartmentTable />
         </div>
 
-        {/* 6. Decision → Impact */}
-        <div className="mb-6">
-          <DecisionImpact />
+        {/* 5. Decision Impact Table */}
+        <div className="mb-5">
+          <DecisionImpactTable />
         </div>
       </div>
     </AppLayout>
