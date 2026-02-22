@@ -374,6 +374,11 @@
   100% { transform: translateX(-50%); }
 }
 
+@keyframes neon-sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 @keyframes pulse-line {
   0%, 100% { opacity: 0.15; }
   50% { opacity: 0.35; }
