@@ -8,7 +8,7 @@ interface ChartCardProps {
 }
 
 const ChartCard = ({ title, agent, children, className = "" }: ChartCardProps) => (
-  <div className={`glass-card p-5 ${className}`}>
+  <div className={`rounded-[14px] border border-border bg-card backdrop-blur-[14px] p-5 ${className}`}>
     <div className="flex items-center justify-between mb-4">
       <h3 className="text-sm font-semibold text-foreground">{title}</h3>
       {agent && (

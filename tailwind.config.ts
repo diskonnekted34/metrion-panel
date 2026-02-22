@@ -20,8 +20,8 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 4px)",
         sm: "calc(var(--radius) - 8px)",
-        "2xl": "16px",
-        "3xl": "20px",
+        "2xl": "14px",
+        "3xl": "18px",
       },
       colors: {
         border: "hsl(var(--border))",
