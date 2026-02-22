@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Target, BarChart3, TrendingUp, FileText, Brain, ChevronRight, Calendar } from "lucide-react";
+import { Target, BarChart3, TrendingUp, FileText, Brain, ChevronRight, Calendar, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";
 import { OkrService } from "@/services/OkrService";
 import { GovernanceIntelligenceService } from "@/services/GovernanceIntelligenceService";
@@ -19,6 +20,9 @@ const Strategy = () => {
     { id: "reports" as const, label: "Raporlar", icon: BarChart3 },
     { id: "trends" as const, label: "Trend Analizi", icon: TrendingUp },
   ];
+
+  // If Raporlar tab is selected, show link to full Reports Hub
+  const showReportsHub = activeTab === "reports";
 
   return (
     <AppLayout>
@@ -110,10 +114,24 @@ const Strategy = () => {
             </div>
           )}
 
-          {/* Reports Tab */}
+          {/* Reports Tab — Link to Reports Hub */}
           {activeTab === "reports" && (
             <div className="space-y-4">
-              {/* AI CEO Report cards */}
+              {/* Link to full Reports Hub */}
+              <Link to="/reports" className="glass-card p-5 flex items-center justify-between group hover:border-primary/20 transition-all">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <BarChart3 className="h-4.5 w-4.5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">Rapor Arşivi</h3>
+                    <p className="text-[10px] text-muted-foreground">Şirket ve departman raporlarını görüntüle, filtrele ve indir</p>
+                  </div>
+                </div>
+                <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              </Link>
+
+              {/* AI CEO Report summary cards */}
               {["Günlük", "Haftalık", "Aylık", "Yıllık"].map((period) => (
                 <div key={period} className="glass-card p-5">
                   <div className="flex items-start justify-between mb-3">
@@ -121,19 +139,19 @@ const Strategy = () => {
                       <div className="flex items-center gap-2 mb-1">
                         <FileText className="h-4 w-4 text-primary" />
                         <h3 className="text-sm font-semibold text-foreground">AI CEO {period} Raporu</h3>
-                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-violet-400/10 text-violet-400 border border-violet-400/20">AI</span>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">AI</span>
                       </div>
                       <p className="text-[10px] text-muted-foreground">
                         Punta Visual · Yönetim · {period} · {new Date().toLocaleDateString("tr-TR")}
                       </p>
                     </div>
                     <div className="flex items-center gap-1.5 text-[10px]">
-                      <Brain className="h-3 w-3 text-violet-400" />
-                      <span className="text-violet-400 font-medium">Confidence: %{85 + Math.floor(Math.random() * 10)}</span>
+                      <Brain className="h-3 w-3 text-primary" />
+                      <span className="text-primary font-medium">Confidence: %{85 + Math.floor(Math.random() * 10)}</span>
                     </div>
                   </div>
                   <div className="space-y-2 text-[11px] text-muted-foreground">
-                    <div className="p-3 rounded-lg bg-secondary/30 border border-border/30">
+                    <div className="p-3 rounded-xl bg-secondary/30 border border-border/30">
                       <p className="font-medium text-foreground mb-1">Executive Summary</p>
                       <p>Genel performans hedeflerin %{75 + Math.floor(Math.random() * 15)} üzerinde seyrediyor. Kritik KPI'larda sapma tespit edilmedi.</p>
                     </div>
@@ -142,9 +160,9 @@ const Strategy = () => {
                       <span>{new Date().toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</span>
                     </div>
                   </div>
-                  <button className="mt-3 text-[10px] text-primary hover:underline flex items-center gap-1">
+                  <Link to="/reports" className="mt-3 text-[10px] text-primary hover:underline flex items-center gap-1">
                     Tam Raporu Görüntüle <ChevronRight className="h-2.5 w-2.5" />
-                  </button>
+                  </Link>
                 </div>
               ))}
             </div>
