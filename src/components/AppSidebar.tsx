@@ -77,7 +77,7 @@ const AppSidebar = () => {
   if (isMobile) return null;
 
   return (
-    <aside className="fixed left-0 top-0 bottom-0 z-40 w-[290px] flex flex-col bg-sidebar border-r border-sidebar-border">
+    <aside className="fixed left-0 top-0 bottom-0 z-40 w-[290px] flex flex-col bg-sidebar border-r border-sidebar-border/60">
       {/* Logo */}
       <div className="flex items-center px-5 h-16 shrink-0">
         <Link to="/" className="flex items-center gap-2.5">
@@ -107,7 +107,7 @@ const AppSidebar = () => {
                 <item.icon className={`h-[18px] w-[18px] shrink-0 transition-colors ${active ? "text-primary" : "text-sidebar-foreground group-hover:text-foreground"}`} />
                 <span className="font-semibold">{item.label}</span>
                 {active && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 rounded-r-full bg-primary" style={{ boxShadow: "0 0 14px rgba(30,107,255,0.5)" }} />
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 rounded-r-full bg-primary" />
                 )}
               </Link>
             );
@@ -163,7 +163,7 @@ const AppSidebar = () => {
                           {/* Color dot */}
                           <span
                             className="w-[6px] h-[6px] rounded-full shrink-0"
-                            style={{ backgroundColor: color, boxShadow: deptActive ? `0 0 8px ${color}` : "none" }}
+                            style={{ backgroundColor: color }}
                           />
                           <span className={`flex-1 text-left text-[13px] ${deptActive ? "font-semibold" : "font-medium"}`}>
                             {dept.name}
@@ -182,8 +182,7 @@ const AppSidebar = () => {
                           {/* Active bar */}
                           {deptActive && (
                             <div
-                              className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full"
-                              style={{ backgroundColor: color, boxShadow: `0 0 12px ${color}` }}
+                              className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary"
                             />
                           )}
                         </button>
@@ -253,7 +252,7 @@ const AppSidebar = () => {
                 <item.icon className={`h-[16px] w-[16px] shrink-0 transition-colors ${active ? "text-primary" : "text-sidebar-foreground group-hover:text-foreground"}`} />
                 <span className="font-medium">{item.label}</span>
                 {active && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" style={{ boxShadow: "0 0 14px rgba(30,107,255,0.5)" }} />
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" />
                 )}
               </Link>
             );
