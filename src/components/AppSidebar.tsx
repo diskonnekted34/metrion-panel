@@ -160,16 +160,20 @@ const AppSidebar = () => {
                           }`}
                           style={{ height: 42 }}
                         >
-                          {/* Color dot */}
-                          <span
-                            className="w-[6px] h-[6px] rounded-full shrink-0"
-                            style={{ backgroundColor: color }}
-                          />
+                          {/* Emoji prefix */}
+                          <span className="text-[13px] shrink-0">{dept.icon}</span>
                           <span className={`flex-1 text-left text-[13px] ${deptActive ? "font-semibold" : "font-medium"}`}>
                             {dept.name}
                           </span>
-                          {/* Health score */}
-                          <span className="text-[10px] text-muted-foreground tabular-nums mr-1">{dept.healthScore}</span>
+                          {/* Health score bubble */}
+                          <span
+                            className="text-[10px] font-semibold tabular-nums px-2 py-0.5 mr-1"
+                            style={{
+                              borderRadius: "var(--radius-pill, 999px)",
+                              background: dept.healthScore >= 80 ? "hsl(var(--success) / 0.12)" : dept.healthScore >= 70 ? "hsl(var(--warning) / 0.12)" : "hsl(var(--destructive) / 0.12)",
+                              color: dept.healthScore >= 80 ? "hsl(var(--success))" : dept.healthScore >= 70 ? "hsl(var(--warning))" : "hsl(var(--destructive))",
+                            }}
+                          >{dept.healthScore}</span>
                           {/* Expand arrow */}
                           <motion.div
                             animate={{ rotate: isExpanded ? 90 : 0 }}

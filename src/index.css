@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 0%;
+    --background: 220 20% 2%;
     --foreground: 0 0% 96%;
 
     --card: 0 0% 7%;
@@ -20,7 +20,7 @@
     --secondary-foreground: 0 0% 69%;
 
     --muted: 0 0% 11%;
-    --muted-foreground: 0 0% 48%;
+    --muted-foreground: 0 0% 55%;
 
     --accent: 0 0% 11%;
     --accent-foreground: 0 0% 96%;
@@ -37,7 +37,7 @@
 
     --radius: 0.875rem;
 
-    --sidebar-background: 0 0% 0%;
+    --sidebar-background: 220 20% 2%;
     --sidebar-foreground: 0 0% 69%;
     --sidebar-primary: 220 100% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
@@ -48,7 +48,7 @@
   }
 
   .light {
-    --background: 0 0% 80%;
+    --background: 0 0% 93%;
     --foreground: 0 0% 7%;
 
     --card: 0 0% 100%;
@@ -79,7 +79,7 @@
     --input: 0 0% 85%;
     --ring: 220 100% 50%;
 
-    --sidebar-background: 0 0% 80%;
+    --sidebar-background: 0 0% 93%;
     --sidebar-foreground: 0 0% 25%;
     --sidebar-primary: 220 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
@@ -97,8 +97,8 @@
 
   html {
     font-size: 105%;
-    --radius-card: 14px;
-    --radius-inner: 10px;
+    --radius-card: 18px;
+    --radius-inner: 12px;
     --radius-pill: 999px;
   }
 
@@ -116,36 +116,27 @@
     background-image: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(220 80% 68%) 100%);
   }
 
-  /* ── Ambient background (minimal) ── */
-  .ambient-gradient {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .light .ambient-gradient {
-    background: none;
-  }
-
   /* ── Buttons ── */
   .btn-primary {
-    @apply relative overflow-hidden rounded-xl text-sm font-medium;
+    @apply relative overflow-hidden text-sm font-medium;
+    border-radius: var(--radius-inner);
     background: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
+    transition: filter 200ms, box-shadow 200ms;
   }
-
   .btn-primary:hover {
     filter: brightness(1.08);
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.15);
   }
 
   .btn-accent {
-    @apply relative overflow-hidden rounded-xl text-sm font-medium;
+    @apply relative overflow-hidden text-sm font-medium;
+    border-radius: var(--radius-inner);
     background: transparent;
     color: hsl(var(--primary));
     border: 1px solid hsl(var(--primary) / 0.4);
+    transition: all 200ms;
   }
-
   .btn-accent:hover {
     background: hsl(var(--primary) / 0.06);
     border-color: hsl(var(--primary) / 0.6);
@@ -157,25 +148,21 @@
     border: 1px solid hsl(var(--success) / 0.25);
     color: hsl(var(--success));
   }
-
   .badge-warning {
     background: hsl(var(--warning) / 0.12);
     border: 1px solid hsl(var(--warning) / 0.25);
     color: hsl(var(--warning));
   }
-
   .badge-error {
     background: hsl(var(--destructive) / 0.12);
     border: 1px solid hsl(var(--destructive) / 0.25);
     color: hsl(var(--destructive));
   }
-
   .badge-neutral {
     background: hsl(var(--muted));
     border: 1px solid hsl(var(--border));
     color: hsl(var(--muted-foreground));
   }
-
   .badge-info {
     background: hsl(var(--primary) / 0.10);
     border: 1px solid hsl(var(--primary) / 0.25);
@@ -188,26 +175,27 @@
   .alert-info { border-left: 3px solid hsl(var(--primary)); }
   .alert-success { border-left: 3px solid hsl(var(--success)); }
 
-  /* ── Float Animations ── */
-  .float-animation { animation: float 6s ease-in-out infinite; }
-  .float-animation-delayed { animation: float 6s ease-in-out 2s infinite; }
-  .float-animation-delayed-2 { animation: float 6s ease-in-out 4s infinite; }
-  .marquee { animation: marquee 30s linear infinite; }
-
-  /* ── Legacy glass compat (flat now) ── */
+  /* ── Glass Card System ── */
   .glass,
   .glass-strong,
   .glass-card,
   .glass-bento {
     background: hsl(var(--card));
-    border: 1px solid hsl(var(--border));
-    border-radius: var(--radius-card, 14px);
+    border: 0.5px solid hsl(var(--border));
+    border-radius: var(--radius-card);
   }
 
-  .glass-card:hover,
-  .glass-bento:hover {
-    border-color: hsl(var(--border));
+  .light .glass,
+  .light .glass-strong,
+  .light .glass-card,
+  .light .glass-bento {
+    background: hsla(0, 0%, 100%, 0.75);
+    backdrop-filter: blur(14px);
   }
+
+  /* ── Float Animations ── */
+  .float-animation { animation: float 6s ease-in-out infinite; }
+  .marquee { animation: marquee 30s linear infinite; }
 
   .gradient-bg,
   .gradient-hero {
@@ -219,7 +207,6 @@
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-8px); }
 }
-
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -232,9 +219,7 @@
 ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.35); }
 * { scrollbar-width: thin; scrollbar-color: hsl(var(--muted-foreground) / 0.2) transparent; }
 
-/* Sidebar scroll */
 .sidebar-scroll::-webkit-scrollbar-thumb { background: transparent; }
 .sidebar-scroll:hover::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground) / 0.15); }
-.sidebar-scroll:hover::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.3); }
 .sidebar-scroll { scrollbar-color: transparent transparent; }
 .sidebar-scroll:hover { scrollbar-color: hsl(var(--muted-foreground) / 0.15) transparent; }
