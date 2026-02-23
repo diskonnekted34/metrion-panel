@@ -189,23 +189,11 @@ const KPIWall = () => {
               transition={{ delay: 0.1 + i * 0.03 }}
               className="group relative overflow-hidden cursor-pointer hover:-translate-y-px transition-all duration-200"
               style={{
-                background: `linear-gradient(135deg, rgba(${kpi.tint},0.05) 0%, rgba(0,0,0,0.45) 100%)`,
-                backdropFilter: "blur(16px)",
-                border: "0.5px solid",
-                borderImage: "linear-gradient(135deg, rgba(0,229,255,0.12), rgba(147,51,234,0.08)) 1",
-                borderRadius: "var(--radius-card, 16px)",
+                background: "hsl(var(--card))",
+                border: "0.5px solid hsl(var(--border))",
+                borderRadius: "var(--radius-card, 18px)",
               }}
-              onClick={() => setOpenDrawer(i)}
             >
-              {/* Neon sweep animation overlay */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{
-                  background: "linear-gradient(90deg, transparent 0%, rgba(0,229,255,0.04) 50%, transparent 100%)",
-                  backgroundSize: "200% 100%",
-                  animation: "neon-sweep 5s linear infinite",
-                }}
-              />
 
               <div className="p-3 pb-0 relative">
                 {/* Header: icon + label + delta */}
