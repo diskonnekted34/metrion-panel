@@ -228,8 +228,8 @@ const KPIWall = () => {
                       className="text-[0.55rem] font-semibold px-2 py-0.5 transition-all duration-150"
                       style={{
                         borderRadius: "var(--radius-pill, 999px)",
-                        background: tr === t ? "rgba(30,107,255,0.15)" : "transparent",
-                        color: tr === t ? "#1E90FF" : "rgba(255,255,255,0.35)",
+                        background: tr === t ? "hsl(var(--primary) / 0.15)" : "transparent",
+                        color: tr === t ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))",
                       }}
                     >
                       {t}
@@ -267,16 +267,16 @@ const KPIWall = () => {
             className="fixed inset-0 z-50 flex justify-end"
             onClick={() => setOpenDrawer(null)}
           >
-            <div className="absolute inset-0 bg-black/60" />
+            <div className="absolute inset-0 bg-background/60" />
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="relative w-full max-w-md h-full p-6 overflow-y-auto"
+              className="relative w-full max-w-md h-full p-6 overflow-y-auto glass-card"
               style={{
-                background: "linear-gradient(180deg, rgba(8,8,8,0.98) 0%, rgba(2,2,2,0.99) 100%)",
-                borderLeft: "0.5px solid rgba(255,255,255,0.08)",
+                borderRadius: 0,
+                borderLeft: "1px solid hsl(var(--border))",
               }}
               onClick={e => e.stopPropagation()}
             >
