@@ -37,9 +37,9 @@ const statusLabels: Record<ReportStatus, string> = {
 };
 
 const tierColors: Record<PackageTier, string> = {
-  core: "text-muted-foreground bg-muted/50 border-border/30",
-  growth: "text-primary bg-primary/8 border-primary/20",
-  enterprise: "text-warning bg-warning/8 border-warning/20",
+  core: "text-muted-foreground bg-muted/50",
+  growth: "text-primary bg-primary/8",
+  enterprise: "text-warning bg-warning/8",
 };
 
 const Reports = () => {
@@ -101,12 +101,12 @@ const Reports = () => {
 
   const StatusBadge = ({ status }: { status: ReportStatus }) => {
     const styles = {
-      immutable: "text-primary bg-primary/8 border-primary/15",
-      draft: "text-warning bg-warning/8 border-warning/15",
-      scheduled: "text-muted-foreground bg-muted/50 border-border/30",
+      immutable: "text-primary bg-primary/8",
+      draft: "text-warning bg-warning/8",
+      scheduled: "text-muted-foreground bg-muted/50",
     }[status];
     return (
-      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border flex items-center gap-1 ${styles}`}>
+      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full flex items-center gap-1 ${styles}`}>
         {status === "immutable" && <Lock className="h-2.5 w-2.5" />}
         {statusLabels[status]}
       </span>
@@ -114,7 +114,7 @@ const Reports = () => {
   };
 
   const TierBadge = ({ tier }: { tier: PackageTier }) => (
-    <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded border ${tierColors[tier]}`}>
+    <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${tierColors[tier]}`}>
       {tier}
     </span>
   );
@@ -141,7 +141,7 @@ const Reports = () => {
           </div>
           <div className="flex items-center gap-2">
             {/* Automation Toggle */}
-            <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-border/30 bg-secondary/30">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-secondary/30">
               <Settings2 className="h-3.5 w-3.5 text-muted-foreground" />
               <span className="text-[11px] text-muted-foreground">Otomasyon</span>
               <button
@@ -152,22 +152,22 @@ const Reports = () => {
               </button>
             </div>
             <button onClick={() => setNotifOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium border border-border/30 hover:border-border/60 bg-secondary/30 text-foreground transition-all">
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium bg-secondary/30 text-foreground hover:bg-secondary/50 transition-all">
               <Bell className="h-3.5 w-3.5" /> Bildirimler
             </button>
             <button onClick={() => toast.info("Export Policy — yakında aktif")}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium border border-border/30 hover:border-border/60 bg-secondary/30 text-muted-foreground transition-all">
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium bg-secondary/30 text-muted-foreground hover:bg-secondary/50 transition-all">
               <FileText className="h-3.5 w-3.5" /> Export
             </button>
           </div>
         </motion.div>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-5 bg-secondary/30 rounded-2xl p-1 border border-border/10">
+        <div className="flex gap-1 mb-5 bg-secondary/30 rounded-2xl p-1">
           {tabs.map(t => (
             <button key={t.id} onClick={() => { setTab(t.id); setSelected(null); }}
               className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
-                tab === t.id ? "bg-primary/10 text-primary border border-primary/20" :
+                tab === t.id ? "bg-primary/10 text-primary" :
                 "text-muted-foreground hover:text-foreground"
               }`}>
               {t.icon}
@@ -185,27 +185,28 @@ const Reports = () => {
           {/* Type */}
           <div className="flex gap-1">
             <button onClick={() => setTypeFilter("all")}
-              className={`px-3 py-1.5 rounded-xl text-[11px] font-medium border transition-all ${
-                typeFilter === "all" ? "bg-primary/12 text-primary border-primary/25" : "bg-secondary/30 text-muted-foreground border-border/20 hover:border-border/40"
+              className={`px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all ${
+                typeFilter === "all" ? "bg-primary/12 text-primary" : "bg-secondary/30 text-muted-foreground hover:bg-secondary/50"
+
               }`}>Tümü</button>
             {availableTypes.map(t => (
               <button key={t} onClick={() => setTypeFilter(t)}
-                className={`px-3 py-1.5 rounded-xl text-[11px] font-medium border transition-all ${
-                  typeFilter === t ? "bg-primary/12 text-primary border-primary/25" : "bg-secondary/30 text-muted-foreground border-border/20 hover:border-border/40"
+                className={`px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all ${
+                  typeFilter === t ? "bg-primary/12 text-primary" : "bg-secondary/30 text-muted-foreground hover:bg-secondary/50"
                 }`}>
                 {typeLabels[t]}
               </button>
             ))}
           </div>
           {/* Confidentiality */}
-          <div className="h-5 w-px bg-border/20" />
+          <div className="h-5 w-px bg-muted-foreground/15" />
           <div className="flex gap-1">
             {(["all", "immutable", "draft", "scheduled"] as const).map(s => {
               if (s !== "all" && !baseData.some(r => r.status === s)) return null;
               return (
                 <button key={s} onClick={() => setStatusFilter(s)}
-                  className={`px-3 py-1.5 rounded-xl text-[11px] font-medium border transition-all ${
-                    statusFilter === s ? "bg-primary/12 text-primary border-primary/25" : "bg-secondary/30 text-muted-foreground border-border/20 hover:border-border/40"
+                  className={`px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all ${
+                    statusFilter === s ? "bg-primary/12 text-primary" : "bg-secondary/30 text-muted-foreground hover:bg-secondary/50"
                   }`}>
                   {s === "all" ? "Tümü" : statusLabels[s as ReportStatus]}
                 </button>
@@ -228,9 +229,9 @@ const Reports = () => {
         <div className="flex gap-4">
           {/* Table */}
           <div className="flex-1 min-w-0">
-            <div className="rounded-2xl border border-border/10 overflow-hidden bg-card/50 backdrop-blur-xl">
+            <div className="rounded-2xl overflow-hidden bg-card/50 backdrop-blur-xl">
               {/* Header */}
-              <div className="grid grid-cols-[1fr_80px_60px_90px_60px_70px] gap-0 px-4 py-3 border-b border-border/10 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+              <div className="grid grid-cols-[1fr_80px_60px_90px_60px_70px] gap-0 px-4 py-3 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
                 <span>Rapor</span>
                 <span>Tür</span>
                 <button onClick={() => toggleSort("healthScore")} className="flex items-center gap-1 hover:text-foreground transition-colors">
@@ -244,7 +245,7 @@ const Reports = () => {
               </div>
 
               {/* Rows */}
-              <div className="divide-y divide-border/10">
+              <div>
                 {filtered.length === 0 && (
                   <div className="px-4 py-12 text-center text-sm text-muted-foreground">
                     Bu filtrelere uygun rapor bulunamadı.
@@ -296,7 +297,7 @@ const Reports = () => {
               </div>
 
               {/* Footer */}
-              <div className="px-4 py-3 border-t border-border/10 flex items-center justify-between text-[11px] text-muted-foreground">
+              <div className="px-4 py-3 flex items-center justify-between text-[11px] text-muted-foreground">
                 <span>{filtered.length} rapor gösteriliyor</span>
                 <span className="flex items-center gap-1"><Lock className="h-3 w-3" /> Tüm raporlar immutable & versiyonlu</span>
               </div>
@@ -304,7 +305,7 @@ const Reports = () => {
           </div>
 
           {/* Preview Panel */}
-          <div className="hidden lg:block w-[360px] shrink-0 rounded-2xl border border-border/10 overflow-hidden bg-card/50 backdrop-blur-xl">
+          <div className="hidden lg:block w-[360px] shrink-0 rounded-2xl overflow-hidden bg-card/50 backdrop-blur-xl">
             <ReportPreviewPanel report={selected} />
           </div>
         </div>
