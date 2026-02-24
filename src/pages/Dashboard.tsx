@@ -19,17 +19,7 @@ const Dashboard = () => {
           document.getElementById("intervention-panel")?.scrollIntoView({ behavior: "smooth" });
         }} />}
 
-        {/* 2. Executive Health — full width */}
-        <div className="mb-5">
-          <ExecutiveHealth />
-        </div>
-
-        {/* 3. Risk Console — full width */}
-        <div className="mb-5">
-          <RiskConsole />
-        </div>
-
-        {/* 4. KPI Wall + Intervention Panel */}
+        {/* 1. KPI Wall + Intervention Panel */}
         <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-12"} gap-4 mb-5`}>
           <div className="lg:col-span-9">
             <KPIWall />
@@ -39,12 +29,18 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* 4. Department Table */}
+        {/* 2. Executive Health + Secondary Metric — side by side */}
+        <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"} gap-4 mb-5`}>
+          <ExecutiveHealth />
+          <RiskConsole />
+        </div>
+
+        {/* 3. Department Table */}
         <div className="mb-5">
           <DepartmentTable />
         </div>
 
-        {/* 5. Decision Impact Table */}
+        {/* 4. Decision Impact Table */}
         <div className="mb-5">
           <DecisionImpactTable />
         </div>

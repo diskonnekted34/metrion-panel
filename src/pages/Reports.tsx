@@ -91,12 +91,12 @@ const Reports = () => {
 
   const RiskBadge = ({ risk }: { risk: string }) => {
     const styles = {
-      low: "text-success bg-success/10 border-success/20",
-      medium: "text-warning bg-warning/10 border-warning/20",
-      high: "text-destructive bg-destructive/10 border-destructive/20",
-      critical: "text-destructive bg-destructive/15 border-destructive/30",
+      low: "text-success bg-success/10",
+      medium: "text-warning bg-warning/10",
+      high: "text-destructive bg-destructive/10",
+      critical: "text-destructive bg-destructive/15",
     }[risk] ?? "";
-    return <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${styles}`}>{risk}</span>;
+    return <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${styles}`}>{risk}</span>;
   };
 
   const StatusBadge = ({ status }: { status: ReportStatus }) => {
@@ -163,7 +163,7 @@ const Reports = () => {
         </motion.div>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-5 bg-secondary/30 rounded-2xl p-1 border border-border/20">
+        <div className="flex gap-1 mb-5 bg-secondary/30 rounded-2xl p-1 border border-border/10">
           {tabs.map(t => (
             <button key={t.id} onClick={() => { setTab(t.id); setSelected(null); }}
               className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
@@ -228,12 +228,11 @@ const Reports = () => {
         <div className="flex gap-4">
           {/* Table */}
           <div className="flex-1 min-w-0">
-            <div className="rounded-2xl border border-border/20 overflow-hidden bg-card/50 backdrop-blur-xl">
+            <div className="rounded-2xl border border-border/10 overflow-hidden bg-card/50 backdrop-blur-xl">
               {/* Header */}
-              <div className="grid grid-cols-[1fr_80px_70px_60px_90px_60px_80px_70px_70px] gap-0 px-4 py-3 border-b border-border/20 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+              <div className="grid grid-cols-[1fr_80px_60px_90px_60px_70px] gap-0 px-4 py-3 border-b border-border/10 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
                 <span>Rapor</span>
                 <span>Tür</span>
-                <span>Paket</span>
                 <button onClick={() => toggleSort("healthScore")} className="flex items-center gap-1 hover:text-foreground transition-colors">
                   Sağlık <SortIcon col="healthScore" />
                 </button>
@@ -241,8 +240,6 @@ const Reports = () => {
                   Risk <SortIcon col="risk" />
                 </button>
                 <span>Güven</span>
-                <span>Durum</span>
-                <span>Versiyon</span>
                 <span>Aksiyon</span>
               </div>
 
@@ -258,7 +255,7 @@ const Reports = () => {
                     key={row.id}
                     onClick={() => setSelected(row)}
                     onDoubleClick={() => navigate(`/reports/${row.id}`)}
-                    className={`grid grid-cols-[1fr_80px_70px_60px_90px_60px_80px_70px_70px] gap-0 px-4 py-3 cursor-pointer transition-all hover:bg-secondary/30 ${
+                    className={`grid grid-cols-[1fr_80px_60px_90px_60px_70px] gap-0 px-4 py-3 cursor-pointer transition-all hover:bg-secondary/30 ${
                       selected?.id === row.id ? "bg-primary/[0.04] border-l-2 border-l-primary" : ""
                     }`}
                   >
@@ -271,12 +268,9 @@ const Reports = () => {
                       </span>
                     </div>
                     <div className="flex items-center">
-                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-secondary/50 border border-border/20 text-muted-foreground">
+                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-secondary/50 text-muted-foreground">
                         {typeLabels[row.type]}
                       </span>
-                    </div>
-                    <div className="flex items-center">
-                      <TierBadge tier={row.packageTier} />
                     </div>
                     <div className="flex items-center">
                       <span className="text-sm font-bold text-foreground">{row.healthScore}</span>
@@ -286,12 +280,6 @@ const Reports = () => {
                     </div>
                     <div className="flex items-center">
                       <span className="text-[11px] text-muted-foreground">%{row.confidence}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <StatusBadge status={row.status} />
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-[10px] font-mono text-muted-foreground">v{row.version}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Link to={`/reports/${row.id}`} onClick={e => e.stopPropagation()}
@@ -308,7 +296,7 @@ const Reports = () => {
               </div>
 
               {/* Footer */}
-              <div className="px-4 py-3 border-t border-border/20 flex items-center justify-between text-[11px] text-muted-foreground">
+              <div className="px-4 py-3 border-t border-border/10 flex items-center justify-between text-[11px] text-muted-foreground">
                 <span>{filtered.length} rapor gösteriliyor</span>
                 <span className="flex items-center gap-1"><Lock className="h-3 w-3" /> Tüm raporlar immutable & versiyonlu</span>
               </div>
@@ -316,7 +304,7 @@ const Reports = () => {
           </div>
 
           {/* Preview Panel */}
-          <div className="hidden lg:block w-[360px] shrink-0 rounded-2xl border border-border/20 overflow-hidden bg-card/50 backdrop-blur-xl">
+          <div className="hidden lg:block w-[360px] shrink-0 rounded-2xl border border-border/10 overflow-hidden bg-card/50 backdrop-blur-xl">
             <ReportPreviewPanel report={selected} />
           </div>
         </div>

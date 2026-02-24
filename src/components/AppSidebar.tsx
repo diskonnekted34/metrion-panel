@@ -4,7 +4,9 @@ import {
   LayoutDashboard, Target, Scale, Zap, Network, ChevronDown,
   Database, Settings as SettingsIcon, FileText, ChevronRight,
   Eye, BarChart3, Crosshair, Activity, ClipboardList,
+  ShoppingBag, Bot,
 } from "lucide-react";
+import { executives } from "@/data/experts";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { departments } from "@/contexts/RBACContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -47,11 +49,19 @@ const bottomItems = [
   { label: "Ayarlar", icon: SettingsIcon, path: "/settings" },
 ];
 
+const statusDot: Record<string, string> = {
+  Monitoring: "bg-emerald-500",
+  "Running Task": "bg-blue-500",
+  Idle: "bg-muted-foreground/40",
+  Alerting: "bg-destructive",
+};
+
 const AppSidebar = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
   const [orgOpen, setOrgOpen] = useState(true);
   const [expandedDept, setExpandedDept] = useState<string | null>(null);
+  const [agentsOpen, setAgentsOpen] = useState(false);
 
   const isActive = useCallback((path: string) => {
     if (path === "/strategy") return location.pathname.startsWith("/strategy") || location.pathname === "/okr";
@@ -233,6 +243,64 @@ const AppSidebar = () => {
           </AnimatePresence>
         </div>
 
+        {/* Ajanlar dropdown */}
+        <div className="mt-1">
+          <button
+            onClick={() => setAgentsOpen(!agentsOpen)}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[13.5px] font-semibold transition-all duration-200 ${
+              location.pathname.startsWith("/workspace") || location.pathname === "/kadro"
+                ? "text-primary bg-primary/10"
+                : "text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent"
+            }`}
+          >
+            <Bot className="h-[18px] w-[18px] shrink-0 text-sidebar-foreground" />
+            <span className="flex-1 text-left">Ajanlar</span>
+            <span className="text-[10px] font-medium text-muted-foreground mr-1">{executives.length}</span>
+            <motion.div
+              animate={{ rotate: agentsOpen ? 180 : 0 }}
+              transition={{ duration: 0.22, ease: "easeInOut" }}
+            >
+              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            </motion.div>
+          </button>
+
+          <AnimatePresence initial={false}>
+            {agentsOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="mt-0.5 space-y-0.5 pl-2">
+                  {executives.map((agent) => {
+                    const isAgentActive = location.pathname === `/workspace/${agent.id}`;
+                    return (
+                      <Link
+                        key={agent.id}
+                        to={`/workspace/${agent.id}`}
+                        className={`flex items-center gap-2.5 pl-4 pr-3 rounded-xl text-[12px] transition-all duration-200 relative ${
+                          isAgentActive
+                            ? "text-primary bg-primary/10 font-semibold"
+                            : "text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent font-medium"
+                        }`}
+                        style={{ height: 36 }}
+                      >
+                        <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${statusDot[agent.status] || "bg-muted-foreground/40"}`} />
+                        <span className="truncate">{agent.name}</span>
+                        {isAgentActive && (
+                          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-r-full bg-primary" />
+                        )}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
         {/* Divider */}
         <div className="mx-4 my-5 h-px bg-sidebar-border" />
 
@@ -258,6 +326,22 @@ const AppSidebar = () => {
               </Link>
             );
           })}
+
+          {/* Ekibi Genişlet */}
+          <Link
+            to="/marketplace"
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-[13px] transition-all duration-200 relative group ${
+              location.pathname === "/marketplace"
+                ? "text-primary bg-primary/10"
+                : "text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent"
+            }`}
+          >
+            <ShoppingBag className={`h-[16px] w-[16px] shrink-0 transition-colors ${location.pathname === "/marketplace" ? "text-primary" : "text-sidebar-foreground group-hover:text-foreground"}`} />
+            <span className="font-medium">Ekibi Genişlet</span>
+            {location.pathname === "/marketplace" && (
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary" />
+            )}
+          </Link>
         </div>
       </nav>
 
