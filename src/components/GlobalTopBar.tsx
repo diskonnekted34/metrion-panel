@@ -148,19 +148,19 @@ const GlobalTopBar = () => {
           {/* Search bar */}
           <button
             onClick={() => setPaletteOpen(true)}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-secondary/40 hover:bg-secondary/60 border border-border/40 transition-all group min-w-[180px] lg:min-w-[220px]"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-black/10 dark:bg-white/10 hover:bg-black/15 dark:hover:bg-white/15 transition-all group min-w-[180px] lg:min-w-[220px]"
           >
             <Search className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
             <span className="text-[12px] text-muted-foreground/60 flex-1 text-left truncate hidden md:block">
               {tb.searchShort}
             </span>
-            <kbd className="hidden lg:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-background/50 text-[10px] text-muted-foreground border border-border/60 font-mono">
+            <kbd className="hidden lg:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10 text-[10px] text-muted-foreground font-mono">
               {shortcutLabel}
             </kbd>
           </button>
 
           {/* Language switch */}
-          <div className="flex items-center rounded-xl border border-border/40 overflow-hidden">
+          <div className="flex items-center rounded-xl overflow-hidden bg-black/10 dark:bg-white/10">
             {(["tr", "en"] as const).map(l => (
               <button
                 key={l}

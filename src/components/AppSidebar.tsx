@@ -37,7 +37,7 @@ const topItems = [
   { label: "Merkez", icon: LayoutDashboard, path: "/dashboard" },
   { label: "Strateji", icon: Target, path: "/strategy" },
   { label: "Kararlar", icon: Scale, path: "/decision-lab" },
-  { label: "Operasyon", icon: Zap, path: "/action-center" },
+  { label: "Aksiyonlar", icon: Zap, path: "/action-center" },
 ];
 
 /* ── Bottom nav items ── */
@@ -82,9 +82,9 @@ const AppSidebar = () => {
       <div className="flex items-center px-5 h-16 shrink-0">
         <Link to="/" className="flex items-center gap-2.5">
           <div className="h-8 w-8 rounded-2xl bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground text-xs font-bold">C</span>
+            <span className="text-primary-foreground text-xs font-bold">M</span>
           </div>
-          <span className="text-[17px] font-semibold tracking-tight text-foreground">C-Levels</span>
+          <span className="text-[17px] font-semibold tracking-tight text-foreground">Metrion</span>
         </Link>
       </div>
 

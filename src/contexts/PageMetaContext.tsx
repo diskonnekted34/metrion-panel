@@ -60,7 +60,7 @@ function getMetaFromPath(pathname: string, pageMeta: Record<string, { title: str
   if (pathname.startsWith("/executive/"))
     return pageMeta[pathname] || { title: pageMeta["/executive/position-history"]?.title || "Executive" };
 
-  return { title: "C-Levels" };
+  return { title: "Metrion" };
 }
 
 export const PageMetaProvider = ({ children }: { children: ReactNode }) => {
