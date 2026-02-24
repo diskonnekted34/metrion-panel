@@ -1,4 +1,4 @@
-import { Copy, ExternalLink, Download, Users, Shield, Hash, Clock, Brain, Database } from "lucide-react";
+import { Copy, ExternalLink, Download, Users, Shield, Hash, Clock, Brain, Database, Lock, Tag } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import type { ReportRow } from "@/data/reportsHubData";
@@ -6,6 +6,12 @@ import type { ReportRow } from "@/data/reportsHubData";
 interface ReportPreviewPanelProps {
   report: ReportRow | null;
 }
+
+const tierColors: Record<string, string> = {
+  core: "text-muted-foreground bg-muted/50 border-border/30",
+  growth: "text-primary bg-primary/8 border-primary/20",
+  enterprise: "text-warning bg-warning/8 border-warning/20",
+};
 
 const ReportPreviewPanel = ({ report }: ReportPreviewPanelProps) => {
   if (!report) {
@@ -29,15 +35,22 @@ const ReportPreviewPanel = ({ report }: ReportPreviewPanelProps) => {
 
   return (
     <div className="p-5 space-y-4 h-full overflow-y-auto" style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.06) transparent" }}>
-      {/* Report cover placeholder */}
-      <div className="rounded-xl border border-white/[0.06] overflow-hidden" style={{ background: "rgba(255,255,255,0.02)" }}>
-        <div className="aspect-[4/3] flex items-center justify-center bg-gradient-to-br from-white/[0.03] to-transparent">
-          <div className="text-center">
-            <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3" style={{ boxShadow: "0 0 30px rgba(30,107,255,0.15)" }}>
-              <Shield className="h-6 w-6 text-primary" />
-            </div>
+      {/* Cover preview */}
+      <div className="rounded-xl border border-border/20 overflow-hidden bg-secondary/20">
+        <div className="aspect-[4/3] flex items-center justify-center">
+          <div className="text-center px-4">
+            <p className="text-[16px] font-semibold text-foreground mb-1" style={{ letterSpacing: "-0.04em" }}>Metrion</p>
+            <p className="text-[9px] text-muted-foreground uppercase tracking-widest mb-3">Intelligence Report</p>
             <p className="text-sm font-semibold text-foreground">{report.title}</p>
             <p className="text-[10px] text-muted-foreground mt-1">{report.periodStart} – {report.periodEnd}</p>
+            <div className="flex items-center justify-center gap-2 mt-3">
+              <span className={`text-[8px] font-bold uppercase px-1.5 py-0.5 rounded border ${tierColors[report.packageTier]}`}>
+                {report.packageTier}
+              </span>
+              <span className="text-[8px] font-bold uppercase px-1.5 py-0.5 rounded border border-border/30 text-muted-foreground">
+                {report.confidentiality === "executive" ? "Yönetim" : report.confidentiality === "internal" ? "İç" : "Genel"}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -67,11 +80,31 @@ const ReportPreviewPanel = ({ report }: ReportPreviewPanelProps) => {
           </span>
         </div>
         <div className="flex items-center justify-between text-xs">
+          <span className="text-muted-foreground flex items-center gap-1.5"><Tag className="h-3 w-3" /> Versiyon</span>
+          <span className="text-foreground font-mono text-[10px]">v{report.version}</span>
+        </div>
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-muted-foreground flex items-center gap-1.5"><Lock className="h-3 w-3" /> Model</span>
+          <span className="text-foreground text-[10px]">{report.aiModelVersion}</span>
+        </div>
+        <div className="flex items-center justify-between text-xs">
           <span className="text-muted-foreground flex items-center gap-1.5"><Hash className="h-3 w-3" /> Hash</span>
           <button onClick={() => { navigator.clipboard.writeText(report.hash); toast.success("Hash kopyalandı"); }}
             className="text-foreground font-mono text-[10px] hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
             {report.hash} <Copy className="h-2.5 w-2.5" />
           </button>
+        </div>
+      </div>
+
+      {/* Top Risk & Opportunity */}
+      <div className="space-y-2">
+        <div className="p-2.5 rounded-xl bg-destructive/5 border border-destructive/10">
+          <p className="text-[9px] font-bold text-destructive uppercase tracking-wider mb-1">Top Risk</p>
+          <p className="text-[10px] text-foreground leading-relaxed">{report.topRisk}</p>
+        </div>
+        <div className="p-2.5 rounded-xl bg-success/5 border border-success/10">
+          <p className="text-[9px] font-bold text-success uppercase tracking-wider mb-1">Top Fırsat</p>
+          <p className="text-[10px] text-foreground leading-relaxed">{report.topOpportunity}</p>
         </div>
       </div>
 
@@ -82,7 +115,7 @@ const ReportPreviewPanel = ({ report }: ReportPreviewPanelProps) => {
         </p>
         <div className="flex flex-wrap gap-1.5">
           {report.sources.map(s => (
-            <span key={s} className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/[0.04] border border-white/[0.06] text-muted-foreground">
+            <span key={s} className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-secondary/50 border border-border/20 text-muted-foreground">
               {s}
             </span>
           ))}
@@ -92,12 +125,11 @@ const ReportPreviewPanel = ({ report }: ReportPreviewPanelProps) => {
       {/* Actions */}
       <div className="space-y-2 pt-2">
         <Link to={`/reports/${report.id}`}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 transition-all"
-          style={{ boxShadow: "0 0 20px rgba(30,107,255,0.2)" }}>
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 transition-all">
           <ExternalLink className="h-3.5 w-3.5" /> Raporu Aç
         </Link>
         <button onClick={() => toast.info("PDF indiriliyor...")}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium text-foreground border border-white/[0.08] hover:border-white/[0.16] bg-white/[0.02] transition-all">
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium text-foreground border border-border/30 hover:border-border/60 bg-secondary/30 transition-all">
           <Download className="h-3.5 w-3.5" /> PDF İndir
         </button>
         <button onClick={() => { navigator.clipboard.writeText(report.id); toast.success("Rapor ID kopyalandı"); }}
