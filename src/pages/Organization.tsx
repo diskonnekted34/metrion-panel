@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Building2, Crown, Shield } from "lucide-react";
+import { Building2, Crown, Shield, Bot } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 
-// Lazy-loaded tab content
 import DepartmentsTab from "@/components/organization/DepartmentsTab";
 import KadroTab from "@/components/organization/KadroTab";
 import PermissionsTab from "@/components/organization/PermissionsTab";
+import AjanlarTab from "@/components/organization/AjanlarTab";
 
 const TABS = [
   { key: "departments", label: "Departmanlar", icon: Building2 },
   { key: "kadro", label: "Kadro", icon: Crown },
+  { key: "ajanlar", label: "Ajanlar", icon: Bot },
   { key: "permissions", label: "Yetkiler", icon: Shield },
 ] as const;
 
@@ -74,6 +75,7 @@ const Organization = () => {
           >
             {activeTab === "departments" && <DepartmentsTab />}
             {activeTab === "kadro" && <KadroTab />}
+            {activeTab === "ajanlar" && <AjanlarTab />}
             {activeTab === "permissions" && <PermissionsTab />}
           </motion.div>
         </div>

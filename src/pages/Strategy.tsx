@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, FileText, Globe, ChevronDown, Info } from "lucide-react";
+import { Plus, FileText } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import StrategicSnapshot from "@/components/strategy/StrategicSnapshot";
 import DecisionQueue from "@/components/strategy/DecisionQueue";
@@ -8,7 +8,7 @@ import SimulationLab from "@/components/strategy/SimulationLab";
 import ProjectionCanvas from "@/components/strategy/ProjectionCanvas";
 import DecisionBuilder from "@/components/strategy/DecisionBuilder";
 import { scenarios } from "@/data/strategyMock";
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+
 
 type TimeWindow = "daily" | "weekly" | "monthly" | "yearly";
 
@@ -31,26 +31,8 @@ const Strategy = () => {
   return (
     <AppLayout>
       <div className="p-6 max-w-[1400px] mx-auto">
-        {/* Page Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-          <div className="flex items-center gap-3">
-            <div>
-              <h1 className="text-lg font-bold text-foreground">Strateji</h1>
-              <p className="text-xs text-muted-foreground mt-0.5">Şirket düzeyinde planlama, kıyas, simülasyon ve karar üretimi</p>
-            </div>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-[9px] font-medium cursor-help">
-                    <Globe className="h-2.5 w-2.5" /> Ortak Alan
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent className="text-[10px]">Bu sayfa tüm şirket için tek strateji alanıdır.</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-
-          <div className="flex items-center gap-2 flex-wrap">
+        {/* Controls */}
+        <div className="flex items-center gap-2 flex-wrap mb-6">
             {/* Scenario selector */}
             <select
               value={selectedScenario}
@@ -81,7 +63,6 @@ const Strategy = () => {
               <FileText className="h-3 w-3" /> Karar Taslağı Oluştur
             </button>
           </div>
-        </div>
 
         {/* Grid Layout */}
         <div className="space-y-5">

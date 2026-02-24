@@ -176,7 +176,7 @@ const translations = {
       privacy: "Privacy",
       terms: "Terms",
       contact: "Contact",
-      rights: "© 2030 C-Levels. All rights reserved.",
+      rights: "© 2030 Metrion. All rights reserved.",
       creatorProgram: "Creator Program (Invite-only)",
     },
     /* ── Top Bar & Page Metadata ── */
@@ -222,6 +222,7 @@ const translations = {
     },
     pageMeta: {
       "/dashboard": { title: "Command Center", subtitle: "Manage strategic insights and analyses." },
+      "/strategy": { title: "Strategy", subtitle: "Company-level planning, comparison, simulation and decision-making." },
       "/decision-lab": { title: "Decision Lab", subtitle: "Track decisions, risk and impact across the pipeline." },
       "/action-center": { title: "Action Center", subtitle: "Manage actions through approval and execution." },
       "/okr": { title: "OKR", subtitle: "Track goals, outcomes and cadence." },
@@ -238,6 +239,7 @@ const translations = {
       "/creative-workspace": { title: "Creative Workspace", subtitle: "Content creation and creative management." },
       "/pricing": { title: "Pricing", subtitle: "Plans and packages." },
       "/executive/position-history": { title: "Position History", subtitle: "Track executive position changes, scope diffs and handover quality." },
+      "/organization": { title: "Organization", subtitle: "Department structure, chain of command and access management." },
     } as Record<string, { title: string; subtitle: string }>,
     commandPalette: {
       pages: "Pages",
@@ -423,7 +425,7 @@ const translations = {
       privacy: "Gizlilik",
       terms: "Şartlar",
       contact: "İletişim",
-      rights: "© 2030 C-Levels. Tüm hakları saklıdır.",
+      rights: "© 2030 Metrion. Tüm hakları saklıdır.",
       creatorProgram: "Yaratıcı Programı (Yalnızca Davet)",
     },
     /* ── Top Bar & Page Metadata ── */
@@ -469,6 +471,7 @@ const translations = {
     },
     pageMeta: {
       "/dashboard": { title: "Komuta", subtitle: "Stratejik içgörüleri ve analizleri yönetin." },
+      "/strategy": { title: "Strateji", subtitle: "Şirket düzeyinde planlama, kıyas, simülasyon ve karar üretimi" },
       "/decision-lab": { title: "Karar Merkezi", subtitle: "Karar pipeline'ını, riskleri ve etkiyi izleyin." },
       "/action-center": { title: "Aksiyon Merkezi", subtitle: "Onay ve yürütme sürecindeki aksiyonları yönetin." },
       "/okr": { title: "OKR", subtitle: "Hedefleri, sonuçları ve ritmi takip edin." },
@@ -485,6 +488,7 @@ const translations = {
       "/creative-workspace": { title: "Kreatif Çalışma Alanı", subtitle: "İçerik üretimi ve kreatif yönetim." },
       "/pricing": { title: "Fiyatlandırma", subtitle: "Paketler ve planlar." },
       "/executive/position-history": { title: "Pozisyon Geçmişleri", subtitle: "C-level pozisyon değişimlerini, scope diff'lerini ve devir-teslim kalitesini izleyin." },
+      "/organization": { title: "Organizasyon", subtitle: "Departman yapısı, emir-komuta zinciri ve yetki yönetimi" },
     } as Record<string, { title: string; subtitle: string }>,
     commandPalette: {
       pages: "Sayfalar",
