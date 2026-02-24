@@ -6,7 +6,7 @@ import {
   Eye, BarChart3, Crosshair, Activity, ClipboardList,
   ShoppingBag, Bot,
 } from "lucide-react";
-import { executives } from "@/data/experts";
+import { allExperts } from "@/data/experts";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { departments } from "@/contexts/RBACContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -255,7 +255,7 @@ const AppSidebar = () => {
           >
             <Bot className="h-[18px] w-[18px] shrink-0 text-sidebar-foreground" />
             <span className="flex-1 text-left">Ajanlar</span>
-            <span className="text-[10px] font-medium text-muted-foreground mr-1">{executives.length}</span>
+            <span className="text-[10px] font-medium text-muted-foreground mr-1">{allExperts.length}</span>
             <motion.div
               animate={{ rotate: agentsOpen ? 180 : 0 }}
               transition={{ duration: 0.22, ease: "easeInOut" }}
@@ -274,7 +274,7 @@ const AppSidebar = () => {
                 className="overflow-hidden"
               >
                 <div className="mt-0.5 space-y-0.5 pl-2">
-                  {executives.map((agent) => {
+                  {allExperts.map((agent) => {
                     const isAgentActive = location.pathname === `/workspace/${agent.id}`;
                     return (
                       <Link
