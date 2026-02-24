@@ -47,15 +47,7 @@ const ExecutiveHealth = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <div
-        className="p-5"
-        style={{
-          background: "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 45%, rgba(0,0,0,0.35) 100%)",
-          backdropFilter: "blur(14px)",
-          border: "0.5px solid rgba(255,255,255,0.10)",
-          borderRadius: "var(--radius-card, 16px)",
-        }}
-      >
+      <div className="glass-card p-5">
         {/* Score + Drivers Row */}
         <div className="flex items-start gap-5">
           {/* Radial gauge */}
@@ -112,7 +104,7 @@ const ExecutiveHealth = () => {
             </div>
 
             {/* Simulation hint */}
-            <div className="mt-3 flex items-center gap-1.5 px-2.5 py-1.5" style={{ background: "rgba(30,107,255,0.06)", borderRadius: "var(--radius-inner, 12px)" }}>
+            <div className="mt-3 flex items-center gap-1.5 px-2.5 py-1.5 bg-primary/5 rounded-xl">
               <Sparkles className="h-3 w-3 text-primary/60 shrink-0" />
               <span className="text-[0.6rem] text-primary/70">
                 Bütçe X onaylanırsa → tahmini +3 sağlık skoru
@@ -124,8 +116,7 @@ const ExecutiveHealth = () => {
         {/* Expand breakdown */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="w-full flex items-center justify-center gap-1 mt-4 pt-3 text-[0.6rem] font-medium text-muted-foreground/60 hover:text-foreground transition-colors"
-          style={{ borderTop: "0.5px solid rgba(255,255,255,0.05)" }}
+          className="w-full flex items-center justify-center gap-1 mt-4 pt-3 text-[0.6rem] font-medium text-muted-foreground/60 hover:text-foreground transition-colors border-t border-border/30"
         >
           {expanded ? "Detayları Gizle" : "Ağırlıklı Bileşenleri Göster"}
           {expanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}

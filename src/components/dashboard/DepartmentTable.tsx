@@ -77,18 +77,16 @@ const DepartmentTable = () => {
             <button
               key={f.id}
               onClick={() => setFilter(f.id)}
-              className="text-[0.6rem] font-semibold px-2.5 py-1 transition-all duration-150"
-              style={{
-                borderRadius: "var(--radius-pill, 999px)",
-                background: filter === f.id ? "rgba(30,107,255,0.12)" : "rgba(255,255,255,0.03)",
-                color: filter === f.id ? "#1E90FF" : "rgba(255,255,255,0.4)",
-              }}
+              className={`text-[0.6rem] font-semibold px-2.5 py-1 transition-all duration-150 ${
+                filter === f.id ? "bg-primary/12 text-primary" : "bg-secondary/50 text-muted-foreground hover:text-foreground"
+              }`}
+              style={{ borderRadius: "var(--radius-pill, 999px)" }}
             >
               {f.label}
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-1.5 ml-auto px-2.5 py-1" style={{ background: "rgba(255,255,255,0.03)", borderRadius: "var(--radius-inner, 12px)", border: "0.5px solid rgba(255,255,255,0.05)" }}>
+        <div className="flex items-center gap-1.5 ml-auto px-2.5 py-1 bg-secondary/50 border border-border/30" style={{ borderRadius: "var(--radius-inner, 12px)" }}>
           <Search className="h-3 w-3 text-muted-foreground/40" />
           <input
             type="text"
@@ -101,19 +99,9 @@ const DepartmentTable = () => {
       </div>
 
       {/* Table */}
-      <div
-        className="overflow-hidden"
-        style={{
-          background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0.4) 100%)",
-          backdropFilter: "blur(14px)",
-          border: "0.5px solid rgba(255,255,255,0.06)",
-          borderRadius: "var(--radius-card, 16px)",
-        }}
-      >
+      <div className="overflow-hidden glass-card" style={{ padding: 0 }}>
         {/* Header */}
-        <div className="grid grid-cols-12 gap-2 px-4 py-2.5 text-[0.6rem] font-semibold text-muted-foreground/50 uppercase tracking-wider"
-          style={{ borderBottom: "0.5px solid rgba(255,255,255,0.04)" }}
-        >
+        <div className="grid grid-cols-12 gap-2 px-4 py-2.5 text-[0.6rem] font-semibold text-muted-foreground/50 uppercase tracking-wider border-b border-border/30">
           <button className="col-span-2 text-left flex items-center gap-1" onClick={() => setSortCol("name")}>
             Departman {sortCol === "name" && <ChevronDown className="h-2.5 w-2.5" />}
           </button>
@@ -134,8 +122,7 @@ const DepartmentTable = () => {
             <button
               key={d.slug}
               onClick={() => navigate(`/departments/${d.slug}`)}
-              className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left hover:bg-white/[0.02] transition-colors items-center"
-              style={{ borderBottom: "0.5px solid rgba(255,255,255,0.03)" }}
+              className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left hover:bg-secondary/30 transition-colors items-center border-b border-border/20"
             >
               <div className="col-span-2 text-[0.72rem] font-medium text-foreground">{d.name}</div>
               <div className="col-span-2 flex items-center gap-2">

@@ -74,15 +74,7 @@ const InterventionPanel = () => {
   };
 
   return (
-    <div
-      className="h-full flex flex-col"
-      style={{
-        background: "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0.5) 100%)",
-        backdropFilter: "blur(18px)",
-        border: "0.5px solid rgba(255,255,255,0.06)",
-        borderRadius: "var(--radius-card, 16px)",
-      }}
-    >
+    <div className="h-full flex flex-col glass-card" style={{ padding: 0 }}>
       {/* Header */}
       <div className="px-4 pt-4 pb-2">
         <div className="flex items-center gap-2 mb-3">
@@ -91,17 +83,15 @@ const InterventionPanel = () => {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 p-0.5" style={{ background: "rgba(255,255,255,0.03)", borderRadius: "var(--radius-inner, 12px)" }}>
+        <div className="flex gap-1 p-0.5 bg-secondary/50" style={{ borderRadius: "var(--radius-inner, 12px)" }}>
           {tabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="flex items-center gap-1 flex-1 justify-center py-1.5 text-[0.6rem] font-semibold transition-all duration-150"
-              style={{
-                borderRadius: "var(--radius-inner, 12px)",
-                background: activeTab === tab.id ? "rgba(30,107,255,0.12)" : "transparent",
-                color: activeTab === tab.id ? "#1E90FF" : "rgba(255,255,255,0.4)",
-              }}
+              className={`flex items-center gap-1 flex-1 justify-center py-1.5 text-[0.6rem] font-semibold transition-all duration-150 ${
+                activeTab === tab.id ? "bg-primary/12 text-primary" : "text-muted-foreground hover:text-foreground"
+              }`}
+              style={{ borderRadius: "var(--radius-inner, 12px)" }}
             >
               <tab.icon className="h-3 w-3" />
               {tab.label}
@@ -125,7 +115,7 @@ const InterventionPanel = () => {
                 exit={{ opacity: 0, x: -12 }}
                 className="group p-3 relative overflow-hidden"
                 style={{
-                  background: "rgba(255,255,255,0.02)",
+                  background: "hsl(var(--secondary) / 0.5)",
                   border: `0.5px solid ${pc}30`,
                   borderLeft: `3px solid ${pc}`,
                   borderRadius: "var(--radius-inner, 12px)",
@@ -163,7 +153,7 @@ const InterventionPanel = () => {
                       <span className="text-success/80">ROI: {item.expectedROI}</span>
                       <div className="flex gap-1">
                         {item.affectedKPIs.map(k => (
-                          <span key={k} className="text-muted-foreground/40 px-1 py-0.5" style={{ background: "rgba(255,255,255,0.03)", borderRadius: "var(--radius-pill, 999px)" }}>
+                          <span key={k} className="text-muted-foreground/40 px-1 py-0.5 bg-secondary/50" style={{ borderRadius: "var(--radius-pill, 999px)" }}>
                             {k}
                           </span>
                         ))}
@@ -173,18 +163,18 @@ const InterventionPanel = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center justify-between mt-2 pt-2" style={{ borderTop: "0.5px solid rgba(255,255,255,0.03)" }}>
+                <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/30">
                   <div className="flex gap-1">
                     <button
                       onClick={() => togglePin(item.id)}
-                      className="p-1 rounded-lg hover:bg-white/[0.04] transition-colors"
+                      className="p-1 rounded-lg hover:bg-secondary/60 transition-colors"
                       title={pinned.has(item.id) ? "Unpin" : "Pin"}
                     >
                       {pinned.has(item.id) ? <PinOff className="h-3 w-3 text-primary" /> : <Pin className="h-3 w-3 text-muted-foreground/40" />}
                     </button>
                     <button
                       onClick={() => setSnoozed(prev => new Set([...prev, item.id]))}
-                      className="p-1 rounded-lg hover:bg-white/[0.04] transition-colors"
+                      className="p-1 rounded-lg hover:bg-secondary/60 transition-colors"
                       title="Sessize Al"
                     >
                       <BellOff className="h-3 w-3 text-muted-foreground/40" />

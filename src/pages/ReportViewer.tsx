@@ -119,22 +119,20 @@ const ReportViewer = () => {
               </div>
 
               {/* Paper area */}
-              <div className="p-8 flex justify-center" style={{ background: "rgba(0,0,0,0.3)" }}>
+              <div className="p-8 flex justify-center bg-muted/50">
                 <div className="w-full max-w-[680px] bg-white rounded-lg shadow-2xl overflow-hidden"
                   style={{ transform: `scale(${zoom / 100})`, transformOrigin: "top center", transition: "transform 0.2s" }}>
-                  {/* Mock document page */}
-                  <div className="p-10 min-h-[880px]">
+                  <div className="p-10 min-h-[880px]" style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
                     {/* Letterhead */}
                     <div className="flex items-center justify-between mb-8 pb-4 border-b-2 border-gray-800">
                       <div>
-                        <div className="h-8 w-8 rounded-lg bg-gray-900 flex items-center justify-center mb-2">
-                          <span className="text-white text-xs font-bold">C</span>
-                        </div>
-                        <p className="text-[10px] text-gray-500 font-medium">C-LEVELS INTELLIGENCE</p>
+                        <span className="text-[18px] font-semibold text-gray-900" style={{ letterSpacing: "-0.04em" }}>Metrion</span>
+                        <p className="text-[10px] text-gray-500 font-medium mt-1 uppercase tracking-[0.15em]">Intelligence Report</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-[10px] text-gray-500">GİZLİ — YALNIZCA YÖNETİM İÇİN</p>
-                        <p className="text-[10px] text-gray-400">{generatedAt}</p>
+                        <p className="text-[10px] text-gray-500 font-medium">GİZLİ — YALNIZCA YÖNETİM İÇİN</p>
+                        <p className="text-[10px] text-gray-400 mt-0.5">{generatedAt}</p>
+                        <p className="text-[9px] text-gray-400 font-mono mt-0.5">{hubReport?.hash ?? "0xA3F1B2"}</p>
                       </div>
                     </div>
 
@@ -142,38 +140,71 @@ const ReportViewer = () => {
                     <h2 className="text-xl font-bold text-gray-900 mb-1">{title}</h2>
                     <p className="text-sm text-gray-500 mb-6">{period}</p>
 
-                    {/* Executive Summary placeholder */}
+                    {/* Executive Summary */}
                     <div className="mb-6">
-                      <h3 className="text-sm font-bold text-gray-800 mb-2 uppercase tracking-wider">Executive Summary</h3>
-                      <div className="space-y-2">
-                        {[...Array(4)].map((_, i) => (
-                          <div key={i} className="h-3 rounded bg-gray-200" style={{ width: `${95 - i * 8}%` }} />
-                        ))}
-                      </div>
+                      <h3 className="text-[11px] font-bold text-gray-800 mb-2.5 uppercase tracking-[0.12em]">Yönetici Özeti</h3>
+                      <p className="text-[12px] text-gray-700 leading-relaxed mb-2">
+                        Şirket genel sağlık skoru <strong>78/100</strong> ile pozitif trendini sürdürmektedir. Gelir büyümesi %12.4 ile plan üzerinde seyrederken, kâr marjı katkı marjındaki 1.3pp iyileşmeyle desteklenmektedir. Operasyonel verimlilik endeksi hafif düşüş gösterse de, teknoloji altyapısı %99.98 uptime ile güçlü performans sergilemektedir.
+                      </p>
+                      <p className="text-[12px] text-gray-700 leading-relaxed">
+                        Temel risk alanları arasında kanal konsantrasyonu (%58 tek kanala bağımlılık) ve tedarik zinciri gecikmeleri (ortalama +2.3 gün) öne çıkmaktadır. Nakit tamponu $1.87M ile planın %8 altında seyretmekte olup, 6 aylık tampon hedefine ulaşmak için bütçe revizyonu önerilmektedir.
+                      </p>
                     </div>
 
-                    {/* KPI Grid placeholder */}
+                    {/* KPI Grid */}
                     <div className="mb-6">
-                      <h3 className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">Temel Göstergeler</h3>
-                      <div className="grid grid-cols-3 gap-3">
-                        {["Gelir", "Net Kâr", "Katkı Marjı", "Nakit", "CAC", "LTV"].map(label => (
-                          <div key={label} className="p-3 rounded-lg border border-gray-200">
-                            <p className="text-[10px] text-gray-500 mb-1">{label}</p>
-                            <div className="h-4 rounded bg-gray-200 w-3/4 mb-2" />
-                            <div className="h-8 rounded bg-gray-100 w-full" />
+                      <h3 className="text-[11px] font-bold text-gray-800 mb-3 uppercase tracking-[0.12em]">Temel Performans Göstergeleri</h3>
+                      <div className="grid grid-cols-3 gap-2.5">
+                        {[
+                          { label: "Aylık Gelir", value: "₺2.84M", delta: "+12.4%", positive: true },
+                          { label: "Net Kâr", value: "₺412K", delta: "+8.2%", positive: true },
+                          { label: "Katkı Marjı", value: "%42.6", delta: "+1.3pp", positive: true },
+                          { label: "Nakit Pozisyonu", value: "$1.87M", delta: "-8% plan", positive: false },
+                          { label: "CAC", value: "₺148", delta: "-6.2%", positive: true },
+                          { label: "LTV", value: "₺2,240", delta: "+14.1%", positive: true },
+                        ].map(kpi => (
+                          <div key={kpi.label} className="p-3 rounded-lg border border-gray-200">
+                            <p className="text-[9px] text-gray-500 uppercase tracking-wider mb-1">{kpi.label}</p>
+                            <p className="text-[16px] font-bold text-gray-900" style={{ letterSpacing: "-0.03em" }}>{kpi.value}</p>
+                            <p className={`text-[10px] font-semibold mt-0.5 ${kpi.positive ? "text-emerald-600" : "text-red-500"}`}>{kpi.delta}</p>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    {/* Risk section placeholder */}
+                    {/* Risk Assessment */}
                     <div className="mb-6">
-                      <h3 className="text-sm font-bold text-gray-800 mb-2 uppercase tracking-wider">Risk Değerlendirmesi</h3>
+                      <h3 className="text-[11px] font-bold text-gray-800 mb-2.5 uppercase tracking-[0.12em]">Risk Değerlendirmesi</h3>
                       <div className="space-y-2">
-                        {[...Array(3)].map((_, i) => (
-                          <div key={i} className="flex items-center gap-3 p-2 rounded border border-gray-100">
-                            <div className="h-2 w-2 rounded-full" style={{ background: ["#ef4444", "#f59e0b", "#22c55e"][i] }} />
-                            <div className="h-3 rounded bg-gray-200 flex-1" style={{ width: `${80 - i * 15}%` }} />
+                        {[
+                          { level: "Yüksek", color: "#ef4444", text: "Kanal konsantrasyonu %58 — tek kanala bağımlılık riski. Diversifikasyon planı başlatılmalı." },
+                          { level: "Orta", color: "#f59e0b", text: "Tedarik zinciri gecikmesi 3 kritik SKU'yu etkiliyor. Tahmini gelir kaybı $120K/ay." },
+                          { level: "Düşük", color: "#22c55e", text: "Teknoloji altyapısı güçlü. Uptime %99.98, latency 42ms. Ölçekleme hazırlığı tamamlandı." },
+                        ].map((r, i) => (
+                          <div key={i} className="flex items-start gap-2.5 p-2.5 rounded-lg border border-gray-100">
+                            <div className="flex items-center gap-1.5 shrink-0 mt-0.5">
+                              <div className="h-2 w-2 rounded-full" style={{ background: r.color }} />
+                              <span className="text-[9px] font-bold uppercase" style={{ color: r.color }}>{r.level}</span>
+                            </div>
+                            <p className="text-[11px] text-gray-600 leading-relaxed">{r.text}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Strategic Recommendations */}
+                    <div className="mb-6">
+                      <h3 className="text-[11px] font-bold text-gray-800 mb-2.5 uppercase tracking-[0.12em]">Stratejik Öneriler</h3>
+                      <div className="space-y-1.5">
+                        {[
+                          "Kanal çeşitlendirme stratejisi oluşturulmalı — SEO ve organik kanal yatırımı %30 artırılmalı.",
+                          "Nakit rezerv politikası güncellenmeli — 6 aylık tampon hedefi için Q2 bütçe revizyonu yapılmalı.",
+                          "Tedarikçi değişikliği ile COGS %2.5pp düşürülmeli — alternatif tedarikçi değerlendirmesi başlatılmalı.",
+                          "Premium segment genişletme planı aktive edilmeli — tahmini etki: ARPU +18.3%, LTV +₺420.",
+                        ].map((rec, i) => (
+                          <div key={i} className="flex items-start gap-2 pl-1">
+                            <span className="text-[10px] font-bold text-gray-400 mt-0.5 shrink-0">{i + 1}.</span>
+                            <p className="text-[11px] text-gray-700 leading-relaxed">{rec}</p>
                           </div>
                         ))}
                       </div>
@@ -182,7 +213,7 @@ const ReportViewer = () => {
                     {/* Footer */}
                     <div className="mt-auto pt-6 border-t border-gray-200 flex items-center justify-between">
                       <p className="text-[9px] text-gray-400">Sayfa {page} / {totalPages}</p>
-                      <p className="text-[9px] text-gray-400 font-mono">{hubReport?.hash ?? "0xA3F1B2"}</p>
+                      <p className="text-[9px] text-gray-400">Metrion Intelligence · Güven Skoru: %{confidence}</p>
                     </div>
                   </div>
                 </div>

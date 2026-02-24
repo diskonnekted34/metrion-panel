@@ -19,23 +19,23 @@ const Dashboard = () => {
           document.getElementById("intervention-panel")?.scrollIntoView({ behavior: "smooth" });
         }} />}
 
-        {/* 2. KPI Wall + Intervention Panel */}
+        {/* 2. Executive Health — full width */}
+        <div className="mb-5">
+          <ExecutiveHealth />
+        </div>
+
+        {/* 3. Risk Console — full width */}
+        <div className="mb-5">
+          <RiskConsole />
+        </div>
+
+        {/* 4. KPI Wall + Intervention Panel */}
         <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-12"} gap-4 mb-5`}>
           <div className="lg:col-span-9">
             <KPIWall />
           </div>
-          <div className="lg:col-span-3" id="intervention-panel">
+          <div className="lg:col-span-3 flex" id="intervention-panel">
             <InterventionPanel />
-          </div>
-        </div>
-
-        {/* 3. Risk Console + Executive Health */}
-        <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-12"} gap-4 mb-5`}>
-          <div className="lg:col-span-8">
-            <RiskConsole />
-          </div>
-          <div className="lg:col-span-4">
-            <ExecutiveHealth />
           </div>
         </div>
 
