@@ -77,7 +77,7 @@ const AppSidebar = () => {
   if (isMobile) return null;
 
   return (
-    <aside className="fixed left-0 top-0 bottom-0 z-40 w-[290px] flex flex-col bg-sidebar border-r border-sidebar-border/60">
+    <aside className="fixed left-0 top-0 bottom-0 z-40 w-[290px] flex flex-col bg-sidebar">
       {/* Logo */}
       <div className="flex items-center px-5 h-16 shrink-0">
         <Link to="/" className="flex items-center gap-2.5">

@@ -119,7 +119,7 @@ const GlobalTopBar = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 h-[72px] flex items-center justify-between px-6 border-b border-border/50 bg-transparent backdrop-blur-[2px]">
+      <header className="sticky top-0 z-30 h-[72px] flex items-center justify-between px-6 bg-transparent backdrop-blur-[2px]">
         {/* Left — breadcrumb + title */}
         <div className="flex flex-col justify-center min-w-0">
           {breadcrumb && (
