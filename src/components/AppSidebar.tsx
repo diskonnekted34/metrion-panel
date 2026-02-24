@@ -80,11 +80,8 @@ const AppSidebar = () => {
     <aside className="fixed left-0 top-0 bottom-0 z-40 w-[290px] flex flex-col bg-sidebar">
       {/* Logo */}
       <div className="flex items-center px-5 h-16 shrink-0">
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="h-8 w-8 rounded-2xl bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground text-xs font-bold">M</span>
-          </div>
-          <span className="text-[17px] font-semibold tracking-tight text-foreground">Metrion</span>
+        <Link to="/" className="flex items-center">
+          <span className="text-[20px] font-semibold text-foreground" style={{ letterSpacing: "-0.04em", fontFamily: "'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif" }}>Metrion</span>
         </Link>
       </div>
 

@@ -137,19 +137,12 @@ const RiskConsole = () => {
       </div>
 
       {/* Summary strip */}
-      <div
-        className="flex items-center gap-4 px-4 py-2.5 mb-3"
-        style={{
-          background: "rgba(255,255,255,0.02)",
-          border: "0.5px solid rgba(255,255,255,0.05)",
-          borderRadius: "var(--radius-inner, 12px)",
-        }}
-      >
+      <div className="flex items-center gap-4 px-4 py-2.5 mb-3 bg-secondary/50 border border-border/30" style={{ borderRadius: "var(--radius-inner, 12px)" }}>
         <div className="flex items-center gap-2">
           <span className="text-2xl font-bold" style={{ color: severityColor(overallScore) }}>{overallScore}</span>
           <span className="text-[0.6rem] text-muted-foreground/40">/ 100</span>
         </div>
-        <div className="h-6 w-px bg-white/[0.04]" />
+        <div className="h-6 w-px bg-border" />
         <div className="flex-1">
           <p className="text-[0.6rem] text-muted-foreground/50 mb-0.5">En kritik etkenler</p>
           <p className="text-[0.68rem] text-foreground/70">{topDrivers.join(" · ")}</p>
@@ -157,19 +150,9 @@ const RiskConsole = () => {
       </div>
 
       {/* Table */}
-      <div
-        className="overflow-hidden"
-        style={{
-          background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0.4) 100%)",
-          backdropFilter: "blur(14px)",
-          border: "0.5px solid rgba(255,255,255,0.06)",
-          borderRadius: "var(--radius-card, 16px)",
-        }}
-      >
+      <div className="overflow-hidden glass-card" style={{ padding: 0 }}>
         {/* Header */}
-        <div className="grid grid-cols-12 gap-2 px-4 py-2.5 text-[0.6rem] font-semibold text-muted-foreground/50 uppercase tracking-wider"
-          style={{ borderBottom: "0.5px solid rgba(255,255,255,0.04)" }}
-        >
+        <div className="grid grid-cols-12 gap-2 px-4 py-2.5 text-[0.6rem] font-semibold text-muted-foreground/50 uppercase tracking-wider border-b border-border/30">
           <button className="col-span-2 text-left flex items-center gap-1" onClick={() => setSortCol("category")}>
             Kategori {sortCol === "category" && <ChevronDown className="h-2.5 w-2.5" />}
           </button>
@@ -190,8 +173,7 @@ const RiskConsole = () => {
             <div key={r.category}>
               <button
                 onClick={() => setOpenDetail(openDetail === i ? null : i)}
-                className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left hover:bg-white/[0.02] transition-colors items-center"
-                style={{ borderBottom: "0.5px solid rgba(255,255,255,0.03)" }}
+                className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left hover:bg-secondary/30 transition-colors items-center border-b border-border/20"
               >
                 <div className="col-span-2 flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full" style={{ background: sc, boxShadow: `0 0 6px ${sc}40` }} />
@@ -210,7 +192,7 @@ const RiskConsole = () => {
                 <div className="col-span-3 text-[0.68rem] text-muted-foreground/70 truncate">{r.driver}</div>
                 <div className="col-span-2 text-[0.68rem] text-primary/60 truncate">{r.recommendation}</div>
                 <div className="col-span-2 text-[0.65rem] text-muted-foreground/50">{r.owner}</div>
-                <div className="col-span-1 text-[0.65rem] font-medium" style={{ color: r.eta === "Acil" ? "#EF4444" : "rgba(255,255,255,0.5)" }}>{r.eta}</div>
+                <div className={`col-span-1 text-[0.65rem] font-medium ${r.eta === "Acil" ? "text-destructive" : "text-muted-foreground"}`}>{r.eta}</div>
               </button>
             </div>
           );

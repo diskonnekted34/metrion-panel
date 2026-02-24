@@ -84,19 +84,9 @@ const DecisionImpactTable = () => {
         </button>
       </div>
 
-      <div
-        className="overflow-hidden"
-        style={{
-          background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0.4) 100%)",
-          backdropFilter: "blur(14px)",
-          border: "0.5px solid rgba(255,255,255,0.06)",
-          borderRadius: "var(--radius-card, 16px)",
-        }}
-      >
+      <div className="overflow-hidden glass-card" style={{ padding: 0 }}>
         {/* Header */}
-        <div className="grid grid-cols-12 gap-2 px-4 py-2.5 text-[0.6rem] font-semibold text-muted-foreground/50 uppercase tracking-wider"
-          style={{ borderBottom: "0.5px solid rgba(255,255,255,0.04)" }}
-        >
+        <div className="grid grid-cols-12 gap-2 px-4 py-2.5 text-[0.6rem] font-semibold text-muted-foreground/50 uppercase tracking-wider border-b border-border/30">
           <div className="col-span-3">Karar</div>
           <div className="col-span-2">KPI Etki</div>
           <div className="col-span-1">Δ</div>
@@ -113,8 +103,7 @@ const DecisionImpactTable = () => {
             <button
               key={d.id}
               onClick={() => navigate("/decision-lab")}
-              className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left hover:bg-white/[0.02] transition-colors items-center group"
-              style={{ borderBottom: "0.5px solid rgba(255,255,255,0.03)" }}
+              className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left hover:bg-secondary/30 transition-colors items-center group border-b border-border/20"
             >
               <div className="col-span-3">
                 <div className="flex items-center gap-1.5">
