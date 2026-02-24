@@ -58,7 +58,7 @@ const TaskCreationModal = ({ open, onOpenChange, prefillObjective = "", prefillA
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-card border-white/[0.08] bg-[#11161C] max-w-lg">
+      <DialogContent className="glass-card border-border max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-foreground">Yeni Görev Oluştur</DialogTitle>
         </DialogHeader>

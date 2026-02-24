@@ -75,7 +75,7 @@ const pipelineStages: { key: DecisionLifecycle; label: string }[] = [
 const GlowTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#0A0F1F]/95 border border-primary/20 rounded-xl px-4 py-3 backdrop-blur-xl shadow-[0_0_20px_rgba(30,107,255,0.15)]">
+    <div className="glass-card px-4 py-3 shadow-lg">
       <p className="text-[10px] text-muted-foreground mb-1.5">{label}</p>
       {payload.map((p: any, i: number) => (
         <p key={i} className="text-xs font-medium" style={{ color: p.color }}>
@@ -137,7 +137,7 @@ const ImpactMatrix = ({ decisions, onSelect }: { decisions: Decision[]; onSelect
       <h3 className="text-xs font-semibold text-foreground mb-4 flex items-center gap-2">
         <CircleDot className="h-3.5 w-3.5 text-primary" /> Stratejik Etki Matrisi
       </h3>
-      <div className="relative h-[240px] border border-white/[0.04] rounded-xl bg-[#060A14]" style={{ backgroundImage: "linear-gradient(rgba(30,107,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(30,107,255,0.03) 1px, transparent 1px)", backgroundSize: "30px 30px" }}>
+      <div className="relative h-[240px] border border-border rounded-xl bg-secondary" style={{ backgroundImage: "linear-gradient(hsl(var(--primary) / 0.03) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.03) 1px, transparent 1px)", backgroundSize: "30px 30px" }}>
         {/* Axis labels */}
         <span className="absolute -left-0 top-1/2 -translate-y-1/2 -rotate-90 text-[9px] text-muted-foreground tracking-wider">ETKİ ↑</span>
         <span className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[9px] text-muted-foreground tracking-wider mb-0.5">RİSK →</span>
@@ -310,8 +310,8 @@ const DecisionDetailView = ({ decision, onBack, onUpdateLifecycle }: { decision:
   }));
 
   return (
-    <div className="min-h-screen relative" style={{ background: "#05070D" }}>
-      <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(30,107,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(30,107,255,0.03) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+    <div className="min-h-screen relative bg-background">
+      <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(hsl(var(--primary) / 0.03) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.03) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
       <div className="relative z-10 px-6 py-6 max-w-[1200px] mx-auto space-y-5">
         <button onClick={onBack} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
           <ArrowRight className="h-3 w-3 rotate-180" /> Kararlara Dön
@@ -361,7 +361,7 @@ const DecisionDetailView = ({ decision, onBack, onUpdateLifecycle }: { decision:
         </div>
 
         {/* Section tabs */}
-        <div className="flex gap-1 p-1 rounded-xl bg-secondary/30 border border-white/[0.04]">
+        <div className="flex gap-1 p-1 rounded-xl bg-secondary border border-border">
           {sections.map(s => (
             <button
               key={s.id}
@@ -588,8 +588,8 @@ const DecisionDetailView = ({ decision, onBack, onUpdateLifecycle }: { decision:
         {/* Reject Modal */}
         <AnimatePresence>
           {showRejectModal && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-              <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-[#0A0F1F] border border-white/[0.08] rounded-2xl p-6 w-full max-w-md space-y-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-background/60 backdrop-blur-sm">
+              <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="glass-card p-6 w-full max-w-md space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold text-foreground">Karar Reddi</h3>
                   <button onClick={() => setShowRejectModal(false)} className="h-8 w-8 rounded-lg hover:bg-secondary flex items-center justify-center"><X className="h-4 w-4 text-muted-foreground" /></button>
@@ -729,8 +729,8 @@ const DecisionLab = () => {
 
   return (
     <AppLayout>
-      <div className="min-h-screen relative" style={{ background: "#05070D" }}>
-        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(30,107,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(30,107,255,0.03) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+      <div className="min-h-screen relative bg-background">
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(hsl(var(--primary) / 0.03) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.03) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
         <div className="relative z-10 px-6 py-6 space-y-4 max-w-[1400px] mx-auto">
 
           {/* ── HEADER ── */}
