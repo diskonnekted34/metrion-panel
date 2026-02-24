@@ -23,16 +23,11 @@ const confLabel = { public: "GENEL", internal: "İÇ KULLANIM", executive: "YALN
 const CoverPage = ({ report }: { report: NonNullable<ReturnType<typeof getReportHubById>> }) => (
   <div className="flex flex-col h-full min-h-[880px] justify-between" style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
     {/* Top bar */}
-    <div className="flex items-center justify-between pb-4 border-b border-gray-300">
+    <div className="flex items-center justify-between pb-4 border-b border-gray-200">
       <span className="text-[20px] font-semibold text-gray-900" style={{ letterSpacing: "-0.04em" }}>Metrion</span>
-      <div className="flex items-center gap-2">
-        <span className="text-[9px] font-bold uppercase px-2 py-0.5 border border-gray-300 rounded text-gray-500 tracking-widest">
-          {confLabel[report.confidentiality]}
-        </span>
-        <span className="text-[9px] font-bold uppercase px-2 py-0.5 border border-gray-300 rounded text-gray-500 tracking-widest">
-          {tierLabel[report.packageTier]}
-        </span>
-      </div>
+      <span className="text-[9px] font-bold uppercase px-2 py-0.5 border border-gray-200 rounded text-gray-400 tracking-widest">
+        {confLabel[report.confidentiality]}
+      </span>
     </div>
 
     {/* Center content */}
@@ -43,20 +38,22 @@ const CoverPage = ({ report }: { report: NonNullable<ReturnType<typeof getReport
       </h1>
       <p className="text-lg text-gray-500 mb-8">{report.periodStart} – {report.periodEnd}</p>
       
-      <div className="grid grid-cols-3 gap-4 max-w-[420px]">
-        <div className="p-3 border border-gray-200 rounded-lg">
-          <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-1">Sağlık Skoru</p>
-          <p className="text-2xl font-bold text-gray-900" style={{ letterSpacing: "-0.03em" }}>{report.healthScore}</p>
+      <div className="flex items-center gap-6 mt-2">
+        <div>
+          <p className="text-[8px] text-gray-400 uppercase tracking-wider">Sağlık</p>
+          <p className="text-[15px] font-bold text-gray-900" style={{ letterSpacing: "-0.03em" }}>{report.healthScore}<span className="text-[10px] text-gray-400 font-normal">/100</span></p>
         </div>
-        <div className="p-3 border border-gray-200 rounded-lg">
-          <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-1">Risk Seviyesi</p>
-          <p className={`text-sm font-bold uppercase ${report.risk === "high" || report.risk === "critical" ? "text-red-600" : report.risk === "medium" ? "text-amber-600" : "text-emerald-600"}`}>
+        <div className="h-6 w-px bg-gray-200" />
+        <div>
+          <p className="text-[8px] text-gray-400 uppercase tracking-wider">Risk</p>
+          <p className={`text-[13px] font-bold uppercase ${report.risk === "high" || report.risk === "critical" ? "text-red-600" : report.risk === "medium" ? "text-amber-600" : "text-emerald-600"}`}>
             {report.risk}
           </p>
         </div>
-        <div className="p-3 border border-gray-200 rounded-lg">
-          <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-1">Güven Skoru</p>
-          <p className="text-2xl font-bold text-gray-900" style={{ letterSpacing: "-0.03em" }}>%{report.confidence}</p>
+        <div className="h-6 w-px bg-gray-200" />
+        <div>
+          <p className="text-[8px] text-gray-400 uppercase tracking-wider">Güven</p>
+          <p className="text-[15px] font-bold text-gray-900" style={{ letterSpacing: "-0.03em" }}>%{report.confidence}</p>
         </div>
       </div>
     </div>
@@ -445,9 +442,9 @@ const ReportViewer = () => {
         <div className="flex gap-4">
           {/* PDF Viewer */}
           <div className="flex-1 min-w-0">
-            <div className="rounded-2xl border border-border/20 overflow-hidden bg-card/50 backdrop-blur-xl">
+            <div className="rounded-2xl border border-border/10 overflow-hidden bg-card/50 backdrop-blur-xl">
               {/* Controls */}
-              <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/20">
+              <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/10">
                 <div className="flex items-center gap-2">
                   <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page <= 1}
                     className="h-7 w-7 rounded-lg flex items-center justify-center hover:bg-secondary/50 disabled:opacity-30 transition-all">
@@ -500,8 +497,8 @@ const ReportViewer = () => {
           </div>
 
           {/* Intelligence Panel */}
-          <div className="hidden lg:block w-[340px] shrink-0 rounded-2xl border border-border/20 overflow-hidden bg-card/50 backdrop-blur-xl">
-            <div className="px-5 py-3.5 border-b border-border/20">
+          <div className="hidden lg:block w-[340px] shrink-0 rounded-2xl border border-border/10 overflow-hidden bg-card/50 backdrop-blur-xl">
+            <div className="px-5 py-3.5 border-b border-border/10">
               <h3 className="text-xs font-semibold text-foreground">Report Intelligence</h3>
             </div>
             <ReportIntelligencePanel report={report} />
