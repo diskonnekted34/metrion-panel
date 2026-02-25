@@ -55,8 +55,8 @@ const ExecutiveHealth = () => {
       </div>
 
       <div className="glass-card p-5">
-        {/* Score + Drivers Row */}
-        <div className="flex items-start gap-5">
+        {/* Gauge on top, drivers below */}
+        <div className="flex flex-col items-center gap-4">
           {/* Radial gauge */}
           <div className="flex flex-col items-center shrink-0">
             <div className="relative">
@@ -88,7 +88,7 @@ const ExecutiveHealth = () => {
           </div>
 
           {/* Score Drivers */}
-          <div className="flex-1 min-w-0">
+          <div className="w-full">
             <p className="text-[0.65rem] font-semibold text-muted-foreground mb-2">Skor Etkenleri</p>
             <div className="space-y-1.5 mb-3">
               {positiveDrivers.map((d, i) => (
