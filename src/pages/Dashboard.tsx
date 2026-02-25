@@ -20,13 +20,9 @@ const Dashboard = () => {
         }} />}
 
         {/* 1. KPI Wall + Executive Health */}
-        <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-12"} gap-4 mb-5`}>
-          <div className="lg:col-span-9">
-            <KPIWall />
-          </div>
-          <div className="lg:col-span-3 flex">
-            <ExecutiveHealth />
-          </div>
+        <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"} gap-4 mb-5`}>
+          <KPIWall />
+          <ExecutiveHealth />
         </div>
 
         {/* 2. Intervention Panel + Risk Console — side by side */}
