@@ -137,7 +137,7 @@ const RiskConsole = () => {
       </div>
 
       {/* Summary strip */}
-      <div className="flex items-center gap-4 px-4 py-2.5 mb-3 bg-secondary/50 border border-border/30" style={{ borderRadius: "var(--radius-inner, 12px)" }}>
+      <div className="flex items-center gap-4 px-4 py-2.5 mb-3 bg-secondary/50" style={{ borderRadius: "var(--radius-inner, 12px)" }}>
         <div className="flex items-center gap-2">
           <span className="text-2xl font-bold" style={{ color: severityColor(overallScore) }}>{overallScore}</span>
           <span className="text-[0.6rem] text-muted-foreground/40">/ 100</span>
@@ -152,7 +152,7 @@ const RiskConsole = () => {
       {/* Table */}
       <div className="overflow-hidden glass-card" style={{ padding: 0 }}>
         {/* Header */}
-        <div className="grid grid-cols-12 gap-2 px-4 py-2.5 text-[0.6rem] font-semibold text-muted-foreground/50 uppercase tracking-wider border-b border-border/30">
+        <div className="grid grid-cols-12 gap-2 px-4 py-2.5 text-[0.6rem] font-semibold text-muted-foreground/50 uppercase tracking-wider">
           <button className="col-span-2 text-left flex items-center gap-1" onClick={() => setSortCol("category")}>
             Kategori {sortCol === "category" && <ChevronDown className="h-2.5 w-2.5" />}
           </button>
@@ -173,7 +173,7 @@ const RiskConsole = () => {
             <div key={r.category}>
               <button
                 onClick={() => setOpenDetail(openDetail === i ? null : i)}
-                className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left hover:bg-secondary/30 transition-colors items-center border-b border-border/20"
+                className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left hover:bg-secondary/30 transition-colors items-center"
               >
                 <div className="col-span-2 flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full" style={{ background: sc, boxShadow: `0 0 6px ${sc}40` }} />

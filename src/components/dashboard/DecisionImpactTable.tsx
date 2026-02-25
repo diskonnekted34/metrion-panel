@@ -86,7 +86,7 @@ const DecisionImpactTable = () => {
 
       <div className="overflow-hidden glass-card" style={{ padding: 0 }}>
         {/* Header */}
-        <div className="grid grid-cols-12 gap-2 px-4 py-2.5 text-[0.6rem] font-semibold text-muted-foreground/50 uppercase tracking-wider border-b border-border/30">
+        <div className="grid grid-cols-12 gap-2 px-4 py-2.5 text-[0.6rem] font-semibold text-muted-foreground/50 uppercase tracking-wider">
           <div className="col-span-3">Karar</div>
           <div className="col-span-2">KPI Etki</div>
           <div className="col-span-1">Δ</div>
@@ -103,7 +103,7 @@ const DecisionImpactTable = () => {
             <button
               key={d.id}
               onClick={() => navigate("/decision-lab")}
-              className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left hover:bg-secondary/30 transition-colors items-center group border-b border-border/20"
+              className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left hover:bg-secondary/30 transition-colors items-center group"
             >
               <div className="col-span-3">
                 <div className="flex items-center gap-1.5">
