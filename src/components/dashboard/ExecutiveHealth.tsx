@@ -46,6 +46,7 @@ const ExecutiveHealth = () => {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
+      className="h-full flex flex-col"
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
@@ -54,7 +55,7 @@ const ExecutiveHealth = () => {
         </div>
       </div>
 
-      <div className="glass-card p-5">
+      <div className="glass-card p-5 flex-1">
         {/* Gauge on top, drivers below */}
         <div className="flex flex-col items-center gap-4">
           {/* Radial gauge */}

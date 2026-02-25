@@ -172,7 +172,7 @@ const KPIWall = () => {
   const getRange = (i: number): TimeRange => ranges[i] ?? "A";
 
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-4 w-4 text-primary" />
@@ -180,7 +180,7 @@ const KPIWall = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-2.5">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-2.5 flex-1">
         {kpis.map((kpi, i) => {
           const tr = getRange(i);
           const ds = kpi.datasets[tr];
