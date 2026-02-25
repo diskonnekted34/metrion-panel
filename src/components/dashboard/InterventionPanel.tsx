@@ -175,7 +175,7 @@ const InterventionPanel = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center justify-between mt-2 pt-2">
+                <div className="flex items-center justify-between mt-2 pt-2 border-t border-black">
                   <div className="flex gap-1">
                     <button
                       onClick={() => togglePin(item.id)}
