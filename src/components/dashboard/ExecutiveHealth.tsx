@@ -47,12 +47,18 @@ const ExecutiveHealth = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <h2 className="text-lg font-semibold text-foreground">Sağlık Skoru</h2>
+        </div>
+      </div>
+
       <div className="glass-card p-5">
         {/* Score + Drivers Row */}
         <div className="flex items-start gap-5">
           {/* Radial gauge */}
           <div className="flex flex-col items-center shrink-0">
-            <p className="text-[0.6rem] font-semibold text-muted-foreground tracking-[0.12em] uppercase mb-3">Sağlık Skoru</p>
             <div className="relative">
               <svg width={124} height={124} className="-rotate-90">
                 <circle cx={62} cy={62} r={r} fill="none" stroke="#111" strokeWidth="8" />

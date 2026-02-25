@@ -74,31 +74,43 @@ const InterventionPanel = () => {
   };
 
   return (
-    <div className="h-full flex flex-col glass-card" style={{ padding: 0 }}>
-      {/* Header */}
-      <div className="px-4 pt-4 pb-2">
-        <div className="flex items-center gap-2 mb-3">
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2 }}
+    >
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
           <AlertTriangle className="h-4 w-4 text-warning" />
-          <h3 className="text-[0.85rem] font-semibold text-foreground">Müdahale Paneli</h3>
+          <h2 className="text-lg font-semibold text-foreground">Müdahale Paneli</h2>
         </div>
-
-        {/* Tabs */}
-        <div className="flex gap-1 p-0.5 bg-secondary/50" style={{ borderRadius: "var(--radius-inner, 12px)" }}>
-          {tabs.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1 flex-1 justify-center py-1.5 text-[0.6rem] font-semibold transition-all duration-150 ${
-                activeTab === tab.id ? "bg-primary/12 text-primary" : "text-muted-foreground hover:text-foreground"
-              }`}
-              style={{ borderRadius: "var(--radius-inner, 12px)" }}
-            >
-              <tab.icon className="h-3 w-3" />
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        <button
+          onClick={() => navigate("/action-center")}
+          className="text-[0.65rem] text-primary/70 hover:text-primary transition-colors flex items-center gap-1"
+        >
+          Tümünü Gör <ArrowRight className="h-3 w-3" />
+        </button>
       </div>
+
+      <div className="glass-card" style={{ padding: 0 }}>
+        {/* Tabs */}
+        <div className="px-4 pt-4 pb-2">
+          <div className="flex gap-1 p-0.5 bg-secondary/50" style={{ borderRadius: "var(--radius-inner, 12px)" }}>
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-1 flex-1 justify-center py-1.5 text-[0.6rem] font-semibold transition-all duration-150 ${
+                  activeTab === tab.id ? "bg-primary/12 text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+                style={{ borderRadius: "var(--radius-inner, 12px)" }}
+              >
+                <tab.icon className="h-3 w-3" />
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
       {/* Items */}
       <div className="flex-1 overflow-y-auto px-3 pb-3 space-y-2">
@@ -192,7 +204,8 @@ const InterventionPanel = () => {
           })}
         </AnimatePresence>
       </div>
-    </div>
+      </div>
+    </motion.div>
   );
 };
 

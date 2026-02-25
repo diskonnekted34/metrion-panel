@@ -174,7 +174,10 @@ const KPIWall = () => {
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-lg font-semibold text-foreground">Şirket Metrikleri</h2>
+        <div className="flex items-center gap-2">
+          <TrendingUp className="h-4 w-4 text-primary" />
+          <h2 className="text-lg font-semibold text-foreground">Şirket Metrikleri</h2>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-2.5">
