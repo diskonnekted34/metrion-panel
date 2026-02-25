@@ -128,7 +128,7 @@ const InterventionPanel = () => {
                 className="group p-3 relative overflow-hidden"
                 style={{
                   background: "hsl(var(--secondary) / 0.5)",
-                  border: `0.5px solid ${pc}30`,
+                  border: "none",
                   borderLeft: `3px solid ${pc}`,
                   borderRadius: "var(--radius-inner, 12px)",
                 }}
@@ -175,7 +175,7 @@ const InterventionPanel = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/30">
+                <div className="flex items-center justify-between mt-2 pt-2">
                   <div className="flex gap-1">
                     <button
                       onClick={() => togglePin(item.id)}
