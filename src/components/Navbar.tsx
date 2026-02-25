@@ -26,7 +26,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-6">
         <Link to="/" className="flex items-center">
-          <span className="text-[20px] font-semibold text-foreground" style={{ letterSpacing: "-0.04em", fontFamily: "'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif" }}>Metrion</span>
+          <span className="text-[40px] font-semibold text-foreground" style={{ letterSpacing: "-0.04em", fontFamily: "'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif" }}>Metrion<sup className="text-[11px] font-normal" style={{ verticalAlign: "super", marginLeft: "-2px" }}>®</sup></span>
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
