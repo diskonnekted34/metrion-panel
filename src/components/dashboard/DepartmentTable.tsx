@@ -101,7 +101,7 @@ const DepartmentTable = () => {
       {/* Table */}
       <div className="overflow-hidden glass-card" style={{ padding: 0 }}>
         {/* Header */}
-        <div className="grid grid-cols-12 gap-2 px-4 py-2.5 text-[0.6rem] font-semibold text-muted-foreground/50 uppercase tracking-wider">
+        <div className="grid grid-cols-12 gap-2 px-4 py-2.5 text-[0.6rem] font-semibold text-muted-foreground/50 uppercase tracking-wider border-b border-black">
           <button className="col-span-2 text-left flex items-center gap-1" onClick={() => setSortCol("name")}>
             Departman {sortCol === "name" && <ChevronDown className="h-2.5 w-2.5" />}
           </button>
@@ -122,7 +122,7 @@ const DepartmentTable = () => {
             <button
               key={d.slug}
               onClick={() => navigate(`/departments/${d.slug}`)}
-              className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left hover:bg-secondary/30 transition-colors items-center"
+              className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left hover:bg-secondary/30 transition-colors items-center border-b border-black"
             >
               <div className="col-span-2 text-[0.72rem] font-medium text-foreground">{d.name}</div>
               <div className="col-span-2 flex items-center gap-2">
