@@ -31,6 +31,7 @@ import ActionCenter from "./pages/ActionCenter";
 import CreativeWorkspace from "./pages/CreativeWorkspace";
 import IntelligenceView from "./pages/IntelligenceView";
 import DecisionLab from "./pages/DecisionLab";
+import Analysis from "./pages/Analysis";
 import TechDataSources from "./pages/TechDataSources";
 import TechIntegrationDetail from "./pages/TechIntegrationDetail";
 import OKRPage from "./pages/OKR";
@@ -53,6 +54,7 @@ const App = () => (
             {/* Main navigation */}
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/strategy" element={<Strategy />} />
+            <Route path="/analysis" element={<Analysis />} />
             <Route path="/decision-lab" element={<DecisionLab />} />
             <Route path="/action-center" element={<ActionCenter />} />
             <Route path="/data-sources" element={<DataSources />} />

@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Target, Scale, Zap, Network, ChevronDown,
   Database, Settings as SettingsIcon, FileText, ChevronRight,
   Eye, BarChart3, Crosshair, Activity, ClipboardList,
-  ShoppingBag, Bot,
+  ShoppingBag, Bot, Brain,
 } from "lucide-react";
 import { allExperts } from "@/data/experts";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -38,6 +38,7 @@ const deptSubItems = [
 const topItems = [
   { label: "Merkez", icon: LayoutDashboard, path: "/dashboard" },
   { label: "Strateji", icon: Target, path: "/strategy" },
+  { label: "Analiz", icon: Brain, path: "/analysis" },
   { label: "Kararlar", icon: Scale, path: "/decision-lab" },
   { label: "Aksiyonlar", icon: Zap, path: "/action-center" },
 ];
