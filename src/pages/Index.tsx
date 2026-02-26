@@ -1,29 +1,33 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import TrustStrip from "@/components/TrustStrip";
-import HowItWorks from "@/components/HowItWorks";
-import StatsCounter from "@/components/StatsCounter";
-import FeatureTabs from "@/components/FeatureTabs";
-import PainPoints from "@/components/PainPoints";
-import FeaturedExperts from "@/components/FeaturedExperts";
-import ContinuousIntelligence from "@/components/ContinuousIntelligence";
-import LegalHighlight from "@/components/LegalHighlight";
-import Footer from "@/components/Footer";
+import LandingNav from "@/components/landing/LandingNav";
+import HeroV2 from "@/components/landing/HeroV2";
+import TrustStripV2 from "@/components/landing/TrustStripV2";
+import ProblemSection from "@/components/landing/ProblemSection";
+import GovernedLoop from "@/components/landing/GovernedLoop";
+import DecisionLabSection from "@/components/landing/DecisionLabSection";
+import RiskRadarSection from "@/components/landing/RiskRadarSection";
+import ReportsMemory from "@/components/landing/ReportsMemory";
+import GovernanceControl from "@/components/landing/GovernanceControl";
+import MaturityCards from "@/components/landing/MaturityCards";
+import IntegrationsGrid from "@/components/landing/IntegrationsGrid";
+import FinalCTA from "@/components/landing/FinalCTA";
+import FooterV2 from "@/components/landing/FooterV2";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <Hero />
-      <TrustStrip />
-      <HowItWorks />
-      <StatsCounter />
-      <FeatureTabs />
-      <FeaturedExperts />
-      <ContinuousIntelligence />
-      <LegalHighlight />
-      <PainPoints />
-      <Footer />
+    <div className="min-h-screen bg-[#050505] text-foreground">
+      <LandingNav />
+      <HeroV2 />
+      <TrustStripV2 />
+      <ProblemSection />
+      <GovernedLoop />
+      <DecisionLabSection />
+      <RiskRadarSection />
+      <ReportsMemory />
+      <GovernanceControl />
+      <MaturityCards />
+      <IntegrationsGrid />
+      <FinalCTA />
+      <FooterV2 />
     </div>
   );
 };
