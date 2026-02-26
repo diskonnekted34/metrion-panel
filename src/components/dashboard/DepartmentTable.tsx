@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, ChevronDown, Search, TrendingUp, TrendingDown } from "lucide-react";
+import { Building2, ChevronDown, ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type FilterType = "all" | "critical" | "watch" | "stable";
@@ -86,16 +86,12 @@ const DepartmentTable = () => {
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-1.5 ml-auto px-2.5 py-1 bg-secondary/50 border border-border/30" style={{ borderRadius: "var(--radius-inner, 12px)" }}>
-          <Search className="h-3 w-3 text-muted-foreground/40" />
-          <input
-            type="text"
-            placeholder="Ara..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="bg-transparent text-[0.65rem] text-foreground outline-none w-28 placeholder:text-muted-foreground/30"
-          />
-        </div>
+        <button
+          onClick={() => navigate("/organization")}
+          className="ml-auto text-[0.65rem] text-primary/70 hover:text-primary transition-colors flex items-center gap-1"
+        >
+          Departmanlara Git <ArrowRight className="h-3 w-3" />
+        </button>
       </div>
 
       {/* Table */}
