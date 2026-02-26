@@ -60,7 +60,7 @@ const ComparativeView = () => {
   ];
 
   return (
-    <div className="bg-card border border-border rounded-[14px] p-5">
+    <div className="bg-card border border-border rounded-[14px] p-5 h-full flex flex-col">
       <div className="mb-4">
         <h2 className="text-base font-semibold text-foreground">Kıyas & Karşılaştırma</h2>
         <p className="text-xs text-muted-foreground mt-0.5">Mevcut planı farklı senaryolarla yan yana kıyaslayın.</p>

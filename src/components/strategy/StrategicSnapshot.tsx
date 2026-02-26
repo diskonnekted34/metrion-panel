@@ -46,7 +46,7 @@ const StrategicSnapshot = () => {
   const [hoveredPoint, setHoveredPoint] = useState<string | null>(null);
 
   return (
-    <div className="bg-card border border-border rounded-[14px] p-5">
+    <div className="bg-card border border-border rounded-[14px] p-5 h-full flex flex-col">
       <div className="mb-4">
         <h2 className="text-base font-semibold text-foreground">Stratejik Snapshot</h2>
         <p className="text-xs text-muted-foreground mt-0.5">Şirketin stratejik yönü, sapmalar ve baskı haritası.</p>

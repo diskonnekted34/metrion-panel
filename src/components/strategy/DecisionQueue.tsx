@@ -20,11 +20,11 @@ const DecisionQueue = ({ onOpenBuilder }: { onOpenBuilder: () => void }) => {
   ];
 
   return (
-    <div className="bg-card border border-border rounded-[14px] p-5 flex flex-col h-full">
+    <div className="bg-card border border-border rounded-[14px] p-5 flex flex-col h-full flex-1">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h2 className="text-base font-semibold text-foreground">Stratejik Inbox</h2>
-          <p className="text-[10px] text-muted-foreground mt-0.5">Karar merkezi öncesi taslaklar</p>
+          <h2 className="text-base font-semibold text-foreground">Karar Taslakları</h2>
+          <p className="text-[10px] text-muted-foreground mt-0.5">Onay bekleyen karar taslakları.</p>
         </div>
         <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-medium">
           {drafts.length} taslak
