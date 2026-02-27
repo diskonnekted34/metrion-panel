@@ -1,7 +1,9 @@
 /**
- * Lightweight fetch wrapper with typed responses and auth token support.
- * Token is injected per-call (not stored globally) so the module stays pure.
+ * Lightweight fetch wrapper with typed responses, auto-auth, and refresh.
+ * Token is auto-read from authSession; can be overridden per-call.
  */
+
+import { getAccessToken, tryRefresh } from "@/lib/authSession";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
@@ -16,10 +18,13 @@ export class ApiError extends Error {
   }
 }
 
-interface RequestOptions {
+export interface RequestOptions {
+  /** Explicit token overrides auto-read from session */
   token?: string | null;
   headers?: Record<string, string>;
   signal?: AbortSignal;
+  /** Skip automatic token attachment (e.g. for login) */
+  skipAuth?: boolean;
 }
 
 async function request<T>(
@@ -32,16 +37,36 @@ async function request<T>(
     "Content-Type": "application/json",
     ...opts?.headers,
   };
-  if (opts?.token) {
-    headers["Authorization"] = `Bearer ${opts.token}`;
+
+  // Resolve token: explicit > session > none
+  const token = opts?.skipAuth
+    ? null
+    : (opts?.token ?? getAccessToken());
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const res = await fetch(`${BASE_URL}${path}`, {
+  let res = await fetch(`${BASE_URL}${path}`, {
     method,
     headers,
     body: body != null ? JSON.stringify(body) : undefined,
     signal: opts?.signal,
   });
+
+  // Auto-refresh on 401 (once)
+  if (res.status === 401 && !opts?.skipAuth && !opts?.token) {
+    const newToken = await tryRefresh();
+    if (newToken) {
+      headers["Authorization"] = `Bearer ${newToken}`;
+      res = await fetch(`${BASE_URL}${path}`, {
+        method,
+        headers,
+        body: body != null ? JSON.stringify(body) : undefined,
+        signal: opts?.signal,
+      });
+    }
+  }
 
   if (!res.ok) {
     let msg = res.statusText;
