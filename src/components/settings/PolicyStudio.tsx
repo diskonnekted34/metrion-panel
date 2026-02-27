@@ -7,8 +7,8 @@ import { useState } from "react";
 import { useAuthorization } from "@/contexts/AuthorizationContext";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Shield, Users, Key, GitBranch, Tag, ChevronRight,
-  Check, X, AlertTriangle, Lock, Eye, Edit, Zap, Crown,
+  Shield, Users, Key, GitBranch, Tag,
+  Check, X, Lock, Eye, Edit, Zap, Crown,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
@@ -27,8 +27,8 @@ import {
 import {
   LEVEL_DEFAULT_PERMISSIONS,
   FUNCTIONAL_ROLE_PERMISSIONS,
-  SYSTEM_ROLE_PERMISSIONS,
 } from "@/core/security/authorization/defaults";
+import PermissionMatrix from "./PermissionMatrix";
 
 const TABS = [
   { key: "levels", label: "Seviyeler", icon: Users },
@@ -40,20 +40,9 @@ const TABS = [
 
 type TabKey = typeof TABS[number]["key"];
 
-const ACTIONS: PermissionAction[] = ["view", "create", "propose", "approve", "execute", "admin"];
-const ACTION_ICONS: Record<PermissionAction, typeof Eye> = {
-  view: Eye, create: Edit, propose: GitBranch, approve: Check, execute: Zap, admin: Crown,
-};
 const ACTION_LABELS: Record<PermissionAction, string> = {
   view: "Görüntüle", create: "Oluştur", propose: "Öner", approve: "Onayla", execute: "Çalıştır", admin: "Yönet",
 };
-
-const RESOURCES: PermissionResource[] = [
-  "dashboard", "report", "decision", "action", "task", "alert", "integration",
-  "tech_integration", "department", "organization", "seat", "agent_workspace",
-  "settings", "billing", "okr", "strategy", "analysis", "marketplace",
-  "creative_workspace", "position_history", "approval_policy", "user_roles",
-];
 
 const RESOURCE_LABELS: Record<PermissionResource, string> = {
   dashboard: "Dashboard", report: "Raporlar", decision: "Kararlar", action: "Aksiyonlar",
@@ -68,7 +57,7 @@ const RESOURCE_LABELS: Record<PermissionResource, string> = {
 
 export default function PolicyStudio() {
   const { profile, approvalRules, isOwner } = useAuthorization();
-  const [activeTab, setActiveTab] = useState<TabKey>("levels");
+  const [activeTab, setActiveTab] = useState<TabKey>("permissions");
 
   if (!isOwner) {
     return (
@@ -95,14 +84,14 @@ export default function PolicyStudio() {
       </div>
 
       {/* Tab bar */}
-      <div className="flex gap-1 p-1 rounded-xl bg-muted/40">
+      <div className="flex gap-1 p-1 rounded-xl bg-muted/40 overflow-x-auto">
         {TABS.map((tab) => {
           const active = activeTab === tab.key;
           return (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
                 active
                   ? "bg-card text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
@@ -126,7 +115,7 @@ export default function PolicyStudio() {
         >
           {activeTab === "levels" && <LevelsPanel />}
           {activeTab === "functional" && <FunctionalRolesPanel />}
-          {activeTab === "permissions" && <PermissionMatrixPanel />}
+          {activeTab === "permissions" && <PermissionMatrix />}
           {activeTab === "approvals" && <ApprovalRulesPanel rules={approvalRules} />}
           {activeTab === "classification" && <ClassificationPanel />}
         </motion.div>
@@ -216,83 +205,6 @@ function FunctionalRolesPanel() {
             </motion.div>
           );
         })}
-      </div>
-    </div>
-  );
-}
-
-// ── Permission Matrix Panel ────────────────────────────
-function PermissionMatrixPanel() {
-  const levels = Object.keys(ORG_LEVEL_LABELS) as OrgLevel[];
-  const resources = RESOURCES.slice(0, 14); // Show main resources
-
-  function hasPermission(level: OrgLevel, resource: PermissionResource, action: PermissionAction): boolean {
-    const perms = LEVEL_DEFAULT_PERMISSIONS[level] ?? [];
-    return perms.some((p) => p.resource === resource && p.action === action);
-  }
-
-  function hasSystemPermission(resource: PermissionResource, action: PermissionAction): boolean {
-    return (SYSTEM_ROLE_PERMISSIONS.owner ?? []).some(
-      (p) => p.resource === resource && p.action === action
-    );
-  }
-
-  return (
-    <div className="space-y-3">
-      <p className="text-xs text-muted-foreground">Seviye × Kaynak × Aksiyon izin matrisi</p>
-      <div className="overflow-x-auto">
-        <table className="w-full text-[11px]">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="text-left py-2 px-3 text-muted-foreground font-medium sticky left-0 bg-background z-10">Kaynak</th>
-              <th className="text-center py-2 px-2 text-muted-foreground font-medium">Aksiyon</th>
-              <th className="text-center py-2 px-2 text-primary font-semibold">Owner</th>
-              {levels.map((l) => (
-                <th key={l} className="text-center py-2 px-2 text-muted-foreground font-medium whitespace-nowrap">
-                  {ORG_LEVEL_LABELS[l].split(" ")[0]}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {resources.map((resource) =>
-              ACTIONS.map((action, ai) => (
-                <tr
-                  key={`${resource}-${action}`}
-                  className={ai === 0 ? "border-t border-border/50" : ""}
-                >
-                  {ai === 0 && (
-                    <td
-                      className="py-1.5 px-3 font-medium text-foreground sticky left-0 bg-background z-10"
-                      rowSpan={ACTIONS.length}
-                    >
-                      {RESOURCE_LABELS[resource]}
-                    </td>
-                  )}
-                  <td className="py-1 px-2 text-center">
-                    <span className="text-muted-foreground">{ACTION_LABELS[action]}</span>
-                  </td>
-                  <td className="py-1 px-2 text-center">
-                    {hasSystemPermission(resource, action) ? (
-                      <Check className="h-3 w-3 text-primary mx-auto" />
-                    ) : (
-                      <X className="h-3 w-3 text-muted-foreground/30 mx-auto" />
-                    )}
-                  </td>
-                  {levels.map((level) => (
-                    <td key={level} className="py-1 px-2 text-center">
-                      {hasPermission(level, resource, action) ? (
-                        <Check className="h-3 w-3 text-success mx-auto" />
-                      ) : (
-                        <X className="h-3 w-3 text-muted-foreground/20 mx-auto" />
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
       </div>
     </div>
   );
