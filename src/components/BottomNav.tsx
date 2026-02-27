@@ -4,6 +4,8 @@ import { LayoutDashboard, Target, Scale, Zap, Building2, Bell } from "lucide-rea
 import { useIsMobile } from "@/hooks/use-mobile";
 import NotificationPanel from "./NotificationPanel";
 import { alertsData } from "@/data/alerts";
+import { BRAND } from "@/config/branding";
+import { useAuth } from "@/contexts/AuthContext";
 
 const bottomItems = [
   { label: "Merkez", icon: LayoutDashboard, path: "/dashboard" },
@@ -16,6 +18,7 @@ const bottomItems = [
 const BottomNav = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
+  const { isAuthenticated } = useAuth();
   const [notifOpen, setNotifOpen] = useState(false);
 
   const criticalCount = alertsData.filter((a) => a.category === "critical" && !a.resolved).length;
@@ -26,11 +29,11 @@ const BottomNav = () => {
     <>
       {/* Top bar */}
       <div className="fixed top-0 left-0 right-0 z-50 h-12 glass-strong border-b border-border flex items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2">
+        <Link to={isAuthenticated ? BRAND.dashboardPath : BRAND.publicPath} className="flex items-center gap-2">
           <div className="h-7 w-7 rounded-2xl bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground text-[10px] font-bold">C</span>
+            <span className="text-primary-foreground text-[10px] font-bold">{BRAND.mobileShort}</span>
           </div>
-          <span className="text-sm font-semibold text-foreground">C-Levels</span>
+          <span className="text-sm font-semibold text-foreground">{BRAND.name}</span>
         </Link>
         <button
           onClick={() => setNotifOpen(true)}
