@@ -37,6 +37,7 @@ import TechIntegrationDetail from "./pages/TechIntegrationDetail";
 import OKRPage from "./pages/OKR";
 import IntegrationDetail from "./pages/IntegrationDetail";
 import PositionHistory from "./pages/PositionHistory";
+import DevDebug from "./pages/DevDebug";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -88,6 +89,11 @@ const App = () => (
             {/* Legacy redirects */}
             <Route path="/command-structure" element={<Organization />} />
             <Route path="/team" element={<Organization />} />
+
+            {/* Dev-only debug panel */}
+            {import.meta.env.DEV && (
+              <Route path="/dev-debug" element={<DevDebug />} />
+            )}
 
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -105,6 +105,19 @@ export const DecisionService = {
     return d ? mapMockToContract(d) : undefined;
   },
 
+  /**
+   * Returns raw mock Decision[] (original shape from @/data/decisions).
+   * Use this when UI components depend on mock-specific fields like `lifecycle`, `performanceReport`, etc.
+   * Will be removed once UI migrates to contract types.
+   */
+  async fetchAllMock(): Promise<MockDecision[]> {
+    return Promise.resolve([...mockDecisions]);
+  },
+
+  async fetchMockById(id: string): Promise<MockDecision | undefined> {
+    return Promise.resolve(mockDecisions.find((m) => m.id === id));
+  },
+
   /* ── Async API methods ── */
   async fetchAll(opts?: { token?: string; signal?: AbortSignal }): Promise<Decision[]> {
     if (USE_MOCK) return Promise.resolve(this.getAll());

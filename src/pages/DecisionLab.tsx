@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { executivePositions } from "@/data/executivePositions";
 import {
-  decisions as allDecisions,
   executiveDecisionRecords,
   lifecycleConfig,
   categoryLabels,
@@ -25,6 +24,7 @@ import {
   type Decision,
   type DecisionLifecycle,
 } from "@/data/decisions";
+import { DecisionService } from "@/services/DecisionService";
 import { useRBAC } from "@/contexts/RBACContext";
 import {
   submitDecisionForApproval,
@@ -664,7 +664,7 @@ const PressureBanner = ({ decisions }: { decisions: Decision[] }) => {
 const DecisionLab = () => {
   const { data: asyncDecisions, isLoading, error, retry } = useAsyncData(
     ["decisions"],
-    () => Promise.resolve(allDecisions),
+    () => DecisionService.fetchAllMock(),
   );
 
   const [activeTab, setActiveTab] = useState<TabId>("pending");
@@ -721,7 +721,8 @@ const DecisionLab = () => {
     setAuditDrawerOpen(true);
   }, []);
   // Sync async data into local state once loaded
-  if (asyncDecisions && localDecisions.length === 0 && asyncDecisions.length > 0) {
+  const needsSync = asyncDecisions && asyncDecisions.length > 0 && localDecisions.length === 0;
+  if (needsSync) {
     setLocalDecisions(asyncDecisions);
   }
 
