@@ -4,6 +4,8 @@ import {
   Database, Plug, CheckCircle2, AlertCircle, Loader2, Clock, Search,
   Activity, RefreshCw, Settings2, Signal
 } from "lucide-react";
+import PageLoading from "@/components/ui/PageLoading";
+import PageError from "@/components/ui/PageError";
 import { Link, useNavigate } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";
 import { useIntegrations } from "@/contexts/IntegrationContext";

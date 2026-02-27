@@ -6,6 +6,9 @@ import { Bell, AlertTriangle, ArrowRight, Eye, Search, CheckCircle2, Filter, Loc
 import AppLayout from "@/components/AppLayout";
 import { alertsData } from "@/data/alerts";
 import { useRBAC } from "@/contexts/RBACContext";
+import { useAsyncData } from "@/hooks/useAsyncData";
+import PageLoading from "@/components/ui/PageLoading";
+import PageError from "@/components/ui/PageError";
 
 const severityOptions = ["Tümü", "Kritik", "Yüksek", "Orta", "Düşük"];
 const agentOptions = ["Tümü", "AI CMO", "AI CFO", "AI CSO", "AI CTO", "AI CEO", "Hukuk Masası"];
@@ -19,7 +22,15 @@ const Alerts = () => {
   const [agent, setAgent] = useState("Tümü");
   const [status, setStatus] = useState("Tümü");
 
-  const filtered = alertsData.filter((a) => {
+  const { data: alerts, isLoading, error, retry } = useAsyncData(
+    ["alerts"],
+    () => Promise.resolve(alertsData),
+  );
+
+  if (isLoading) return <AppLayout><PageLoading label="Sinyaller yükleniyor…" rows={4} /></AppLayout>;
+  if (error || !alerts) return <AppLayout><PageError message={error?.message} onRetry={retry} /></AppLayout>;
+
+  const filtered = alerts.filter((a) => {
     if (search && !a.text.toLowerCase().includes(search.toLowerCase()) && !a.detail.toLowerCase().includes(search.toLowerCase())) return false;
     if (severity !== "Tümü" && a.urgency !== severity) return false;
     if (agent !== "Tümü" && a.agent !== agent) return false;
