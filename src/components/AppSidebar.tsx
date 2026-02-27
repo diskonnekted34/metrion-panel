@@ -8,23 +8,12 @@ import {
 } from "lucide-react";
 import { allExperts } from "@/data/experts";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { departments } from "@/contexts/RBACContext";
+import { departments } from "@/data/departments";
 import { useAuthorization } from "@/contexts/AuthorizationContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-
-/* ── Department color dots ── */
-const deptColors: Record<string, string> = {
-  executive: "hsl(220, 100%, 56%)",
-  technology: "hsl(190, 90%, 50%)",
-  marketing: "hsl(280, 70%, 55%)",
-  finance: "hsl(160, 76%, 44%)",
-  operations: "hsl(38, 92%, 50%)",
-  creative: "hsl(330, 70%, 55%)",
-  marketplace: "hsl(25, 85%, 55%)",
-  legal: "hsl(210, 30%, 55%)",
-  hr: "hsl(350, 65%, 55%)",
-  sales: "hsl(140, 60%, 45%)",
-};
+import { BRAND } from "@/config/branding";
+import { DEPT_COLORS, AGENT_STATUS_COLORS } from "@/theme/tokens";
 
 /* ── Department submenu items ── */
 const deptSubItems = [
@@ -51,17 +40,11 @@ const bottomItems = [
   { label: "Ayarlar", icon: SettingsIcon, path: "/settings" },
 ];
 
-const statusDot: Record<string, string> = {
-  Monitoring: "bg-emerald-500",
-  "Running Task": "bg-blue-500",
-  Idle: "bg-muted-foreground/40",
-  Alerting: "bg-destructive",
-};
-
 const AppSidebar = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
   const { can: canDo, profile } = useAuthorization();
+  const { isAuthenticated } = useAuth();
   const [orgOpen, setOrgOpen] = useState(true);
   const [expandedDept, setExpandedDept] = useState<string | null>(null);
   const [agentsOpen, setAgentsOpen] = useState(false);
@@ -91,10 +74,10 @@ const AppSidebar = () => {
 
   return (
     <aside className="fixed left-0 top-0 bottom-0 z-40 w-[290px] flex flex-col bg-sidebar">
-      {/* Logo */}
+      {/* Logo — auth-aware destination */}
       <div className="flex items-center px-5 h-16 shrink-0">
-        <Link to="/" className="flex items-center">
-          <span className="text-[40px] font-semibold text-foreground" style={{ letterSpacing: "-0.04em", fontFamily: "'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif" }}>Metrion<sup className="text-[11px] font-normal" style={{ verticalAlign: "super", marginLeft: "-2px" }}>®</sup></span>
+        <Link to={isAuthenticated ? BRAND.dashboardPath : BRAND.publicPath} className="flex items-center">
+          <span className="text-[40px] font-semibold text-foreground" style={{ letterSpacing: "-0.04em", fontFamily: "'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif" }}>{BRAND.name}<sup className="text-[11px] font-normal" style={{ verticalAlign: "super", marginLeft: "-2px" }}>{BRAND.mark}</sup></span>
         </Link>
       </div>
 
@@ -163,7 +146,7 @@ const AppSidebar = () => {
                   {departments.filter((d) => profile.department_ids.includes(d.id)).map((dept) => {
                     const deptActive = isDeptActive(dept.id);
                     const isExpanded = expandedDept === dept.id;
-                    const color = deptColors[dept.id] || "hsl(220, 100%, 56%)";
+                    const color = DEPT_COLORS[dept.id] || "hsl(220, 100%, 56%)";
 
                     return (
                       <div key={dept.id}>
@@ -297,7 +280,7 @@ const AppSidebar = () => {
                         }`}
                         style={{ height: 36 }}
                       >
-                        <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${statusDot[agent.status] || "bg-muted-foreground/40"}`} />
+                        <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${AGENT_STATUS_COLORS[agent.status] || "bg-muted-foreground/40"}`} />
                         <span className="truncate">{agent.name}</span>
                         {isAgentActive && (
                           <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-r-full bg-primary" />

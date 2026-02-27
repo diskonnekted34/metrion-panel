@@ -1,20 +1,28 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+/**
+ * @deprecated MIGRATION BRIDGE — Use AuthorizationContext for permissions.
+ *
+ * This context is kept as a compatibility layer during the transition
+ * from the legacy 5-role RBAC to the 4-layer Authorization engine.
+ * All permission checks should migrate to:
+ *   - useAuthorization().can(resource, action, scope)
+ *   - useAuth() for user identity (name, email)
+ *
+ * Department data is now sourced from src/data/departments.ts.
+ * TODO: Remove this context once all consumers are migrated.
+ */
+
+import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+  departments,
+  ALL_DEPARTMENT_IDS,
+  type DepartmentId,
+  type Department,
+} from "@/data/departments";
+
+// Re-export for backward compatibility
+export { departments, type DepartmentId, type Department } from "@/data/departments";
 
 export type UserRole = "owner" | "admin" | "department_lead" | "operator" | "viewer";
-
-export type DepartmentId = "executive" | "marketing" | "finance" | "operations" | "creative" | "marketplace" | "legal" | "technology" | "hr" | "sales";
-
-export interface Department {
-  id: DepartmentId;
-  name: string;
-  icon: string;
-  agentIds: string[];
-  healthScore: number;
-  activeAlerts: number;
-  activeTasks: number;
-  trend: "up" | "down" | "stable";
-  description: string;
-}
 
 export interface MockUser {
   id: string;
@@ -34,22 +42,9 @@ export interface TeamMember {
   joinedAt: string;
 }
 
-export const departments: Department[] = [
-  { id: "executive", name: "Yönetim", icon: "🧭", agentIds: ["ceo"], healthScore: 82, activeAlerts: 1, activeTasks: 4, trend: "up", description: "Stratejik önceliklendirme, karar yönetimi ve yönetici brifingleri." },
-  { id: "technology", name: "Teknoloji", icon: "🧠", agentIds: ["cto", "cio"], healthScore: 88, activeAlerts: 2, activeTasks: 6, trend: "up", description: "Teknoloji altyapısı, bilgi sistemleri ve dijital dönüşüm yönetimi." },
-  { id: "marketing", name: "Pazarlama", icon: "📣", agentIds: ["cmo", "growth-agent"], healthScore: 68, activeAlerts: 3, activeTasks: 8, trend: "down", description: "Kampanya stratejisi, performans izleme ve büyüme yönetimi." },
-  { id: "finance", name: "Finans", icon: "💰", agentIds: ["cfo", "accounting-agent"], healthScore: 91, activeAlerts: 1, activeTasks: 3, trend: "up", description: "Kârlılık analizi, nakit akış tahmini ve bütçe kontrolü." },
-  { id: "operations", name: "Operasyon", icon: "⚙️", agentIds: ["coo", "inventory-agent"], healthScore: 74, activeAlerts: 2, activeTasks: 5, trend: "stable", description: "Tedarik zinciri, envanter yönetimi ve süreç optimizasyonu." },
-  { id: "creative", name: "Kreatif", icon: "✨", agentIds: ["creative-director", "graphic-designer", "art-director"], healthScore: 79, activeAlerts: 1, activeTasks: 6, trend: "up", description: "Marka yönetimi, görsel üretim ve kreatif strateji." },
-  { id: "marketplace", name: "Pazaryeri", icon: "🛒", agentIds: ["marketplace-agent"], healthScore: 76, activeAlerts: 1, activeTasks: 4, trend: "stable", description: "Çoklu pazaryeri listeleme, fiyat senkronizasyonu ve sipariş yönetimi." },
-  { id: "legal", name: "Hukuk", icon: "⚖️", agentIds: ["legal"], healthScore: 85, activeAlerts: 0, activeTasks: 0, trend: "stable", description: "Sözleşme analizi, uyum denetimi ve hukuki risk değerlendirmesi." },
-  { id: "hr", name: "İnsan Kaynakları", icon: "🧑‍💼", agentIds: ["chro", "hr-analytics", "talent-acquisition", "compensation-agent"], healthScore: 73, activeAlerts: 3, activeTasks: 7, trend: "down", description: "İşe alım, yetenek yönetimi, ücretlendirme ve çalışan bağlılığı." },
-  { id: "sales", name: "Satış", icon: "🤝", agentIds: ["sales-director", "revenue-intel", "sales-ops", "customer-success"], healthScore: 77, activeAlerts: 2, activeTasks: 9, trend: "up", description: "Gelir yönetimi, pipeline analizi, müşteri başarısı ve satış operasyonları." },
-];
-
 const mockTeam: TeamMember[] = [
-  { id: "u1", name: "Ahmet Yılmaz", email: "ahmet@company.com", role: "owner", departments: ["executive", "technology", "marketing", "finance", "operations", "creative", "marketplace", "legal", "hr", "sales"], joinedAt: "2024-01-15" },
-  { id: "u2", name: "Zeynep Kaya", email: "zeynep@company.com", role: "admin", departments: ["executive", "technology", "marketing", "finance", "operations", "creative", "marketplace", "legal", "hr", "sales"], joinedAt: "2024-02-01" },
+  { id: "u1", name: "Ahmet Yılmaz", email: "ahmet@company.com", role: "owner", departments: [...ALL_DEPARTMENT_IDS], joinedAt: "2024-01-15" },
+  { id: "u2", name: "Zeynep Kaya", email: "zeynep@company.com", role: "admin", departments: [...ALL_DEPARTMENT_IDS], joinedAt: "2024-02-01" },
   { id: "u3", name: "Mehmet Demir", email: "mehmet@company.com", role: "department_lead", departments: ["marketing"], joinedAt: "2024-03-10" },
   { id: "u4", name: "Elif Öztürk", email: "elif@company.com", role: "department_lead", departments: ["finance"], joinedAt: "2024-03-15" },
   { id: "u5", name: "Can Arslan", email: "can@company.com", role: "operator", departments: ["operations"], joinedAt: "2024-04-01" },
@@ -89,6 +84,7 @@ interface RBACContextType {
 
 const RBACContext = createContext<RBACContextType | null>(null);
 
+/** @deprecated Use useAuthorization() instead */
 export const useRBAC = () => {
   const ctx = useContext(RBACContext);
   if (!ctx) throw new Error("useRBAC must be used within RBACProvider");
@@ -101,7 +97,7 @@ export const RBACProvider = ({ children }: { children: ReactNode }) => {
     name: "Ahmet Yılmaz",
     email: "ahmet@company.com",
     role: "owner",
-    departments: ["executive", "marketing", "finance", "operations", "creative", "marketplace", "legal", "hr", "sales"],
+    departments: [...ALL_DEPARTMENT_IDS],
   });
 
   const [viewMode, setViewMode] = useState<DepartmentId | "company">("company");
@@ -121,14 +117,8 @@ export const RBACProvider = ({ children }: { children: ReactNode }) => {
     return rolePermissions[currentUser.role][action];
   };
 
-  const getVisibleDepartments = () => {
-    return departments.filter(d => hasAccessToDepartment(d.id));
-  };
-
-  const getVisibleDepartmentIds = () => {
-    const visibleDeptIds = getVisibleDepartments().map(d => d.id);
-    return visibleDeptIds as string[];
-  };
+  const getVisibleDepartments = () => departments.filter(d => hasAccessToDepartment(d.id));
+  const getVisibleDepartmentIds = () => getVisibleDepartments().map(d => d.id) as string[];
 
   return (
     <RBACContext.Provider value={{

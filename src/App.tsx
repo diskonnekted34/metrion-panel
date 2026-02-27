@@ -19,7 +19,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 
 // App pages (protected)
 import Dashboard from "./pages/Dashboard";
-import Kadro from "./pages/Kadro";
+// Kadro page removed — /kadro route uses Organization component
 import Organization from "./pages/Organization";
 import SeatDetail from "./pages/SeatDetail";
 import Strategy from "./pages/Strategy";

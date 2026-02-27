@@ -1,4 +1,4 @@
-import type { DepartmentId } from "@/contexts/RBACContext";
+import type { DepartmentId } from "@/data/departments";
 
 export interface PackAgent {
   id: string;

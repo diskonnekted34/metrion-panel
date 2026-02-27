@@ -241,6 +241,20 @@ export const ROUTE_ACCESS_RULES: RouteAccessRule[] = [
   { path: "/settings/users", label: "Kullanıcılar & Roller", system_roles: ["owner", "system_admin"] },
   { path: "/settings/security", label: "Güvenlik & Denetim", system_roles: ["owner", "security_admin"] },
   { path: "/settings/policy-studio", label: "Policy Studio", system_roles: ["owner"] },
+
+  // Departments (covers /departments/:deptId and all sub-paths)
+  { path: "/departments", label: "Departmanlar", required_permission: { resource: "organization", action: "view" } },
+
+  // Expert profiles
+  { path: "/expert", label: "Uzman Profili", required_permission: { resource: "marketplace", action: "view" } },
+
+  // Intelligence deep views
+  { path: "/intelligence", label: "İstihbarat Görünümü", required_permission: { resource: "analysis", action: "view" } },
+
+  // Route aliases (all resolve to Organization page)
+  { path: "/kadro", label: "Kadro", required_permission: { resource: "organization", action: "view" } },
+  { path: "/command-structure", label: "Komuta Yapısı", required_permission: { resource: "organization", action: "view" } },
+  { path: "/team", label: "Ekip", required_permission: { resource: "organization", action: "view" } },
 ];
 
 // ── Default approval rules ─────────────────────────────
