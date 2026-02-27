@@ -1,4 +1,4 @@
-import LandingNav from "@/components/landing/LandingNav";
+import PublicNav from "@/components/PublicNav";
 import HeroV2 from "@/components/landing/HeroV2";
 import TrustStripV2 from "@/components/landing/TrustStripV2";
 import ProblemSection from "@/components/landing/ProblemSection";
@@ -15,7 +15,7 @@ import FooterV2 from "@/components/landing/FooterV2";
 const Index = () => {
   return (
     <div className="min-h-screen bg-[#050505] text-foreground">
-      <LandingNav />
+      <PublicNav />
       <HeroV2 />
       <TrustStripV2 />
       <ProblemSection />
