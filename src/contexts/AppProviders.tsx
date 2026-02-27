@@ -14,6 +14,7 @@ import { TenantProvider } from "@/core/store/TenantContext";
 import { OKRProvider } from "@/core/store/OKRContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthorizationProvider } from "@/contexts/AuthorizationContext";
 import { queryClient } from "@/lib/queryClient";
 
 interface AppProvidersProps {
@@ -27,6 +28,7 @@ export function AppProviders({ children }: AppProvidersProps) {
         <LanguageProvider>
            <ThemeProvider>
             <AuthProvider>
+              <AuthorizationProvider>
               <RBACProvider>
               <TenantProvider>
                 <PackProvider>
@@ -40,6 +42,7 @@ export function AppProviders({ children }: AppProvidersProps) {
                 </PackProvider>
               </TenantProvider>
             </RBACProvider>
+              </AuthorizationProvider>
             </AuthProvider>
           </ThemeProvider>
         </LanguageProvider>

@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProviders } from "@/contexts/AppProviders";
 import { PageMetaProvider } from "@/contexts/PageMetaContext";
 import AppErrorBoundary from "@/components/system/AppErrorBoundary";
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { AuthorizedRoute } from "@/components/auth/AuthorizedRoute";
 
 // Public pages
 import Index from "./pages/Index";
@@ -54,7 +54,7 @@ import DevDebug from "./pages/DevDebug";
 import NotFound from "./pages/NotFound";
 
 const P = ({ children }: { children: React.ReactNode }) => (
-  <ProtectedRoute>{children}</ProtectedRoute>
+  <AuthorizedRoute>{children}</AuthorizedRoute>
 );
 
 const App = () => (

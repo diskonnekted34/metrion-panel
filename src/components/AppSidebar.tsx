@@ -4,11 +4,12 @@ import {
   LayoutDashboard, Target, Scale, Zap, Network, ChevronDown,
   Database, Settings as SettingsIcon, FileText, ChevronRight,
   Eye, BarChart3, Crosshair, Activity, ClipboardList,
-  ShoppingBag, Bot, Brain,
+  ShoppingBag, Bot, Brain, Lock,
 } from "lucide-react";
 import { allExperts } from "@/data/experts";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { departments } from "@/contexts/RBACContext";
+import { useAuthorization } from "@/contexts/AuthorizationContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 /* ── Department color dots ── */
@@ -60,6 +61,7 @@ const statusDot: Record<string, string> = {
 const AppSidebar = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
+  const { can: canDo, profile } = useAuthorization();
   const [orgOpen, setOrgOpen] = useState(true);
   const [expandedDept, setExpandedDept] = useState<string | null>(null);
   const [agentsOpen, setAgentsOpen] = useState(false);
@@ -98,9 +100,16 @@ const AppSidebar = () => {
 
       {/* Scrollable nav */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 sidebar-scroll">
-        {/* Top items */}
+        {/* Top items — filtered by authorization */}
         <div className="space-y-0.5">
-          {topItems.map((item) => {
+          {topItems.filter((item) => {
+            const resourceMap: Record<string, string> = {
+              "/dashboard": "dashboard", "/strategy": "strategy", "/analysis": "analysis",
+              "/decision-lab": "decision", "/action-center": "action", "/reports": "report",
+            };
+            const res = resourceMap[item.path];
+            return res ? canDo(res as any, "view") : true;
+          }).map((item) => {
             const active = isActive(item.path);
             return (
               <Link
@@ -151,7 +160,7 @@ const AppSidebar = () => {
                 className="overflow-hidden"
               >
                 <div className="mt-1 space-y-0.5 pl-2">
-                  {departments.map((dept) => {
+                  {departments.filter((d) => profile.department_ids.includes(d.id)).map((dept) => {
                     const deptActive = isDeptActive(dept.id);
                     const isExpanded = expandedDept === dept.id;
                     const color = deptColors[dept.id] || "hsl(220, 100%, 56%)";

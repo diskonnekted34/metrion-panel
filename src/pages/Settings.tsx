@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Settings as SettingsIcon, User, Building2, CreditCard, Bell, ChevronDown, ChevronUp, Users, Shield, Plus, Trash2, Package, X, DollarSign, Zap } from "lucide-react";
+import PolicyStudio from "@/components/settings/PolicyStudio";
 import { Link } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";
 import { useRBAC, UserRole, DepartmentId } from "@/contexts/RBACContext";
@@ -407,6 +408,11 @@ const Settings = () => {
                 )}
               </div>
             )}
+          </div>
+
+          {/* Policy Studio */}
+          <div className="mt-8">
+            <PolicyStudio />
           </div>
         </motion.div>
       </div>
