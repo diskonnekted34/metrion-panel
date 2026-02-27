@@ -5,6 +5,9 @@ import { AppProviders } from "@/contexts/AppProviders";
 import { PageMetaProvider } from "@/contexts/PageMetaContext";
 import AppErrorBoundary from "@/components/system/AppErrorBoundary";
 import Index from "./pages/Index";
+import Checkout from "./pages/Checkout";
+import CheckoutSuccess from "./pages/CheckoutSuccess";
+import CheckoutFailure from "./pages/CheckoutFailure";
 import ExpertProfile from "./pages/ExpertProfile";
 import Dashboard from "./pages/Dashboard";
 import Kadro from "./pages/Kadro";
@@ -51,6 +54,9 @@ const App = () => (
             {/* Marketing pages */}
             <Route path="/" element={<Index />} />
             <Route path="/pricing" element={<Pricing />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/checkout/success" element={<CheckoutSuccess />} />
+            <Route path="/checkout/failure" element={<CheckoutFailure />} />
 
             {/* Main navigation */}
             <Route path="/dashboard" element={<Dashboard />} />

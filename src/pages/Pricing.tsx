@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check, X, ChevronDown, ChevronUp } from "lucide-react";
+import { Link } from "react-router-dom";
 import PublicNav from "@/components/PublicNav";
 import Footer from "@/components/Footer";
 import { plans, faqs } from "@/config/plans";
+import { persistPlan } from "@/lib/checkoutMachine";
 
 const Pricing = () => {
   const [yearly, setYearly] = useState(false);
@@ -121,15 +123,17 @@ const Pricing = () => {
                     ))}
                   </ul>
 
-                  <button
-                    className={`w-full py-3.5 rounded-2xl text-sm font-medium transition-all active:scale-[0.99] ${
+                  <Link
+                    to={`/checkout?plan=${plan.id}`}
+                    onClick={() => persistPlan(plan.id)}
+                    className={`w-full py-3.5 rounded-2xl text-sm font-medium transition-all active:scale-[0.99] text-center block ${
                       plan.ctaVariant === "primary"
                         ? "btn-primary"
                         : "border border-border hover:bg-secondary text-foreground"
                     }`}
                   >
                     {plan.cta}
-                  </button>
+                  </Link>
                 </motion.div>
               );
             })}
