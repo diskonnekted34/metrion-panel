@@ -4,11 +4,20 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProviders } from "@/contexts/AppProviders";
 import { PageMetaProvider } from "@/contexts/PageMetaContext";
 import AppErrorBoundary from "@/components/system/AppErrorBoundary";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+
+// Public pages
 import Index from "./pages/Index";
+import Pricing from "./pages/Pricing";
 import Checkout from "./pages/Checkout";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
 import CheckoutFailure from "./pages/CheckoutFailure";
-import ExpertProfile from "./pages/ExpertProfile";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import VerifyEmail from "./pages/VerifyEmail";
+
+// App pages (protected)
 import Dashboard from "./pages/Dashboard";
 import Kadro from "./pages/Kadro";
 import Organization from "./pages/Organization";
@@ -21,7 +30,6 @@ import Reports from "./pages/Reports";
 import ReportViewer from "./pages/ReportViewer";
 import Marketplace from "./pages/Marketplace";
 import Settings from "./pages/Settings";
-import Pricing from "./pages/Pricing";
 import AgentWorkspace from "./pages/AgentWorkspace";
 import Departments from "./pages/Departments";
 import DepartmentDetail from "./pages/DepartmentDetail";
@@ -40,8 +48,13 @@ import TechIntegrationDetail from "./pages/TechIntegrationDetail";
 import OKRPage from "./pages/OKR";
 import IntegrationDetail from "./pages/IntegrationDetail";
 import PositionHistory from "./pages/PositionHistory";
+import ExpertProfile from "./pages/ExpertProfile";
 import DevDebug from "./pages/DevDebug";
 import NotFound from "./pages/NotFound";
+
+const P = ({ children }: { children: React.ReactNode }) => (
+  <ProtectedRoute>{children}</ProtectedRoute>
+);
 
 const App = () => (
   <AppProviders>
@@ -51,52 +64,52 @@ const App = () => (
       <AppErrorBoundary>
         <PageMetaProvider>
           <Routes>
-            {/* Marketing pages */}
+            {/* Public / marketing */}
             <Route path="/" element={<Index />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/checkout/success" element={<CheckoutSuccess />} />
             <Route path="/checkout/failure" element={<CheckoutFailure />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
 
-            {/* Main navigation */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/strategy" element={<Strategy />} />
-            <Route path="/analysis" element={<Analysis />} />
-            <Route path="/decision-lab" element={<DecisionLab />} />
-            <Route path="/action-center" element={<ActionCenter />} />
-            <Route path="/data-sources" element={<DataSources />} />
-            <Route path="/data-sources/:integrationId" element={<IntegrationDetail />} />
-            <Route path="/tech-data-sources" element={<TechDataSources />} />
-            <Route path="/tech-data-sources/:connectorId" element={<TechIntegrationDetail />} />
-            <Route path="/organization" element={<Organization />} />
-            <Route path="/kadro" element={<Organization />} />
-            <Route path="/seat/:seatKey" element={<SeatDetail />} />
-            <Route path="/settings" element={<Settings />} />
+            {/* Protected app routes */}
+            <Route path="/dashboard" element={<P><Dashboard /></P>} />
+            <Route path="/strategy" element={<P><Strategy /></P>} />
+            <Route path="/analysis" element={<P><Analysis /></P>} />
+            <Route path="/decision-lab" element={<P><DecisionLab /></P>} />
+            <Route path="/action-center" element={<P><ActionCenter /></P>} />
+            <Route path="/data-sources" element={<P><DataSources /></P>} />
+            <Route path="/data-sources/:integrationId" element={<P><IntegrationDetail /></P>} />
+            <Route path="/tech-data-sources" element={<P><TechDataSources /></P>} />
+            <Route path="/tech-data-sources/:connectorId" element={<P><TechIntegrationDetail /></P>} />
+            <Route path="/organization" element={<P><Organization /></P>} />
+            <Route path="/kadro" element={<P><Organization /></P>} />
+            <Route path="/seat/:seatKey" element={<P><SeatDetail /></P>} />
+            <Route path="/settings" element={<P><Settings /></P>} />
+            <Route path="/alerts" element={<P><Alerts /></P>} />
+            <Route path="/alerts/:alertId" element={<P><AlertDetail /></P>} />
+            <Route path="/tasks" element={<P><Tasks /></P>} />
+            <Route path="/reports" element={<P><Reports /></P>} />
+            <Route path="/reports/:reportId" element={<P><ReportViewer /></P>} />
+            <Route path="/okr" element={<P><OKRPage /></P>} />
+            <Route path="/marketplace" element={<P><Marketplace /></P>} />
+            <Route path="/departments" element={<P><Departments /></P>} />
+            <Route path="/departments/:deptId" element={<P><DepartmentDetail /></P>} />
+            <Route path="/departments/:deptId/reports" element={<P><DepartmentReports /></P>} />
+            <Route path="/departments/:deptId/actions" element={<P><DepartmentActions /></P>} />
+            <Route path="/departments/:deptId/modules" element={<P><DepartmentModules /></P>} />
+            <Route path="/departments/:deptId/intelligence/:metricId" element={<P><DepartmentIntelligenceView /></P>} />
+            <Route path="/creative-workspace" element={<P><CreativeWorkspace /></P>} />
+            <Route path="/intelligence/:clusterId" element={<P><IntelligenceView /></P>} />
+            <Route path="/expert/:id" element={<P><ExpertProfile /></P>} />
+            <Route path="/workspace/:agentId" element={<P><AgentWorkspace /></P>} />
+            <Route path="/executive/position-history" element={<P><PositionHistory /></P>} />
+            <Route path="/command-structure" element={<P><Organization /></P>} />
+            <Route path="/team" element={<P><Organization /></P>} />
 
-            {/* Supporting pages */}
-            <Route path="/alerts" element={<Alerts />} />
-            <Route path="/alerts/:alertId" element={<AlertDetail />} />
-            <Route path="/tasks" element={<Tasks />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/reports/:reportId" element={<ReportViewer />} />
-            <Route path="/okr" element={<OKRPage />} />
-            <Route path="/marketplace" element={<Marketplace />} />
-            <Route path="/departments" element={<Departments />} />
-            <Route path="/departments/:deptId" element={<DepartmentDetail />} />
-            <Route path="/departments/:deptId/reports" element={<DepartmentReports />} />
-            <Route path="/departments/:deptId/actions" element={<DepartmentActions />} />
-            <Route path="/departments/:deptId/modules" element={<DepartmentModules />} />
-            <Route path="/departments/:deptId/intelligence/:metricId" element={<DepartmentIntelligenceView />} />
-            <Route path="/creative-workspace" element={<CreativeWorkspace />} />
-            <Route path="/intelligence/:clusterId" element={<IntelligenceView />} />
-            <Route path="/expert/:id" element={<ExpertProfile />} />
-            <Route path="/workspace/:agentId" element={<AgentWorkspace />} />
-            <Route path="/executive/position-history" element={<PositionHistory />} />
-            {/* Legacy redirects */}
-            <Route path="/command-structure" element={<Organization />} />
-            <Route path="/team" element={<Organization />} />
-
-            {/* Dev-only debug panel */}
             {import.meta.env.DEV && (
               <Route path="/dev-debug" element={<DevDebug />} />
             )}

@@ -13,6 +13,7 @@ import { ActionModeProvider } from "@/contexts/ActionModeContext";
 import { TenantProvider } from "@/core/store/TenantContext";
 import { OKRProvider } from "@/core/store/OKRContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { queryClient } from "@/lib/queryClient";
 
 interface AppProvidersProps {
@@ -24,8 +25,9 @@ export function AppProviders({ children }: AppProvidersProps) {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <LanguageProvider>
-          <ThemeProvider>
-            <RBACProvider>
+           <ThemeProvider>
+            <AuthProvider>
+              <RBACProvider>
               <TenantProvider>
                 <PackProvider>
                   <IntegrationProvider>
@@ -38,6 +40,7 @@ export function AppProviders({ children }: AppProvidersProps) {
                 </PackProvider>
               </TenantProvider>
             </RBACProvider>
+            </AuthProvider>
           </ThemeProvider>
         </LanguageProvider>
       </TooltipProvider>
