@@ -49,6 +49,7 @@ import OKRPage from "./pages/OKR";
 import IntegrationDetail from "./pages/IntegrationDetail";
 import PositionHistory from "./pages/PositionHistory";
 import ExpertProfile from "./pages/ExpertProfile";
+import Onboarding from "./pages/Onboarding";
 import DevDebug from "./pages/DevDebug";
 import NotFound from "./pages/NotFound";
 
@@ -74,6 +75,7 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/onboarding" element={<Onboarding />} />
 
             {/* Protected app routes */}
             <Route path="/dashboard" element={<P><Dashboard /></P>} />
