@@ -1,4 +1,7 @@
 import { useState, forwardRef, useCallback, useMemo } from "react";
+import { useAsyncData } from "@/hooks/useAsyncData";
+import PageLoading from "@/components/ui/PageLoading";
+import PageError from "@/components/ui/PageError";
 import AppLayout from "@/components/AppLayout";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -659,10 +662,15 @@ const PressureBanner = ({ decisions }: { decisions: Decision[] }) => {
 
 /* ════════════════════════ MAIN PAGE ════════════════════════ */
 const DecisionLab = () => {
+  const { data: asyncDecisions, isLoading, error, retry } = useAsyncData(
+    ["decisions"],
+    () => Promise.resolve(allDecisions),
+  );
+
   const [activeTab, setActiveTab] = useState<TabId>("pending");
   const [timeFilter, setTimeFilter] = useState("quarter");
   const [selectedDecision, setSelectedDecision] = useState<Decision | null>(null);
-  const [localDecisions, setLocalDecisions] = useState<Decision[]>(allDecisions);
+  const [localDecisions, setLocalDecisions] = useState<Decision[]>([]);
   const [auditDrawerOpen, setAuditDrawerOpen] = useState(false);
   const [auditEntityId, setAuditEntityId] = useState<string>("");
 
@@ -712,6 +720,13 @@ const DecisionLab = () => {
     setAuditEntityId(entityId);
     setAuditDrawerOpen(true);
   }, []);
+  // Sync async data into local state once loaded
+  if (asyncDecisions && localDecisions.length === 0 && asyncDecisions.length > 0) {
+    setLocalDecisions(asyncDecisions);
+  }
+
+  if (isLoading) return <AppLayout><PageLoading label="Kararlar yükleniyor…" rows={5} /></AppLayout>;
+  if (error && localDecisions.length === 0) return <AppLayout><PageError message={error.message} onRetry={retry} /></AppLayout>;
 
   const { pendingCount, highRiskCount, activeCount, approvalPending } = calculateDecisionMetrics(localDecisions);
   const totalFinancialImpact = "₺12.8M";
