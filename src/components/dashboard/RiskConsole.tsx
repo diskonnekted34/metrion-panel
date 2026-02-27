@@ -151,7 +151,7 @@ const RiskConsole = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden glass-card" style={{ padding: 0 }}>
+      <div className="overflow-hidden glass-card flex-1 flex flex-col" style={{ padding: 0 }}>
         {/* Header */}
         <div className="grid grid-cols-12 gap-2 px-4 py-2.5 text-[0.6rem] font-semibold text-muted-foreground/50 uppercase tracking-wider border-b border-black">
           <button className="col-span-2 text-left flex items-center gap-1" onClick={() => setSortCol("category")}>

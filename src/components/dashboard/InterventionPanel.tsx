@@ -93,7 +93,7 @@ const InterventionPanel = () => {
         </button>
       </div>
 
-      <div className="glass-card" style={{ padding: 0 }}>
+      <div className="glass-card flex-1 flex flex-col overflow-hidden" style={{ padding: 0 }}>
         {/* Tabs */}
         <div className="px-4 pt-4 pb-2">
           <div className="flex gap-1 p-0.5 bg-secondary/50" style={{ borderRadius: "var(--radius-inner, 12px)" }}>

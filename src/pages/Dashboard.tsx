@@ -29,10 +29,10 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* 2. Intervention Panel + Risk Console — side by side */}
+        {/* 2. Intervention Panel + Risk Console — side by side, equal height */}
         <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"} gap-4 mb-5 items-stretch`} id="intervention-panel">
-          <div className="flex flex-col"><InterventionPanel /></div>
-          <div className="flex flex-col"><RiskConsole /></div>
+          <div className="flex flex-col min-h-0"><InterventionPanel /></div>
+          <div className="flex flex-col min-h-0"><RiskConsole /></div>
         </div>
 
         {/* 3. Department Table */}

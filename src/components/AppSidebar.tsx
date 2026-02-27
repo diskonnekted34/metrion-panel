@@ -41,11 +41,11 @@ const topItems = [
   { label: "Analiz", icon: Brain, path: "/analysis" },
   { label: "Kararlar", icon: Scale, path: "/decision-lab" },
   { label: "Aksiyonlar", icon: Zap, path: "/action-center" },
+  { label: "Raporlar", icon: FileText, path: "/reports" },
 ];
 
 /* ── Bottom nav items ── */
 const bottomItems = [
-  { label: "Raporlar", icon: FileText, path: "/reports" },
   { label: "Veri Kaynakları", icon: Database, path: "/data-sources" },
   { label: "Ayarlar", icon: SettingsIcon, path: "/settings" },
 ];
