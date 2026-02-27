@@ -69,6 +69,9 @@ export function apiPost<T>(path: string, body: unknown, opts?: RequestOptions) {
 export function apiPut<T>(path: string, body: unknown, opts?: RequestOptions) {
   return request<T>("PUT", path, body, opts);
 }
+export function apiPatch<T>(path: string, body: unknown, opts?: RequestOptions) {
+  return request<T>("PATCH", path, body, opts);
+}
 export function apiDelete<T>(path: string, opts?: RequestOptions) {
   return request<T>("DELETE", path, undefined, opts);
 }
