@@ -60,7 +60,7 @@ const PublicNav = () => {
 
         <div className="flex items-center gap-3">
           <Link
-            to="/dashboard"
+            to="/login"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
           >
             Login
