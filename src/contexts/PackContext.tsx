@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from "react";
 import { Pack, Tier, tiers, addonPacks, allPacks, creditPacks } from "@/data/packs";
-import type { DepartmentId } from "@/contexts/RBACContext";
+import type { DepartmentId } from "@/data/departments";
 import { toast } from "sonner";
 
 interface PackContextType {
