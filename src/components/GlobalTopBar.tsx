@@ -64,7 +64,8 @@ const getBreadcrumb = (pathname: string, lang: "tr" | "en") => {
 const GlobalTopBar = () => {
   const { theme, themeChoice, setThemeChoice, toggleTheme } = useTheme();
   const { meta } = usePageMeta();
-  const { currentUser } = useRBAC();
+  const { user: authUser, logout } = useAuth();
+  const currentUser = { name: authUser?.displayName ?? "User", email: authUser?.email ?? "" };
   const { lang, setLang, t } = useLanguage();
   const tb = t.topBar;
   const isMobile = useIsMobile();
