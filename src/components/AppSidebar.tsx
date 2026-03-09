@@ -342,11 +342,13 @@ const AppSidebar = () => {
       <div className="px-4 py-3 shrink-0 border-t border-sidebar-border">
         <div className="flex items-center gap-2.5 px-2">
           <div className="h-7 w-7 rounded-full bg-primary/20 flex items-center justify-center">
-            <span className="text-[10px] font-bold text-primary">AY</span>
+            <span className="text-[10px] font-bold text-primary">
+              {user?.displayName?.charAt(0)?.toUpperCase() ?? "U"}
+            </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-medium text-foreground truncate">Ahmet Yılmaz</p>
-            <p className="text-[9px] text-muted-foreground">CEO</p>
+            <p className="text-[11px] font-medium text-foreground truncate">{user?.displayName ?? "User"}</p>
+            <p className="text-[9px] text-muted-foreground truncate">{user?.email ?? ""}</p>
           </div>
         </div>
       </div>
