@@ -8,7 +8,8 @@ import ViewModeSwitcher from "@/components/ViewModeSwitcher";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const DashboardHeader = () => {
-  const { currentUser } = useRBAC();
+  const { user } = useAuth();
+  const currentUser = { name: user?.displayName ?? "User" };
   const { isTrial, trialDaysRemaining } = usePacks();
   const isMobile = useIsMobile();
   const [notifOpen, setNotifOpen] = useState(false);
