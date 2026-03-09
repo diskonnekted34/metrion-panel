@@ -385,7 +385,7 @@ const GlobalTopBar = () => {
                 {tb.cancel}
               </button>
               <button
-                onClick={() => { toast.success(tb.sessionClosed); setSignOutConfirm(false); navigate("/"); }}
+                onClick={async () => { await logout(); toast.success(tb.sessionClosed); setSignOutConfirm(false); navigate("/"); }}
                 className="flex-1 px-4 py-2 rounded-lg text-sm font-medium bg-destructive hover:bg-destructive/90 text-destructive-foreground transition-colors"
               >
                 {tb.exit}

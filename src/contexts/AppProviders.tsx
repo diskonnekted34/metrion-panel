@@ -1,5 +1,6 @@
 /**
  * AppProviders — composes all global providers.
+ * Order matters: Auth wraps everything that needs user state.
  */
 import type { ReactNode } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -26,22 +27,22 @@ export function AppProviders({ children }: AppProvidersProps) {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <LanguageProvider>
-           <ThemeProvider>
+          <ThemeProvider>
             <AuthProvider>
               <AuthorizationProvider>
-              <RBACProvider>
-              <TenantProvider>
-                <PackProvider>
-                  <IntegrationProvider>
-                    <OKRProvider>
-                      <ActionModeProvider>
-                        {children}
-                      </ActionModeProvider>
-                    </OKRProvider>
-                  </IntegrationProvider>
-                </PackProvider>
-              </TenantProvider>
-            </RBACProvider>
+                <RBACProvider>
+                  <TenantProvider>
+                    <PackProvider>
+                      <IntegrationProvider>
+                        <OKRProvider>
+                          <ActionModeProvider>
+                            {children}
+                          </ActionModeProvider>
+                        </OKRProvider>
+                      </IntegrationProvider>
+                    </PackProvider>
+                  </TenantProvider>
+                </RBACProvider>
               </AuthorizationProvider>
             </AuthProvider>
           </ThemeProvider>
