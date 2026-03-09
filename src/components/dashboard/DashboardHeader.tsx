@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Bell, Clock } from "lucide-react";
-import { useRBAC } from "@/contexts/RBACContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { usePacks } from "@/contexts/PackContext";
 import { alertsData } from "@/data/alerts";
 import NotificationPanel from "@/components/NotificationPanel";
