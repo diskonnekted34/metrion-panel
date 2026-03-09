@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { usePageMeta } from "@/contexts/PageMetaContext";
-import { useRBAC } from "@/contexts/RBACContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { alertsData } from "@/data/alerts";
 import NotificationPanel from "@/components/NotificationPanel";
