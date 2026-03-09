@@ -6,8 +6,6 @@
  * 2. No matching route rule → DENY (redirect to landing)
  * 3. Matching rule but unauthorized → DENY (redirect to landing)
  * 4. Explicit resource/action override checked first
- *
- * This ensures new pages are inaccessible until a route rule is defined.
  */
 
 import { Navigate, useLocation } from "react-router-dom";
@@ -65,8 +63,6 @@ export function AuthorizedRoute({
   });
 
   // ── DEFAULT-DENY: no rule defined → block access ──
-  // If a protected route has no matching rule in ROUTE_ACCESS_RULES,
-  // it is inaccessible. Add a rule to defaults.ts to grant access.
   if (!matchingRule) {
     if (import.meta.env.DEV) {
       console.warn(
