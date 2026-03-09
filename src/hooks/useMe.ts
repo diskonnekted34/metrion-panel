@@ -1,36 +1,44 @@
 /**
- * useMe — lightweight hook to fetch the current authenticated user.
- * Calls GET /auth/me and returns user, tenant, active seat.
+ * useMe — lightweight hook to get the current authenticated user's profile.
+ * Fetches from the profiles table using the Supabase session.
  */
 
 import { useQuery } from "@tanstack/react-query";
-import { apiGet, ApiError } from "@/lib/apiClient";
-import { API_ROUTES } from "@/lib/apiRoutes";
-import { getAccessToken } from "@/lib/authSession";
-import type { MeResponse } from "@/contracts/v1/auth";
-import type { ApiResponse } from "@/contracts/v1/api";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+
+interface Profile {
+  id: string;
+  user_id: string;
+  display_name: string;
+  email: string;
+  avatar_url: string | null;
+}
 
 export function useMe() {
-  const hasToken = !!getAccessToken();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
 
-  const { data, isLoading, error, refetch } = useQuery<MeResponse, ApiError>({
-    queryKey: ["auth", "me"],
+  const { data: profile, isLoading, error, refetch } = useQuery({
+    queryKey: ["profile", user?.id],
     queryFn: async () => {
-      const res = await apiGet<ApiResponse<MeResponse>>(API_ROUTES.auth.me);
-      return res.data;
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user!.id)
+        .single();
+      if (error) throw error;
+      return data as Profile;
     },
-    enabled: hasToken,
-    staleTime: 5 * 60 * 1000, // 5 min
+    enabled: isAuthenticated && !!user?.id,
+    staleTime: 5 * 60 * 1000,
     retry: false,
   });
 
   return {
-    user: data?.user ?? null,
-    tenant: data?.tenant ?? null,
-    activeSeat: data?.seat ?? null,
-    membership: data?.membership ?? null,
-    isLoading: hasToken && isLoading,
-    isAuthenticated: !!data?.user,
+    user: user ?? null,
+    profile: profile ?? null,
+    isLoading: authLoading || (isAuthenticated && isLoading),
+    isAuthenticated,
     error,
     refetch,
   };
