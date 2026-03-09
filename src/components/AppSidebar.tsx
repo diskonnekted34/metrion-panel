@@ -44,7 +44,7 @@ const AppSidebar = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
   const { can: canDo, profile } = useAuthorization();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [orgOpen, setOrgOpen] = useState(true);
   const [expandedDept, setExpandedDept] = useState<string | null>(null);
   const [agentsOpen, setAgentsOpen] = useState(false);
