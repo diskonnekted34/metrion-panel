@@ -1,13 +1,15 @@
 /**
  * AlertService — Data Access Layer
  *
- * Provides both sync and async methods.
+ * Uses mock data when isMockEnabled() is true.
+ * Otherwise delegates to API endpoints.
  */
 
 import { alertsData, type Alert } from "@/data/alerts";
+import { isMockEnabled } from "@/lib/env";
 
 export const AlertService = {
-  // Sync methods (existing consumers)
+  // Sync methods (mock-only, used by existing consumers)
   getAll(): Alert[] {
     return alertsData;
   },
@@ -24,22 +26,25 @@ export const AlertService = {
     return alertsData.filter(a => a.category === "critical" && !a.resolved);
   },
 
-  // Async methods (future API replacement)
+  // Async methods (API-ready)
   async fetchAll(): Promise<Alert[]> {
-    return Promise.resolve(alertsData);
+    if (isMockEnabled()) return alertsData;
+    // When backend is connected:
+    // const res = await apiGet<ApiResponse<Alert[]>>(API_ROUTES.alerts.alerts);
+    // return res.data;
+    return alertsData; // Temporary: still using mock until backend endpoint exists
   },
 
   async fetchById(id: string): Promise<Alert | undefined> {
-    return Promise.resolve(alertsData.find(a => a.id === id));
+    if (isMockEnabled()) return alertsData.find(a => a.id === id);
+    return alertsData.find(a => a.id === id);
   },
 
   async fetchUnresolved(): Promise<Alert[]> {
-    return Promise.resolve(alertsData.filter(a => !a.resolved));
+    return alertsData.filter(a => !a.resolved);
   },
 
   async fetchCritical(): Promise<Alert[]> {
-    return Promise.resolve(
-      alertsData.filter(a => a.category === "critical" && !a.resolved)
-    );
+    return alertsData.filter(a => a.category === "critical" && !a.resolved);
   },
 };
