@@ -26,9 +26,6 @@ const VerifyEmail = () => (
         <p className="text-sm text-muted-foreground mb-6">
           We sent a verification link to your inbox. Click the link to activate your account.
         </p>
-        <p className="text-xs text-muted-foreground mb-6">
-          This is a stub page — email verification is not yet implemented.
-        </p>
         <Button asChild className="w-full">
           <Link to="/login">Continue to sign in</Link>
         </Button>

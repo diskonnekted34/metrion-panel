@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Bell, Clock } from "lucide-react";
-import { useRBAC } from "@/contexts/RBACContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { usePacks } from "@/contexts/PackContext";
 import { alertsData } from "@/data/alerts";
 import NotificationPanel from "@/components/NotificationPanel";
@@ -8,7 +8,8 @@ import ViewModeSwitcher from "@/components/ViewModeSwitcher";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const DashboardHeader = () => {
-  const { currentUser } = useRBAC();
+  const { user } = useAuth();
+  const currentUser = { name: user?.displayName ?? "User" };
   const { isTrial, trialDaysRemaining } = usePacks();
   const isMobile = useIsMobile();
   const [notifOpen, setNotifOpen] = useState(false);

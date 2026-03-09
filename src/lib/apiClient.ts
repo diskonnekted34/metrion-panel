@@ -1,9 +1,9 @@
 /**
- * Lightweight fetch wrapper with typed responses, auto-auth, and refresh.
- * Token is auto-read from authSession; can be overridden per-call.
+ * Lightweight fetch wrapper with typed responses and Supabase auth.
+ * Token is auto-read from the active Supabase session.
  */
 
-import { getAccessToken, tryRefresh } from "@/lib/authSession";
+import { supabase } from "@/integrations/supabase/client";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
@@ -27,6 +27,11 @@ export interface RequestOptions {
   skipAuth?: boolean;
 }
 
+async function getSessionToken(): Promise<string | null> {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.access_token ?? null;
+}
+
 async function request<T>(
   method: string,
   path: string,
@@ -41,32 +46,18 @@ async function request<T>(
   // Resolve token: explicit > session > none
   const token = opts?.skipAuth
     ? null
-    : (opts?.token ?? getAccessToken());
+    : (opts?.token ?? await getSessionToken());
 
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  let res = await fetch(`${BASE_URL}${path}`, {
+  const res = await fetch(`${BASE_URL}${path}`, {
     method,
     headers,
     body: body != null ? JSON.stringify(body) : undefined,
     signal: opts?.signal,
   });
-
-  // Auto-refresh on 401 (once)
-  if (res.status === 401 && !opts?.skipAuth && !opts?.token) {
-    const newToken = await tryRefresh();
-    if (newToken) {
-      headers["Authorization"] = `Bearer ${newToken}`;
-      res = await fetch(`${BASE_URL}${path}`, {
-        method,
-        headers,
-        body: body != null ? JSON.stringify(body) : undefined,
-        signal: opts?.signal,
-      });
-    }
-  }
 
   if (!res.ok) {
     let msg = res.statusText;

@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { usePageMeta } from "@/contexts/PageMetaContext";
-import { useRBAC } from "@/contexts/RBACContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { alertsData } from "@/data/alerts";
 import NotificationPanel from "@/components/NotificationPanel";
@@ -64,7 +64,8 @@ const getBreadcrumb = (pathname: string, lang: "tr" | "en") => {
 const GlobalTopBar = () => {
   const { theme, themeChoice, setThemeChoice, toggleTheme } = useTheme();
   const { meta } = usePageMeta();
-  const { currentUser } = useRBAC();
+  const { user: authUser, logout } = useAuth();
+  const currentUser = { name: authUser?.displayName ?? "User", email: authUser?.email ?? "" };
   const { lang, setLang, t } = useLanguage();
   const tb = t.topBar;
   const isMobile = useIsMobile();
@@ -384,7 +385,7 @@ const GlobalTopBar = () => {
                 {tb.cancel}
               </button>
               <button
-                onClick={() => { toast.success(tb.sessionClosed); setSignOutConfirm(false); navigate("/"); }}
+                onClick={async () => { await logout(); toast.success(tb.sessionClosed); setSignOutConfirm(false); navigate("/"); }}
                 className="flex-1 px-4 py-2 rounded-lg text-sm font-medium bg-destructive hover:bg-destructive/90 text-destructive-foreground transition-colors"
               >
                 {tb.exit}

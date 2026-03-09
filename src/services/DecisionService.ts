@@ -1,24 +1,23 @@
 /**
  * DecisionService — Data Access Layer
  *
- * Uses apiClient + API_ROUTES when backend is available.
- * Falls back to mock data when VITE_USE_MOCK=true or backend is unreachable.
+ * Uses Supabase/apiClient when backend tables are available.
+ * Falls back to mock data ONLY when isMockEnabled() returns true (DEV+opt-in).
  */
 
 import type {
   Decision,
   DecisionApproval,
 } from "@/contracts/v1/governance";
-import type { ApiResponse, Page } from "@/contracts/v1/api";
+import type { ApiResponse } from "@/contracts/v1/api";
 import type { CreateDecisionInput, ApprovalRequestInput } from "@/contracts/v1/schemas";
 import { apiGet, apiPost, apiPatch, ApiError } from "@/lib/apiClient";
 import { API_ROUTES } from "@/lib/apiRoutes";
+import { isMockEnabled } from "@/lib/env";
 
-// ── Mock fallback ───────────────────────────────────────
+// ── Mock data (lazy import to avoid bundling in prod) ───
 import { decisions as mockDecisions } from "@/data/decisions";
 import type { Decision as MockDecision } from "@/data/decisions";
-
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
 // ── Mock → Contract mapper ──────────────────────────────
 function mapMockToContract(d: MockDecision): Decision {
@@ -77,9 +76,7 @@ function mapMockToContract(d: MockDecision): Decision {
   };
 }
 
-function mapLifecycleToState(
-  lc: string
-): Decision["state"] {
+function mapLifecycleToState(lc: string): Decision["state"] {
   const map: Record<string, Decision["state"]> = {
     proposed: "draft",
     under_review: "review",
@@ -95,7 +92,7 @@ function mapLifecycleToState(
 
 // ── Service ─────────────────────────────────────────────
 export const DecisionService = {
-  /* ── Sync helpers (legacy, mock-only) ── */
+  /* ── Sync helpers (mock-only, used by legacy UI) ── */
   getAll(): Decision[] {
     return mockDecisions.map(mapMockToContract);
   },
@@ -105,11 +102,6 @@ export const DecisionService = {
     return d ? mapMockToContract(d) : undefined;
   },
 
-  /**
-   * Returns raw mock Decision[] (original shape from @/data/decisions).
-   * Use this when UI components depend on mock-specific fields like `lifecycle`, `performanceReport`, etc.
-   * Will be removed once UI migrates to contract types.
-   */
   async fetchAllMock(): Promise<MockDecision[]> {
     return Promise.resolve([...mockDecisions]);
   },
@@ -120,7 +112,7 @@ export const DecisionService = {
 
   /* ── Async API methods ── */
   async fetchAll(opts?: { token?: string; signal?: AbortSignal }): Promise<Decision[]> {
-    if (USE_MOCK) return Promise.resolve(this.getAll());
+    if (isMockEnabled()) return this.getAll();
     try {
       const res = await apiGet<ApiResponse<Decision[]>>(
         API_ROUTES.governance.decisions,
@@ -129,9 +121,7 @@ export const DecisionService = {
       return res.data;
     } catch (err) {
       if (err instanceof ApiError) throw err;
-      // Network error — fallback to mock
-      console.warn("[DecisionService] Backend unreachable, using mock data");
-      return this.getAll();
+      throw err; // No silent mock fallback in prod
     }
   },
 
@@ -139,7 +129,7 @@ export const DecisionService = {
     id: string,
     opts?: { token?: string; signal?: AbortSignal },
   ): Promise<Decision | undefined> {
-    if (USE_MOCK) return Promise.resolve(this.getById(id));
+    if (isMockEnabled()) return this.getById(id);
     try {
       const res = await apiGet<ApiResponse<Decision>>(
         API_ROUTES.governance.decision(id),
@@ -148,9 +138,7 @@ export const DecisionService = {
       return res.data;
     } catch (err) {
       if (err instanceof ApiError && err.status === 404) return undefined;
-      if (err instanceof ApiError) throw err;
-      console.warn("[DecisionService] Backend unreachable, using mock data");
-      return this.getById(id);
+      throw err;
     }
   },
 
@@ -158,7 +146,7 @@ export const DecisionService = {
     payload: CreateDecisionInput,
     opts?: { token?: string },
   ): Promise<Decision> {
-    if (USE_MOCK) throw new ApiError(501, "Mock mode: create not supported");
+    if (isMockEnabled()) throw new ApiError(501, "Mock mode: create not supported");
     const res = await apiPost<ApiResponse<Decision>>(
       API_ROUTES.governance.decisions,
       payload,
@@ -172,7 +160,7 @@ export const DecisionService = {
     payload: Partial<CreateDecisionInput>,
     opts?: { token?: string },
   ): Promise<Decision> {
-    if (USE_MOCK) throw new ApiError(501, "Mock mode: update not supported");
+    if (isMockEnabled()) throw new ApiError(501, "Mock mode: update not supported");
     const res = await apiPatch<ApiResponse<Decision>>(
       API_ROUTES.governance.decision(id),
       payload,
@@ -185,7 +173,7 @@ export const DecisionService = {
     id: string,
     opts?: { token?: string; signal?: AbortSignal },
   ): Promise<DecisionApproval[]> {
-    if (USE_MOCK) return Promise.resolve([]);
+    if (isMockEnabled()) return [];
     const res = await apiGet<ApiResponse<DecisionApproval[]>>(
       API_ROUTES.governance.decisionApprovals(id),
       opts,
@@ -198,7 +186,7 @@ export const DecisionService = {
     payload: ApprovalRequestInput,
     opts?: { token?: string },
   ): Promise<DecisionApproval> {
-    if (USE_MOCK) throw new ApiError(501, "Mock mode: approve not supported");
+    if (isMockEnabled()) throw new ApiError(501, "Mock mode: approve not supported");
     const res = await apiPost<ApiResponse<DecisionApproval>>(
       API_ROUTES.governance.decisionApprovals(id),
       payload,

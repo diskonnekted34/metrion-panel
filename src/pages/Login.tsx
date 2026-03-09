@@ -11,7 +11,7 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = (location.state as any)?.from ?? "/dashboard";
+  const from = (location.state as { from?: string })?.from ?? "/dashboard";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,8 +26,8 @@ const Login = () => {
     try {
       await login(email, password);
       navigate(from, { replace: true });
-    } catch (err: any) {
-      setError(err.message ?? "Login failed");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);
     }
@@ -109,10 +109,6 @@ const Login = () => {
             </Link>
           </p>
         </div>
-
-        <p className="text-xs text-muted-foreground text-center mt-6">
-          Demo: use any email & password to sign in
-        </p>
       </motion.div>
     </div>
   );
